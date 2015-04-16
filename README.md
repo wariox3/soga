@@ -1,2 +1,0 @@
-# soga
-Soga nueva version

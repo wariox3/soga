@@ -42,8 +42,32 @@ class NomConfiguracion {
      * @ORM\Column(name="cuenta_trabajadores_planta", type="string", length=10, nullable=false)
      */
     private $cuentaTrabajadoresPlanta;          
-    
 
+    /**
+     * @ORM\Column(name="fecha_desde_exportar_nomina", type="string", length=12, nullable=false)
+     */
+    private $fechaDesdeExportarNomina;    
+
+    /**
+     * @ORM\Column(name="fecha_hasta_exportar_nomina", type="string", length=12, nullable=false)
+     */
+    private $fechaHastaExportarNomina;    
+
+    /**
+     * @ORM\Column(name="fecha_pago", type="string", length=12, nullable=false)
+     */
+    private $fechaPago;
+    
+    /**
+     * @ORM\Column(name="fecha_aplicacion_pago", type="string", length=12, nullable=false)
+     */
+    private $fechaAplicacionPago;     
+
+    /**
+     * @ORM\Column(name="cuenta_debitar", type="string", length=20, nullable=false)
+     */
+    private $cuentaDebitar;    
+    
     /**
      * Get codigoConfiguracionPk
      *
@@ -167,5 +191,120 @@ class NomConfiguracion {
     public function getComprobantePrestaciones()
     {
         return $this->comprobantePrestaciones;
+    }
+
+    /**
+     * Set fechaDesdeExportarNomina
+     *
+     * @param string $fechaDesdeExportarNomina
+     * @return NomConfiguracion
+     */
+    public function setFechaDesdeExportarNomina($fechaDesdeExportarNomina)
+    {
+        $this->fechaDesdeExportarNomina = $fechaDesdeExportarNomina;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaDesdeExportarNomina
+     *
+     * @return string 
+     */
+    public function getFechaDesdeExportarNomina()
+    {
+        return $this->fechaDesdeExportarNomina;
+    }
+
+    /**
+     * Set fechaHastaExportarNomina
+     *
+     * @param string $fechaHastaExportarNomina
+     * @return NomConfiguracion
+     */
+    public function setFechaHastaExportarNomina($fechaHastaExportarNomina)
+    {
+        $this->fechaHastaExportarNomina = $fechaHastaExportarNomina;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaHastaExportarNomina
+     *
+     * @return string 
+     */
+    public function getFechaHastaExportarNomina()
+    {
+        return $this->fechaHastaExportarNomina;
+    }
+
+    /**
+     * Set fechaPago
+     *
+     * @param string $fechaPago
+     * @return NomConfiguracion
+     */
+    public function setFechaPago($fechaPago)
+    {
+        $this->fechaPago = $fechaPago;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaPago
+     *
+     * @return string 
+     */
+    public function getFechaPago()
+    {
+        return $this->fechaPago;
+    }
+
+    /**
+     * Set fechaAplicacionPago
+     *
+     * @param string $fechaAplicacionPago
+     * @return NomConfiguracion
+     */
+    public function setFechaAplicacionPago($fechaAplicacionPago)
+    {
+        $this->fechaAplicacionPago = $fechaAplicacionPago;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaAplicacionPago
+     *
+     * @return string 
+     */
+    public function getFechaAplicacionPago()
+    {
+        return $this->fechaAplicacionPago;
+    }
+
+    /**
+     * Set cuentaDebitar
+     *
+     * @param string $cuentaDebitar
+     * @return NomConfiguracion
+     */
+    public function setCuentaDebitar($cuentaDebitar)
+    {
+        $this->cuentaDebitar = $cuentaDebitar;
+
+        return $this;
+    }
+
+    /**
+     * Get cuentaDebitar
+     *
+     * @return string 
+     */
+    public function getCuentaDebitar()
+    {
+        return $this->cuentaDebitar;
     }
 }

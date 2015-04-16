@@ -12,19 +12,46 @@ class UtiGenerarPagoController extends Controller {
         $em = $this->get('doctrine.orm.entity_manager');
         $paginator = $this->get('knp_paginator');
         $request = $this->getRequest();
-        $strDesde = "";
-        $strHasta = "";
-        $arrControles = null;
+        $arNomConfiguracion = new \Soga\NominaBundle\Entity\NomConfiguracion();
+        $arNomConfiguracion = $em->getRepository('SogaNominaBundle:NomConfiguracion')->find(1);                                              
+             
+        $frmExportacion = $this->createFormBuilder()
+            ->add('TxtFechaDesde', 'text', array('label'  => 'Desde', 'data' => $arNomConfiguracion->getFechaDesdeExportarNomina()))
+            ->add('TxtFechaHasta', 'text', array('label'  => 'Hasta', 'data' => $arNomConfiguracion->getFechaHastaExportarNomina()))
+            ->add('TxtFechaPago', 'text', array('label'  => 'Hasta', 'data' => $arNomConfiguracion->getFechaPago()))                
+            ->add('TxtFechaAplicacion', 'text', array('label'  => 'Hasta', 'data' => $arNomConfiguracion->getFechaAplicacionPago()))                                
+            ->add('TxtCuenta', 'text', array('label'  => 'Hasta', 'data' => $arNomConfiguracion->getCuentaDebitar()))                                                
+            ->add('Actualizar', 'submit')
+            ->getForm();   
+        $frmExportacion->handleRequest($request);                     
+        if($frmExportacion->isValid()) {
+            $arNomConfiguracion->setFechaDesdeExportarNomina($frmExportacion->get('TxtFechaDesde')->getData());
+            $arNomConfiguracion->setFechaHastaExportarNomina($frmExportacion->get('TxtFechaHasta')->getData());
+            $arNomConfiguracion->setFechaPago($frmExportacion->get('TxtFechaPago')->getData());            
+            $arNomConfiguracion->setFechaAplicacionPago($frmExportacion->get('TxtFechaAplicacion')->getData());                        
+            $arNomConfiguracion->setCuentaDebitar($frmExportacion->get('TxtCuenta')->getData());                        
+            $em->persist($arNomConfiguracion);
+            $em->flush();            
+        }
+
+        $ar = new ResultSetMapping;
+        $ar->addEntityResult('SogaNominaBundle:Zona', 'z');
+        $ar->addFieldResult('z', 'codzona', 'codzona'); // ($alias, $columnName, $fieldName)
+        $ar->addFieldResult('z', 'zona', 'zona'); // ($alias, $columnName, $fieldName)
+
+        $strSql = "SELECT zona.codzona, zona.zona "
+                . "FROM zona LEFT JOIN periodo ON zona.codzona = periodo.codzona "
+                . "WHERE periodo.desde='" . $frmExportacion->get('TxtFechaDesde')->getData() . "' "
+                . "AND periodo.hasta='" . $frmExportacion->get('TxtFechaHasta')->getData() . "' "
+                . "AND periodo.pagado = ''";
+        $query = $em->createNativeQuery($strSql, $ar);
+        $arZona = $query->getResult();
+        $arZona = $paginator->paginate($arZona, $this->getRequest()->query->get('page', 1), 50);                        
+
         if ($request->getMethod() == 'POST') {
             $arrControles = $request->request->All();
-            $arrSeleccionados = $request->request->get('ChkSeleccionar');
-            /*if($arrControles['TxtFechaDesde'] != "") {
-                $strDesde = $arrControles['TxtFechaDesde'];
-            }
-            if($arrControles['TxtFechaHasta'] != "") {
-                $strHasta = $arrControles['TxtFechaHasta'];
-            }*/             
-            switch ($request->request->get('OpSubmit')) {                                    
+            $arrSeleccionados = $request->request->get('ChkSeleccionar');             
+            switch ($request->request->get('OpSubmit')) {    
                 case "OpExportar";
                     foreach ($arrSeleccionados AS $codzona) {
                         $ar = new ResultSetMapping;
@@ -60,15 +87,15 @@ class UtiGenerarPagoController extends Controller {
                         $strNitEmpresa = $this->RellenarNr("900456778", "0", 10);
                         $strNombreEmpresa = "JGEFECTIVOS S.A.";
                         $strTipoPagoSecuencia = "225PAGO NOMI ";
-                        $strFechaCreacion = "150415";
-                        $strFechaAplicacion = "A150415";
+                        $strFechaCreacion = $arNomConfiguracion->getFechaPago();
+                        $strFechaAplicacion = "A" . $arNomConfiguracion->getFechaAplicacionPago();
                         $strNoIdentificado = "000018";                        
                         $douTotal = 0;
                         foreach ($arEmpleados AS $arEmpleado) {
                             $douTotal = $douTotal + $arEmpleado->getNivel();
                         }                        
                         $strValorTotal = $this->RellenarNr($douTotal, "0", 24);
-                        $strCuenta = "42073078473D";
+                        $strCuenta = $arNomConfiguracion->getCuentaDebitar();
                         fputs($ar, "1" . $strNitEmpresa . $strNombreEmpresa . $strTipoPagoSecuencia . $strFechaCreacion . $strFechaAplicacion . $strNoIdentificado . $strValorTotal . $strCuenta . "\n");
                         foreach ($arEmpleados AS $arEmpleado) {                            
                             fputs($ar, "6" . $this->RellenarNr($arEmpleado->getCedemple(), "0", 15));
@@ -81,36 +108,8 @@ class UtiGenerarPagoController extends Controller {
                         }
                         fclose($ar);
                         
-                    }                    
-
-                    /*$arNomConfiguracion = new \Soga\NominaBundle\Entity\NomConfiguracion();
-                    $arNomConfiguracion = $em->getRepository('SogaNominaBundle:NomConfiguracion')->find(1);                    
-                    $strRutaArchivo = $arNomConfiguracion->getRutaExportacion();
-                    $strNombreArchivo = date('YmdHis') . ".txt";
-                    $ar = fopen($strRutaArchivo . $strNombreArchivo, "a") or
-                            die("Problemas en la creacion del archivo plano");
-                    //fputs($ar, "Cuenta\tComprobante\tFecha\tDocumento\tDocumento Ref.\tNit\tDetalle\tTipo\tValor\tBase\tCentro de Costo\tTrans. Ext\tPlazo" . "\n");
-                    foreach ($arRegistroExportacion as $arRegistroExportacion) {
-                        fputs($ar, $arRegistroExportacion->getCuenta() . "\t");
-                        fputs($ar, $arRegistroExportacion->getComprobante() . "\t");
-                        fputs($ar, $arRegistroExportacion->getFecha()->format('m/d/Y') . "\t");
-                        fputs($ar, $arRegistroExportacion->getDocumento() . "\t");
-                        fputs($ar, $arRegistroExportacion->getDocumentoReferencia() . "\t");
-                        fputs($ar, $arRegistroExportacion->getNit() . "\t");
-                        fputs($ar, $arRegistroExportacion->getDetalle() . "\t");
-                        fputs($ar, $arRegistroExportacion->getTipo() . "\t");
-                        fputs($ar, $arRegistroExportacion->getValor() . "\t");
-                        fputs($ar, $arRegistroExportacion->getBase() . "\t");
-                        fputs($ar, $arRegistroExportacion->getCentroCostos() . "\t");
-                        fputs($ar, $arRegistroExportacion->getTransaccionExt() . "\t");
-                        fputs($ar, $arRegistroExportacion->getPlazo() . "\t");
-                        fputs($ar, "\n");
-                    }
-                    fclose($ar);
-
-                    //$strSql = "TRUNCATE TABLE nom_registro_exportacion";           
-                    //$objCon = $em->getConnection()->executeQuery($strSql);                    
-        
+                    }                                       
+                    /*
                     header ("Content-Type: application/octet-stream");            
                     header ("Content-Disposition: attachment; filename=" . $strNombreArchivo); 
                     header ("Content-Length: ".filesize($strRutaArchivo.$strNombreArchivo));
@@ -120,26 +119,10 @@ class UtiGenerarPagoController extends Controller {
                     break;                                                                            
             }
         }
-
-
-        $ar = new ResultSetMapping;
-        $ar->addEntityResult('SogaNominaBundle:Zona', 'z');
-        $ar->addFieldResult('z', 'codzona', 'codzona'); // ($alias, $columnName, $fieldName)
-        $ar->addFieldResult('z', 'zona', 'zona'); // ($alias, $columnName, $fieldName)
-
-        $strSql = "SELECT zona.codzona, zona.zona "
-                . "FROM zona LEFT JOIN periodo ON zona.codzona = periodo.codzona "
-                . "WHERE periodo.desde='2015-04-01' "
-                . "AND periodo.hasta='2015-04-15' "
-                . "AND periodo.pagado = ''";
-        $query = $em->createNativeQuery($strSql, $ar);
-        //$query->setParameter(1, 'romanb');
-        $arZona = $query->getResult();
-        $arZona = $paginator->paginate($arZona, $this->getRequest()->query->get('page', 1), 50);        
         
         return $this->render('SogaNominaBundle:Utilidades/Generar:listaPendientesPago.html.twig', array(
-                    'arZona' => $arZona,
-                    'arrControles' => $arrControles
+                    'arZona' => $arZona,                    
+                    'frmExportar' => $frmExportacion->createView()
         ));
         set_time_limit(60);
     }

@@ -17,6 +17,12 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new AppBundle\AppBundle(),
+            new Soga\ContabilidadBundle\SogaContabilidadBundle(),
+            new Soga\FacturacionBundle\SogaFacturacionBundle(),
+            new Soga\FrontEndBundle\SogaFrontEndBundle(),
+            new Soga\NominaBundle\SogaNominaBundle(),
+            new Soga\SeguridadBundle\SogaSeguridadBundle(),
+            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

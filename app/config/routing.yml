@@ -1,3 +1,23 @@
+soga_seguridad:
+    resource: "@SogaSeguridadBundle/Resources/config/routing.yml"
+    prefix:   /
+
+soga_nomina:
+    resource: "@SogaNominaBundle/Resources/config/routing.yml"
+    prefix:   /
+
+soga_front_end:
+    resource: "@SogaFrontEndBundle/Resources/config/routing.yml"
+    prefix:   /
+
+soga_facturacion:
+    resource: "@SogaFacturacionBundle/Resources/config/routing.yml"
+    prefix:   /
+
+soga_contabilidad:
+    resource: "@SogaContabilidadBundle/Resources/config/routing.yml"
+    prefix:   /
+
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation

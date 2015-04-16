@@ -1,0 +1,11 @@
+soga_contabilidad_herramientas_intercambio_contai_comprobantes:
+    pattern:  /contabilidad/herramientas/intercambio/contai/comprobantes/
+    defaults: { _controller: SogaContabilidadBundle:HerIntCtiComprobantes:lista }
+    
+soga_contabilidad_configuracion:
+    pattern:  /contabilidad/configuracion
+    defaults: { _controller: SogaContabilidadBundle:ConConfiguracion:configuracion }     
+
+soga_contabilidad_herramientas_intercambio_contai_parametrizacion_bancos:
+    pattern:  /contabilidad/herramientas/intercambio/contai/parametrizacion/bancos
+    defaults: { _controller: SogaContabilidadBundle:HerIntCtiParametrizacion:bancos }

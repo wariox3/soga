@@ -1,0 +1,35 @@
+soga_nomina_herramientas_intercambio_contai:
+    pattern:  /nomina/herramientas/intercambio/contai/
+    defaults: { _controller: SogaNominaBundle:HerIntCti:lista }
+
+soga_nomina_herramientas_intercambio_contai_prestaciones:
+    pattern:  /nomina/herramientas/intercambio/contai/prestaciones/
+    defaults: { _controller: SogaNominaBundle:HerIntCtiPrestaciones:lista }
+
+soga_nomina_herramientas_intercambio_contai_recibos:
+    pattern:  /nomina/herramientas/intercambio/contai/recibos/
+    defaults: { _controller: SogaNominaBundle:HerIntCtiRecibos:lista }
+
+soga_nomina_herramientas_intercambio_contai_primas:
+    pattern:  /nomina/herramientas/intercambio/contai/primas/
+    defaults: { _controller: SogaNominaBundle:HerIntCtiPrimas:lista }
+
+soga_nomina_herramientas_intercambio_contai_parametrizacion_eps:
+    pattern:  /nomina/herramientas/intercambio/contai/parametrizacion/eps
+    defaults: { _controller: SogaNominaBundle:HerIntCtiParametrizacion:eps }
+    
+soga_nomina_herramientas_intercambio_contai_parametrizacion_pension:
+    pattern:  /nomina/herramientas/intercambio/contai/parametrizacion/pension
+    defaults: { _controller: SogaNominaBundle:HerIntCtiParametrizacion:pension }    
+    
+soga_nomina_herramientas_intercambio_contai_parametrizacion_salario:
+    pattern:  /nomina/herramientas/intercambio/contai/parametrizacion/salario
+    defaults: { _controller: SogaNominaBundle:HerIntCtiParametrizacion:salario }    
+
+soga_nomina_utilidades_generar_pago:
+    pattern:  /nomina/utilidades/generar/pago
+    defaults: { _controller: SogaNominaBundle:UtiGenerarPago:lista }    
+    
+soga_nomina_configuracion:
+    pattern:  /nomina/configuracion
+    defaults: { _controller: SogaNominaBundle:ConConfiguracion:configuracion }      

@@ -1,0 +1,11 @@
+soga_facturacion_herramientas_intercambio_contai_facturas:
+    pattern:  /facturacion/herramientas/intercambio/contai/facturas/
+    defaults: { _controller: SogaFacturacionBundle:HerIntCtiFacturacion:lista }
+
+soga_facturacion_configuracion:
+    pattern:  /facturacion/configuracion
+    defaults: { _controller: SogaFacturacionBundle:FacConfiguracion:configuracion }     
+
+soga_facturacion_herramientas_intercambio_contai_parametrizacion_item:
+    pattern:  /facturacion/herramientas/intercambio/contai/parametrizacion/item
+    defaults: { _controller: SogaFacturacionBundle:HerIntCtiParametrizacion:item }

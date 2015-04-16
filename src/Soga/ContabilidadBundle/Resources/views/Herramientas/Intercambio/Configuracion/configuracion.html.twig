@@ -1,0 +1,76 @@
+{% extends '::base.html.twig' %}
+{% block content %}
+<script>
+    $(function() {
+        $("#TxtFechaDesde").datepicker({dateFormat: 'yy/mm/dd'});
+        $("#TxtFechaHasta").datepicker({dateFormat: 'yy/mm/dd'});
+    });
+</script>
+<div class="container">
+
+    <br/>
+    <form class="form-horizontal" action="{{ path('soga_contabilidad_configuracion') }}" method="POST">
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend>Configuracion general de contabilidad</legend>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Comprobante</label>  
+                <div class="col-md-4">
+                    <input id="TxtComprobante" name="TxtComprobante" type="text" placeholder="codigo comprobante" Value="{{arConConfiguracion.comprobanteComprobantes}}" class="form-control input-md">
+                    <span class="help-block">Comprobante para la interface contable Contai</span>  
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Cuenta trabajadores mision</label>  
+                <div class="col-md-4">
+                    <input id="TxtCuentaTrabajadoresMision" name="TxtCuentaTrabajadoresMision" type="text" placeholder="cuenta trabajadores mision" Value="{{arConConfiguracion.cuentaTrabajadoresMision}}" class="form-control input-md">
+                    <span class="help-block">Cuenta trabajadores mision</span>  
+                </div>
+            </div>                      
+            
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Cuenta trabajadores planta</label>  
+                <div class="col-md-4">
+                    <input id="TxtCuentaTrabajadoresPlanta" name="TxtCuentaTrabajadoresPlanta" type="text" placeholder="cuenta trabajadores planta" Value="{{arConConfiguracion.cuentaTrabajadoresPlanta}}" class="form-control input-md">
+                    <span class="help-block">Cuenta trabajadores planta</span>  
+                </div>
+            </div>            
+               
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Cuenta prima trabajadores mision</label>  
+                <div class="col-md-4">
+                    <input id="TxtCuentaPrimaTrabajadoresMision" name="TxtCuentaPrimaTrabajadoresMision" type="text" placeholder="cuenta prima trabajadores mision" Value="{{arConConfiguracion.cuentaPrimaTrabajadoresMision}}" class="form-control input-md">
+                    <span class="help-block">Cuenta prima trabajadores mision</span>  
+                </div>
+            </div>                      
+            
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Cuenta prima trabajadores planta</label>  
+                <div class="col-md-4">
+                    <input id="TxtCuentaPrimaTrabajadoresPlanta" name="TxtCuentaPrimaTrabajadoresPlanta" type="text" placeholder="cuenta prima trabajadores planta" Value="{{arConConfiguracion.cuentaPrimaTrabajadoresPlanta}}" class="form-control input-md">
+                    <span class="help-block">Cuenta prima trabajadores planta</span>  
+                </div>
+            </div>            
+            
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="singlebutton"></label>
+                <div class="col-md-4">
+                    <button id="singlebutton" class="btn btn-success" type="submit" name="OpSubmit" value="OpGuardar">Guardar</button>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>    
+
+</div>
+
+{% endblock %}

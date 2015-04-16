@@ -1,0 +1,50 @@
+{% extends '::base.html.twig' %}
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Parametrizacion: <small><label>salario</label></small></h1>
+    </div>
+
+    <form id="FrmTabla" action="{{ path('soga_nomina_herramientas_intercambio_contai_parametrizacion_salario') }}" method="POST" novalidate>
+        
+        <table class="table table-striped table-bordered table-condensed table-hover">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Cuenta</th>
+                <th>Cuenta2</th>
+                <th>Cuenta3</th>
+                <th>Tipo</th>
+                <th>Nit Fijo</th>
+                <th>Nit</th>
+                <th>Nit Empleado</th>
+                <th>Nit Empresa Usuaria</th>
+            </tr>
+
+            {% for arSalario in arSalario %}
+            <tr>
+                <td><input type="hidden" name="LblCodigo[]" value="{{ arSalario.codsala }}">{{ arSalario.codsala }}</td>
+                <td>{{ arSalario.desala }}</td>
+                <td><input class="form-control input-sm" style="width:100px; height: 25px" type="text" name="TxtCuenta[]"  value="{{ arSalario.cuenta }}" size="9" maxlength = 9 /></td>
+                <td><input class="form-control input-sm" style="width:100px; height: 25px" type="text" name="TxtCuenta2[]"  value="{{ arSalario.cuenta2 }}" size="9" maxlength = 9 /></td>
+                <td><input class="form-control input-sm" style="width:100px; height: 25px" type="text" name="TxtCuenta3[]"  value="{{ arSalario.cuenta3 }}" size="9" maxlength = 9 /></td>
+                <td><input class="form-control input-sm" style="width:30px; height: 25px" type="text" name="TxtTipo[]"  value="{{ arSalario.tipoAsiento }}" size="9" maxlength = 9 /></td>
+                <td><input type="checkbox" name="ChkNitFijo{{ arSalario.codsala }}" value="{{ arSalario.codsala }}" {% if arSalario.nitFijo %} Checked {% endif %}/></td>
+                <td><input class="form-control input-sm" style="width:100px; height: 25px" type="text" name="TxtNit[]"  value="{{ arSalario.nit }}" size="9" maxlength = 9 /></td>                
+                <td><input type="checkbox" name="ChkNitEmpleado{{ arSalario.codsala }}" value="{{ arSalario.codsala }}" {% if arSalario.nitEmpleado %} Checked {% endif %}/></td>                
+                <td><input type="checkbox" name="ChkNitEmpresaUsuaria{{ arSalario.codsala }}" value="{{ arSalario.codsala }}" {% if arSalario.nitEmpresaUsuaria %} Checked {% endif %}/></td>                
+            </tr>
+            {% endfor %}
+        </table>  
+    
+    <!-- Botones Menu Items -->
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">                                
+            <button class="btn btn-default" type="submit" name="OpSubmit" value="OpGuardar" >Guardar</button>                   
+        </div>                   
+    </div>  
+    </form>
+    <br /><br /><br />
+</div>
+
+{% endblock %}

@@ -1,0 +1,7 @@
+parameters:
+#    soga_contabilidad.example.class: Soga\ContabilidadBundle\Example
+
+services:
+#    soga_contabilidad.example:
+#        class: %soga_contabilidad.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

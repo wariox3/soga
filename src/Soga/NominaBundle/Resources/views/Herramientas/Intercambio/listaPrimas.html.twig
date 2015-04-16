@@ -1,0 +1,116 @@
+{% extends '::base.html.twig' %}
+{% block content %}
+<script>
+    $(function() {
+        $("#TxtFechaDesde").datepicker({dateFormat: 'yy/mm/dd'});
+        $("#TxtFechaHasta").datepicker({dateFormat: 'yy/mm/dd'});
+    });
+</script>
+<div class="container">
+    <div class="page-header">
+        <h1>Intercambio de datos: <small><label id="lblNombreDocumento">Primas</label></small></h1>
+    </div>
+
+    <form id="FrmTabla" action="{{ path('soga_nomina_herramientas_intercambio_contai_primas') }}" method="POST" novalidate>
+
+        <table class="table table-striped table-bordered table-condensed table-hover" style="font-size:12px">
+            <tr>
+                <th>{{ knp_pagination_sortable(arPrima, 'ID', 'prima.nroPrima') }}</th>
+                <th>{{ knp_pagination_sortable(arPrima, 'Cedula', 'prima.cedulaEmpleado') }}</th>
+                <th>{{ knp_pagination_sortable(arPrima, 'Empleado', 'prima.nombre') }}</th>                
+                <th>{{ knp_pagination_sortable(arPrima, 'Fh P', 'prima.fechaP') }}</th>
+                <th>{{ knp_pagination_sortable(arPrima, 'Fh I', 'prima.fechai') }}</th>
+                <th>{{ knp_pagination_sortable(arPrima, 'Fh Inicio', 'prima.fechaInicio') }}</th>
+                <th>{{ knp_pagination_sortable(arPrima, 'Fh Corte', 'prima.fechaCorte') }}</th>
+                <th style="text-align: right">{{ knp_pagination_sortable(arPrima, 'Salario', 'prima.salario') }}</th>
+                <th style="text-align: right">{{ knp_pagination_sortable(arPrima, 'Dias', 'prima.dias') }}</th>
+                <th style="text-align: right">{{ knp_pagination_sortable(arPrima, 'Auxilio', 'prima.auxilio') }}</th>
+                <th style="text-align: right">{{ knp_pagination_sortable(arPrima, 'Total', 'prima.total') }}</th>
+                <th style="text-align: right">{{ knp_pagination_sortable(arPrima, 'Prima', 'prima.prima') }}</th>
+                <th>{{ knp_pagination_sortable(arPrima, 'Estado', 'prima.estadp') }}</th>                
+                <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodos(this);"/></th>
+
+            </tr>
+
+            {% for arPrima in arPrima %}
+            <tr>
+                <td><input type="hidden" name="LblCodigoCopia[]" value="{{ arPrima.nroPrima }}">{{ arPrima.nroPrima }}</td>
+                <td>{{ arPrima.cedulaEmpleado }}</td>
+                <td>{{ arPrima.nombre }}</td>
+                <td>{{ arPrima.fechaP |date("Y/m/d")  }}</td>
+                <td>{{ arPrima.fechai |date("Y/m/d")  }}</td>
+                <td>{{ arPrima.fechaInicio |date("Y/m/d")  }}</td>
+                <td>{{ arPrima.fechaCorte |date("Y/m/d")  }}</td>
+                <td style="text-align: right">{{ arPrima.salario | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arPrima.dias | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arPrima.auxilio | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arPrima.total | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arPrima.prima | number_format(0, '.', ',') }}</td>
+                <td>{{ arPrima.estado }}</td>
+                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPrima.nroPrima }}" /></td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <div class="navigation">
+            {{ knp_pagination_render(arPrima) }}
+        </div>
+
+        <!-- Botones Menu Items -->
+        <div class="btn-toolbar" style="float: right">
+            <div class="btn-group">
+                <button class="btn btn-default" type="submit" name="OpSubmit" value="OpExportar" >Exportar seleccionados</button>
+                <button class="btn btn-danger btn-mini" type="submit" name="OpSubmit" value="OpGenerarPlano" >Generar archivo plano</button>
+
+            </div>
+        </div>
+
+        <br /><br />
+        <hr/>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Cargar prima</div>
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="TxtNumeroPrestacion" class="col-sm-2 control-label">Numero:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="TxtNumeroPrestacion" name="TxtNumeroPrestacion"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button class="btn btn-primary" type="submit" name="OpSubmit" value="OpCargarPrima">Cargar prima</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Formulario busqueda</div>
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="TxtFechaDesde" class="col-sm-2 control-label">Desde</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="TxtFechaDesde" name="TxtFechaDesde" placeholder="Fecha desde aaaa-mm-dd" {% if arrControles is not null %} value="{{arrControles.TxtFechaDesde}}" {% endif%}/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="TxtFechaHasta" class="col-sm-2 control-label">Hasta</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="TxtFechaHasta" name="TxtFechaHasta" placeholder="Fecha desde aaaa-mm-dd" {% if arrControles is not null %} value="{{arrControles.TxtFechaHasta}}" {% endif%}/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button class="btn btn-primary" type="submit" name="OpSubmit" value="OpBuscar">Buscar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

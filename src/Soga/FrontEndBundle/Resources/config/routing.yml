@@ -1,0 +1,3 @@
+soga_front_end_inicio:
+    path:     /
+    defaults: { _controller: SogaFrontEndBundle:Default:index }

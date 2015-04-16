@@ -1,0 +1,40 @@
+{% extends '::base.html.twig' %}
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Parametrizacion: <small><label>bancos</label></small></h1>
+    </div>
+
+    <form id="FrmTabla" action="{{ path('soga_contabilidad_herramientas_intercambio_contai_parametrizacion_bancos') }}" method="POST" novalidate>
+        
+        <table class="table table-striped table-bordered table-condensed table-hover">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Ahorro</th>
+                <th>Corriente</th>
+                <th>Oficina</th>
+            </tr>
+
+            {% for arBancos in arBancos %}
+            <tr>
+                <td><input type="hidden" name="LblCodigo[]" value="{{ arBancos.codbanco }}">{{ arBancos.codbanco }}</td>
+                <td>{{ arBancos.bancos }}</td>
+                <td><input class="form-control input-sm" style="width:100px; height: 25px" type="text" name="TxtAhorro[]"  value="{{ arBancos.cuentaAhorro }}" size="9" maxlength = 10 /></td>
+                <td><input class="form-control input-sm" style="width:100px; height: 25px" type="text" name="TxtCorriente[]"  value="{{ arBancos.cuentaCorriente }}" size="9" maxlength = 10 /></td>
+                <td><input class="form-control input-sm" style="width:100px; height: 25px" type="text" name="TxtOficina[]"  value="{{ arBancos.cuentaOficina }}" size="9" maxlength = 10 /></td>
+            </tr>
+            {% endfor %}
+        </table>  
+    
+    <!-- Botones Menu Items -->
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">                                
+            <button class="btn btn-default" type="submit" name="OpSubmit" value="OpGuardar" >Guardar</button>                   
+        </div>                   
+    </div>  
+    </form>
+    <br />
+</div>
+
+{% endblock %}

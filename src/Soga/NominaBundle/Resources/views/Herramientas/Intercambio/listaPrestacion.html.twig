@@ -1,0 +1,122 @@
+{% extends '::base.html.twig' %}
+{% block content %}
+<script>
+    $(function() {
+        $("#TxtFechaDesde").datepicker({dateFormat: 'yy/mm/dd'});
+        $("#TxtFechaHasta").datepicker({dateFormat: 'yy/mm/dd'});
+    });
+</script>
+<div class="container">
+    <div class="page-header">
+        <h1>Intercambio de datos: <small><label id="lblNombreDocumento">Prestaciones sociales</label></small></h1>
+    </div>
+
+    <form id="FrmTabla" action="{{ path('soga_nomina_herramientas_intercambio_contai_prestaciones') }}" method="POST" novalidate>
+
+        <table class="table table-striped table-bordered table-condensed table-hover" style="font-size:12px">
+            <tr>
+                <th>{{ knp_pagination_sortable(arPrestacion, 'ID', 'prestacion.nroPresta') }}</th>
+                <th>{{ knp_pagination_sortable(arPrestacion, 'Cedula', 'prestacion.cedulaEmpleado') }}</th>
+                <th>{{ knp_pagination_sortable(arPrestacion, 'Nombres', 'prestacion.nombres') }}</th>                
+                <th>{{ knp_pagination_sortable(arPrestacion, 'Desde', 'prestacion.fechaPro') }}</th>
+                <th>{{ knp_pagination_sortable(arPrestacion, 'Desde', 'prestacion.fechaIni') }}</th>
+                <th>{{ knp_pagination_sortable(arPrestacion, 'Hasta', 'prestacion.fechaCor') }}</th>
+                <th style="text-align: right">{{ knp_pagination_sortable(arPrestacion, 'Salario', 'prestacion.salario') }}</th>
+                <th style="text-align: right">{{ knp_pagination_sortable(arPrestacion, 'Cesantias', 'prestacion.cesantia') }}</th>
+                <th style="text-align: right">{{ knp_pagination_sortable(arPrestacion, 'Intereses', 'prestacion.interes') }}</th>
+                <th style="text-align: right">{{ knp_pagination_sortable(arPrestacion, 'Prima', 'prestacion.prima') }}</th>
+                <th style="text-align: right">{{ knp_pagination_sortable(arPrestacion, 'Vacaciones', 'prestacion.vacacion') }}</th>
+                <th style="text-align: right">{{ knp_pagination_sortable(arPrestacion, 'A pagar', 'prestacion.totalp') }}</th>
+                <th>{{ knp_pagination_sortable(arPrestacion, 'Estado', 'prestacion.estado') }}</th>
+                <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodos(this);"/></th>
+
+            </tr>
+
+            {% for arPrestacion in arPrestacion %}
+            <tr>
+                <td><input type="hidden" name="LblCodigoCopia[]" value="{{ arPrestacion.nroPresta }}">{{ arPrestacion.nroPresta }}</td>
+                <td>{{ arPrestacion.cedulaEmpleado }}</td>
+                <td>{{ arPrestacion.nombres }}</td>
+                <td>{{ arPrestacion.fechaPro |date("Y/m/d")  }}</td>
+                <td>{{ arPrestacion.fechaIni |date("Y/m/d")  }}</td>
+                <td>{{ arPrestacion.fechaCor |date("Y/m/d")  }}</td>
+                <td style="text-align: right">{{ arPrestacion.salario | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arPrestacion.cesantia | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arPrestacion.interes | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arPrestacion.prima | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arPrestacion.vacacion | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arPrestacion.totalp | number_format(0, '.', ',') }}</td>
+                <td>{{ arPrestacion.estado }}</td>
+                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPrestacion.nroPresta }}" /></td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <div class="navigation">
+            {{ knp_pagination_render(arPrestacion) }}
+        </div>
+
+        <!-- Botones Menu Items -->
+        <div class="btn-toolbar" style="float: right">
+            <div class="btn-group">
+                <button class="btn btn-default" type="submit" name="OpSubmit" value="OpExportar" >Exportar seleccionados</button>
+                <button class="btn btn-danger btn-mini" type="submit" name="OpSubmit" value="OpGenerarPlano" >Generar archivo plano</button>
+
+            </div>
+        </div>
+
+        <br /><br />
+        <hr/>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Cargar prestacion</div>
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="TxtNumeroConsecutivoDesde" class="col-sm-2 control-label">Desde:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="TxtNumeroConsecutivoDesde" name="TxtNumeroConsecutivoDesde"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="TxtNumeroConsecutivoHasta" class="col-sm-2 control-label">Hasta:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="TxtNumeroConsecutivoHasta" name="TxtNumeroConsecutivoHasta"/>
+                        </div>
+                    </div>                    
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button class="btn btn-primary" type="submit" name="OpSubmit" value="OpCargarPrestacion">Cargar prestacion</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div class="panel panel-default">
+            <div class="panel-heading">Formulario busqueda</div>
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="TxtFechaDesde" class="col-sm-2 control-label">Desde</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="TxtFechaDesde" name="TxtFechaDesde" placeholder="Fecha desde aaaa-mm-dd" {% if arrControles is not null %} value="{{arrControles.TxtFechaDesde}}" {% endif%}/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="TxtFechaHasta" class="col-sm-2 control-label">Hasta</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="TxtFechaHasta" name="TxtFechaHasta" placeholder="Fecha desde aaaa-mm-dd" {% if arrControles is not null %} value="{{arrControles.TxtFechaHasta}}" {% endif%}/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button class="btn btn-primary" type="submit" name="OpSubmit" value="OpBuscar">Buscar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

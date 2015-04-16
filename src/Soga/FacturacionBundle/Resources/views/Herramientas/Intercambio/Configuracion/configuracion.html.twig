@@ -1,0 +1,94 @@
+{% extends '::base.html.twig' %}
+{% block content %}
+<script>
+    $(function() {
+        $("#TxtFechaDesde").datepicker({dateFormat: 'yy/mm/dd'});
+        $("#TxtFechaHasta").datepicker({dateFormat: 'yy/mm/dd'});
+    });
+</script>
+<div class="container">
+
+    <br/>
+    <form class="form-horizontal" action="{{ path('soga_facturacion_configuracion') }}" method="POST">
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend>Configuracion general de facturacion</legend>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Comprobante</label>  
+                <div class="col-md-4">
+                    <input id="TxtComprobante" name="TxtComprobante" type="text" placeholder="codigo comprobante" Value="{{arFacConfiguracion.comprobanteFacturas}}" class="form-control input-md">
+                    <span class="help-block">Comprobante para la interface contable Contai</span>  
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Cuenta IVA</label>  
+                <div class="col-md-4">
+                    <input id="TxtCuentaIva" name="TxtCuentaIva" type="text" placeholder="cuenta iva" Value="{{arFacConfiguracion.cuentaIva}}" class="form-control input-md">
+                    <span class="help-block">Cuenta iva</span>  
+                </div>
+            </div>            
+          
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Cuenta retencion fuente</label>  
+                <div class="col-md-4">
+                    <input id="TxtCuentaRteFte" name="TxtCuentaRteFte" type="text" placeholder="cuenta retencion fuente" Value="{{arFacConfiguracion.cuentaRteFte}}" class="form-control input-md">
+                    <span class="help-block">Cuenta retencion fuente</span>  
+                </div>
+            </div>          
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Cuenta retencion iva</label>  
+                <div class="col-md-4">
+                    <input id="TxtCuentaRteIva" name="TxtCuentaRteIva" type="text" placeholder="cuenta retencion iva" Value="{{arFacConfiguracion.cuentaRteIva}}" class="form-control input-md">
+                    <span class="help-block">Cuenta retencion iva</span>  
+                </div>
+            </div>             
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Cuenta cartera</label>  
+                <div class="col-md-4">
+                    <input id="TxtCuentaCartera" name="TxtCuentaCartera" type="text" placeholder="cuenta cartera" Value="{{arFacConfiguracion.cuentaCartera}}" class="form-control input-md">
+                    <span class="help-block">Cuenta cartera</span>  
+                </div>
+            </div>            
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Cuenta CREE</label>  
+                <div class="col-md-4">
+                    <input id="TxtCuentaCREE" name="TxtCuentaCREE" type="text" placeholder="cuenta CREE" Value="{{arFacConfiguracion.cuentaCREE}}" class="form-control input-md">
+                    <span class="help-block">Cuenta CREE</span>  
+                </div>
+            </div>
+            
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="textinput">Cuenta CREE cartera</label>  
+                <div class="col-md-4">
+                    <input id="TxtCuentaCREECartera" name="TxtCuentaCREECartera" type="text" placeholder="cuenta CREE cartera" Value="{{arFacConfiguracion.cuentaCREECartera}}" class="form-control input-md">
+                    <span class="help-block">Cuenta CREE cartera</span>  
+                </div>
+            </div>            
+            
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="singlebutton"></label>
+                <div class="col-md-4">
+                    <button id="singlebutton" class="btn btn-success" type="submit" name="OpSubmit" value="OpGuardar">Guardar</button>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>    
+
+</div>
+
+{% endblock %}

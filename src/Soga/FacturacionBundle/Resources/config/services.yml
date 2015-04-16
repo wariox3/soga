@@ -1,0 +1,7 @@
+parameters:
+#    soga_facturacion.example.class: Soga\FacturacionBundle\Example
+
+services:
+#    soga_facturacion.example:
+#        class: %soga_facturacion.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

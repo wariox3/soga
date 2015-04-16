@@ -1,0 +1,36 @@
+{% extends '::base.html.twig' %}
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Parametrizacion: <small><label>eps</label></small></h1>
+    </div>
+
+    <form id="FrmTabla" action="{{ path('soga_nomina_herramientas_intercambio_contai_parametrizacion_eps') }}" method="POST" novalidate>
+        
+        <table class="table table-striped table-bordered table-condensed table-hover">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Nit</th>
+            </tr>
+
+            {% for arEps in arEps %}
+            <tr>
+                <td><input type="hidden" name="LblCodigo[]" value="{{ arEps.codeps }}">{{ arEps.codeps }}</td>
+                <td>{{ arEps.eps }}</td>
+                <td><input class="form-control input-sm" style="width:100px; height: 25px" type="text" name="TxtNit[]"  value="{{ arEps.nit }}" size="9" maxlength = 9 /></td>
+            </tr>
+            {% endfor %}
+        </table>  
+    
+    <!-- Botones Menu Items -->
+    <div class="btn-toolbar" style="float: right">
+        <div class="btn-group">                                
+            <button class="btn btn-default" type="submit" name="OpSubmit" value="OpGuardar" >Guardar</button>                   
+        </div>                   
+    </div>  
+    </form>
+    <br />
+</div>
+
+{% endblock %}

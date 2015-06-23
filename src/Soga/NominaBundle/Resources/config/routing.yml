@@ -9,6 +9,10 @@ soga_nomina_herramientas_intercambio_contai_prestaciones:
 soga_nomina_herramientas_intercambio_contai_recibos:
     pattern:  /nomina/herramientas/intercambio/contai/recibos/
     defaults: { _controller: SogaNominaBundle:HerIntCtiRecibos:lista }
+    
+soga_nomina_herramientas_intercambio_contai_terceros:
+    pattern:  /nomina/herramientas/intercambio/contai/terceros/
+    defaults: { _controller: SogaNominaBundle:HerIntCtiTerceros:lista }    
 
 soga_nomina_herramientas_intercambio_contai_primas:
     pattern:  /nomina/herramientas/intercambio/contai/primas/
@@ -33,3 +37,7 @@ soga_nomina_utilidades_generar_pago:
 soga_nomina_configuracion:
     pattern:  /nomina/configuracion
     defaults: { _controller: SogaNominaBundle:ConConfiguracion:configuracion }      
+    
+soga_nomina_utilidades_pila:
+    pattern:  /nomina/utilidades/pila
+    defaults: { _controller: SogaNominaBundle:UtiPila:lista }     

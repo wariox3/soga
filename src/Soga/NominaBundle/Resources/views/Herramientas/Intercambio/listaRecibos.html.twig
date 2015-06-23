@@ -15,33 +15,31 @@
 
         <table class="table table-striped table-bordered table-condensed table-hover" style="font-size:12px">
             <tr>
-                <th>{{ knp_pagination_sortable(arRecibo, 'ID', 'recibo.nroCaja') }}</th>
-                <th>{{ knp_pagination_sortable(arRecibo, 'Nit', 'recibo.nit') }}</th>
-                <th>{{ knp_pagination_sortable(arRecibo, 'Zona', 'recibo.zona') }}</th>                
-                <th>{{ knp_pagination_sortable(arRecibo, 'Fecha', 'recibo.fechaRe') }}</th>
-                <th style="text-align: right">{{ knp_pagination_sortable(arRecibo, 'Valor', 'recibo.valor') }}</th>
-                <th style="text-align: right">{{ knp_pagination_sortable(arRecibo, 'Abono', 'recibo.abono') }}</th>
-                <th>{{ knp_pagination_sortable(arRecibo, 'Cuenta', 'recibo.cuenta') }}</th>                
+                <th>{{ knp_pagination_sortable(arMaestroRecibo, 'ID', 'marecibo.nroCaja') }}</th>
+                <th>{{ knp_pagination_sortable(arMaestroRecibo, 'Nit', 'marecibo.codmaestro') }}</th>
+                <th>{{ knp_pagination_sortable(arMaestroRecibo, 'Fecha', 'marecibo.fechaRa') }}</th>
+                <th>{{ knp_pagination_sortable(arMaestroRecibo, 'Tipo', 'marecibo.tipop') }}</th>
+                <th>{{ knp_pagination_sortable(arMaestroRecibo, 'Estado', 'marecibo.estado') }}</th>                
+                <th style="text-align: right">{{ knp_pagination_sortable(arMaestroRecibo, 'Valor', 'marecibo.vlrpagado') }}</th>                                
                 <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodos(this);"/></th>
 
             </tr>
 
-            {% for arRecibo in arRecibo %}
+            {% for arMaestroRecibo in arMaestroRecibo %}
             <tr>
-                <td><input type="hidden" name="LblCodigoCopia[]" value="{{ arRecibo.nroCaja }}">{{ arRecibo.nroCaja }}</td>
-                <td>{{ arRecibo.nit }}</td>
-                <td>{{ arRecibo.zona }}</td>
-                <td>{{ arRecibo.fechaRe |date("Y/m/d")  }}</td>
-                <td style="text-align: right">{{ arRecibo.valor | number_format(0, '.', ',') }}</td>
-                <td style="text-align: right">{{ arRecibo.abono | number_format(0, '.', ',') }}</td>
-                <td>{{ arRecibo.cuenta }}</td>
-                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arRecibo.nroCaja }}" /></td>
+                <td><input type="hidden" name="LblCodigoCopia[]" value="{{ arMaestroRecibo.nroCaja }}">{{ arMaestroRecibo.nroCaja }}</td>
+                <td>{{ arMaestroRecibo.codmaestro }}</td>
+                <td>{{ arMaestroRecibo.fechaRa |date("Y/m/d")  }}</td>               
+                <td>{{ arMaestroRecibo.tipop }}</td>                
+                <td>{{ arMaestroRecibo.estado }}</td>                
+                <td style="text-align: right">{{ arMaestroRecibo.vlrpagado | number_format(0, '.', ',') }}</td>                                
+                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arMaestroRecibo.nroCaja }}" /></td>
             </tr>
             {% endfor %}
         </table>
 
         <div class="navigation">
-            {{ knp_pagination_render(arRecibo) }}
+            {{ knp_pagination_render(arMaestroRecibo) }}
         </div>
 
         <!-- Botones Menu Items -->
@@ -68,7 +66,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            <button class="btn btn-primary" type="submit" name="OpSubmit" value="OpCargarRecibo">Cargar recibo</button>
+                            <button class="btn btn-primary" type="submit" name="OpSubmit" value="OpCargarMaestroRecibo">Cargar recibo</button>
                         </div>
                     </div>
                 </div>

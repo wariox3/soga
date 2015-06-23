@@ -5,55 +5,13 @@ namespace Soga\NominaBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\Query\ResultSetMapping;
 
-class UtiGenerarPagoController extends Controller {
+class UtiPilaController extends Controller {
 
     public function listaAction() {
-        set_time_limit(0);
-        $em = $this->get('doctrine.orm.entity_manager');
-        $em2 = $this->getDoctrine()->getManager();
+        set_time_limit(0);        
+        $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $request = $this->getRequest();
-        $arNomConfiguracion = new \Soga\NominaBundle\Entity\NomConfiguracion();
-        $arNomConfiguracion = $em->getRepository('SogaNominaBundle:NomConfiguracion')->find(1);
-
-        $frmExportacion = $this->createFormBuilder()
-            ->add('TxtFechaDesde', 'text', array('label'  => 'Desde', 'data' => $arNomConfiguracion->getFechaDesdeExportarNomina()))
-            ->add('TxtFechaHasta', 'text', array('label'  => 'Hasta', 'data' => $arNomConfiguracion->getFechaHastaExportarNomina()))
-            ->add('TxtFechaPago', 'text', array('label'  => 'Hasta', 'data' => $arNomConfiguracion->getFechaPago()))
-            ->add('TxtFechaAplicacion', 'text', array('label'  => 'Hasta', 'data' => $arNomConfiguracion->getFechaAplicacionPago()))
-            ->add('TxtCuenta', 'text', array('label'  => 'Hasta', 'data' => $arNomConfiguracion->getCuentaDebitar()))
-            ->add('CboTipoCuenta', 'choice', array('choices'   => array('S' => 'AHORROS', 'D' => 'CORRIENTE'), 'required'  => false,'empty_value' => false, 'data' => $arNomConfiguracion->getTipoCuenta()))
-            ->add('TxtSecuencia', 'text', array('label'  => 'Hasta', 'data' => $arNomConfiguracion->getSecuencia()))
-            ->add('Actualizar', 'submit')
-            ->getForm();
-        $frmExportacion->handleRequest($request);
-        if($frmExportacion->isValid()) {
-            $arNomConfiguracion->setFechaDesdeExportarNomina($frmExportacion->get('TxtFechaDesde')->getData());
-            $arNomConfiguracion->setFechaHastaExportarNomina($frmExportacion->get('TxtFechaHasta')->getData());
-            $arNomConfiguracion->setFechaPago($frmExportacion->get('TxtFechaPago')->getData());
-            $arNomConfiguracion->setFechaAplicacionPago($frmExportacion->get('TxtFechaAplicacion')->getData());
-            $arNomConfiguracion->setCuentaDebitar($frmExportacion->get('TxtCuenta')->getData());
-            $arNomConfiguracion->setSecuencia($frmExportacion->get('TxtSecuencia')->getData());
-            $arNomConfiguracion->setTipoCuenta($frmExportacion->get('CboTipoCuenta')->getData());
-            $em->persist($arNomConfiguracion);
-            $em->flush();
-        }
-
-        $ar = new ResultSetMapping;
-        $ar->addEntityResult('SogaNominaBundle:Zona', 'z');
-        $ar->addFieldResult('z', 'codzona', 'codzona'); // ($alias, $columnName, $fieldName)
-        $ar->addFieldResult('z', 'zona', 'zona'); // ($alias, $columnName, $fieldName)
-        $ar->addFieldResult('z', 'vr_pago_temporal', 'vrPagoTemporal'); // ($alias, $columnName, $fieldName)
-
-        $strSql = "SELECT zona.codzona, zona.zona, vr_pago_temporal "
-                . "FROM zona "
-                . "LEFT JOIN periodo ON zona.codzona = periodo.codzona "
-                . "WHERE periodo.desde='" . $frmExportacion->get('TxtFechaDesde')->getData() . "' "
-                . "AND periodo.hasta='" . $frmExportacion->get('TxtFechaHasta')->getData() . "' "
-                . "AND periodo.pagado = ''";
-        $query = $em->createNativeQuery($strSql, $ar);
-        $arZona = $query->getResult();
-        $arZona = $paginator->paginate($arZona, $this->getRequest()->query->get('page', 1), 50);
 
         if ($request->getMethod() == 'POST') {
             $arrControles = $request->request->All();
@@ -231,9 +189,7 @@ class UtiGenerarPagoController extends Controller {
             }
         }
 
-        return $this->render('SogaNominaBundle:Utilidades/Generar:listaPendientesPago.html.twig', array(
-                    'arZona' => $arZona,
-                    'frmExportar' => $frmExportacion->createView()
+        return $this->render('SogaNominaBundle:Utilidades/Pila:lista.html.twig', array(
         ));
         set_time_limit(60);
     }

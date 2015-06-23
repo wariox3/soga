@@ -27,54 +27,37 @@ class HerIntCtiRecibosController extends Controller {
                 case "OpExportar";
                     $arNomConfiguracion = new \Soga\NominaBundle\Entity\NomConfiguracion();
                     $arNomConfiguracion = $em->getRepository('SogaNominaBundle:NomConfiguracion')->find(1);
-                    $strComprobante = $arNomConfiguracion->getComprobantePrestaciones();
+                    $strComprobante = $arNomConfiguracion->getComprobanteRecibos();
                     foreach ($arrSeleccionados AS $consecutivo) {
-                        $arPrestacion = new \Soga\NominaBundle\Entity\Prestacion();
-                        $arPrestacion = $em->getRepository('SogaNominaBundle:Prestacion')->find($consecutivo);
-                        $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
-                        $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->findOneByCedemple($arPrestacion->getCedulaEmpleado());
-                        $arZona = new \Soga\NominaBundle\Entity\Zona();
-                        $arZona = $em->getRepository('SogaNominaBundle:Zona')->find($arEmpleado->getCodzona());
-                        $arDetallePrestacion = new \Soga\NominaBundle\Entity\DetallePrestacion();
-                        $objQuery = $em->getRepository('SogaNominaBundle:DetallePrestacion')->DevDqlDetallePrestacion($consecutivo);
-                        $arDetallePrestacion = $objQuery->getResult();
-                        foreach ($arDetallePrestacion as $arDetallePrestacion) {
-                            $arSalario = new \Soga\NominaBundle\Entity\Salario();
-                            $arSalario = $em->getRepository('SogaNominaBundle:Salario')->find($arDetallePrestacion->getCodsala());
+                        $arMaestroRecibo = new \Soga\NominaBundle\Entity\MaestroRecibo();
+                        $arMaestroRecibo = $em->getRepository('SogaNominaBundle:MaestroRecibo')->find($consecutivo);
+                        $arDetalleRecibo = new \Soga\NominaBundle\Entity\Recibo();
+                        $objQuery = $em->getRepository('SogaNominaBundle:Recibo')->DevDqlDetalleRecibo($consecutivo);
+                        $arDetalleRecibo = $objQuery->getResult();
+                        foreach ($arDetalleRecibo as $arDetalleRecibo) {
                             $strNumeroDocumento = $this->RellenarNr((int)$consecutivo, "0", 9);
                             $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
                             $arNomRegistroExportacion->setConsecutivo($consecutivo);
                             $arNomRegistroExportacion->setComprobante($strComprobante);
-                            $arNomRegistroExportacion->setFecha($arPrestacion->getFechaPro());
+                            $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaRa());
                             $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
                             $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);                                                        
-                            if($arSalario->getNitFijo() == 1) {
-                                $arNomRegistroExportacion->setNit($arSalario->getNit());
-                            } else {
-                                $arNomRegistroExportacion->setNit($this->DevNit($arEmpleado, $arDetallePrestacion->getCodsala()));
-                            }
-                            if($arSalario->getNitEmpleado() == 1) {
-                                $arNomRegistroExportacion->setNit($arPrestacion->getCedulaEmpleado());
-                            }                                
-                            if($arSalario->getNitEmpresaUsuaria() == 1) {
-                                $arNomRegistroExportacion->setNit($arZona->getNitzona());
-                            }                             
-                            $arNomRegistroExportacion->setDetalle($arDetallePrestacion->getConcepto());
+                            $arNomRegistroExportacion->setNit($arDetalleRecibo->getNit());
+
+                            $arNomRegistroExportacion->setDetalle("CANCELA FRA" . $arDetalleRecibo->getNroFactura());
                             $arNomRegistroExportacion->setTipo(2);
                             $arNomRegistroExportacion->setBase(0);
                             $arNomRegistroExportacion->setPlazo(0);                            
-                            $arNomRegistroExportacion->setCuenta($arSalario->getCuenta());                            
-                            $arNomRegistroExportacion->setValor($arDetallePrestacion->getValorPago());
-                            $em->persist($arNomRegistroExportacion);
-                            $em->flush();
+                            $arNomRegistroExportacion->setCuenta("130505");                            
+                            $arNomRegistroExportacion->setValor($arDetalleRecibo->getAbono());
+                            $em->persist($arNomRegistroExportacion);                            
                         }
 
-                        $this->CuentasPrincipales($arPrestacion, $strComprobante);
-
-                        $arPrestacion->setExportadoContabilidad(1);
-                        $em->persist($arPrestacion);
-                        $em->flush();
+                        $this->CuentasPrincipales($arMaestroRecibo, $strComprobante);
+                        $arMaestroRecibo->setExportadoContabilidad(1);
+                        $em->persist($arMaestroRecibo);
                     }
+                    $em->flush();
                     break;
 
                 case "OpGenerarPlano";
@@ -128,11 +111,11 @@ class HerIntCtiRecibosController extends Controller {
             }
         }
 
-        $objQueryPrestacion = $em->getRepository('SogaNominaBundle:Recibo')->DevDqlRecibosSinExportar($strDesde, $strHasta);
-        $arRecibo = $paginator->paginate($objQueryPrestacion, $this->getRequest()->query->get('page', 1), 200);
+        $objQueryRecibos = $em->getRepository('SogaNominaBundle:MaestroRecibo')->DevDqlMaestrosRecibosSinExportar($strDesde, $strHasta);
+        $arMaestroRecibo = $paginator->paginate($objQueryRecibos, $this->getRequest()->query->get('page', 1), 100);
 
         return $this->render('SogaNominaBundle:Herramientas/Intercambio:listaRecibos.html.twig', array(
-                    'arRecibo' => $arRecibo,
+                    'arMaestroRecibo' => $arMaestroRecibo,
                     'arrControles' => $arrControles
         ));
         set_time_limit(60);
@@ -145,94 +128,24 @@ class HerIntCtiRecibosController extends Controller {
      * @param double $douDebitos
      * @param double $douCreditos
      */
-    private function CuentasPrincipales ($arPrestacion, $strComprobante) {
+    private function CuentasPrincipales ($arRecibo, $strComprobante) {
         $em = $this->get('doctrine.orm.entity_manager');
-        $strNumeroDocumento = $this->RellenarNr((int)$arPrestacion->getNroPresta(), "0", 9);
+        $strNumeroDocumento = $this->RellenarNr((int)$arRecibo->getNroCaja(), "0", 9);
         //Cuenta cesantias
         $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
-        $arNomRegistroExportacion->setConsecutivo($arPrestacion->getNroPresta());
+        $arNomRegistroExportacion->setConsecutivo($arRecibo->getNroCaja());
         $arNomRegistroExportacion->setComprobante($strComprobante);
-        $arNomRegistroExportacion->setFecha($arPrestacion->getFechaPro());
+        $arNomRegistroExportacion->setFecha($arRecibo->getFechaRa());
         $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
         $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
-        $arNomRegistroExportacion->setNit($arPrestacion->getCedulaEmpleado());
-        $arNomRegistroExportacion->setDetalle("CESANTIAS PRESTACIONES SOCIALES");
+        $arNomRegistroExportacion->setNit($arRecibo->getCodmaestro());
+        $arNomRegistroExportacion->setDetalle("INGRESO");
         $arNomRegistroExportacion->setTipo(1);
         $arNomRegistroExportacion->setBase(0);
         $arNomRegistroExportacion->setPlazo(0);
-        $arNomRegistroExportacion->setCuenta("261005");
-        $arNomRegistroExportacion->setValor($arPrestacion->getCesantia());
-        $em->persist($arNomRegistroExportacion);
-        $em->flush();
-
-        //Cuenta intereses cesantias
-        $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
-        $arNomRegistroExportacion->setConsecutivo($arPrestacion->getNroPresta());
-        $arNomRegistroExportacion->setComprobante($strComprobante);
-        $arNomRegistroExportacion->setFecha($arPrestacion->getFechaPro());
-        $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
-        $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
-        $arNomRegistroExportacion->setNit($arPrestacion->getCedulaEmpleado());
-        $arNomRegistroExportacion->setDetalle("INTERESES CESANTIAS PRESTACIONES");
-        $arNomRegistroExportacion->setTipo(1);
-        $arNomRegistroExportacion->setBase(0);
-        $arNomRegistroExportacion->setPlazo(0);
-        $arNomRegistroExportacion->setCuenta("261010");
-        $arNomRegistroExportacion->setValor($arPrestacion->getInteres());
-        $em->persist($arNomRegistroExportacion);
-        $em->flush();
-
-        //Cuenta prima
-        $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
-        $arNomRegistroExportacion->setConsecutivo($arPrestacion->getNroPresta());
-        $arNomRegistroExportacion->setComprobante($strComprobante);
-        $arNomRegistroExportacion->setFecha($arPrestacion->getFechaPro());
-        $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
-        $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
-        $arNomRegistroExportacion->setNit($arPrestacion->getCedulaEmpleado());
-        $arNomRegistroExportacion->setDetalle("PRIMA SEMESTRAL PRESTACIONES");
-        $arNomRegistroExportacion->setTipo(1);
-        $arNomRegistroExportacion->setBase(0);
-        $arNomRegistroExportacion->setPlazo(0);
-        $arNomRegistroExportacion->setCuenta("261020");
-        $arNomRegistroExportacion->setValor($arPrestacion->getPrima());
-        $em->persist($arNomRegistroExportacion);
-        $em->flush();        
-
-        //Cuenta vacaciones
-        $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
-        $arNomRegistroExportacion->setConsecutivo($arPrestacion->getNroPresta());
-        $arNomRegistroExportacion->setComprobante($strComprobante);
-        $arNomRegistroExportacion->setFecha($arPrestacion->getFechaPro());
-        $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
-        $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
-        $arNomRegistroExportacion->setNit($arPrestacion->getCedulaEmpleado());
-        $arNomRegistroExportacion->setDetalle("VACACIONES PRESTACIONES SOCIALES");
-        $arNomRegistroExportacion->setTipo(1);
-        $arNomRegistroExportacion->setBase(0);
-        $arNomRegistroExportacion->setPlazo(0);
-        $arNomRegistroExportacion->setCuenta("261015");
-        $arNomRegistroExportacion->setValor($arPrestacion->getVacacion());
-        $em->persist($arNomRegistroExportacion);
-        $em->flush();        
-
-        //Cuenta vacaciones
-        $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
-        $arNomRegistroExportacion->setConsecutivo($arPrestacion->getNroPresta());
-        $arNomRegistroExportacion->setComprobante($strComprobante);
-        $arNomRegistroExportacion->setFecha($arPrestacion->getFechaPro());
-        $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
-        $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
-        $arNomRegistroExportacion->setNit($arPrestacion->getCedulaEmpleado());        
-        $arNomRegistroExportacion->setDetalle("PRESTACIONES POR PAGAR");
-        $arNomRegistroExportacion->setTipo(2);
-        $arNomRegistroExportacion->setBase(0);
-        $arNomRegistroExportacion->setPlazo(0);
-        $arNomRegistroExportacion->setCuenta("281505");
-        $arNomRegistroExportacion->setValor($arPrestacion->getTotalp());
-        $em->persist($arNomRegistroExportacion);
-        $em->flush();        
-        
+        $arNomRegistroExportacion->setCuenta("11100501");
+        $arNomRegistroExportacion->setValor($arRecibo->getVlrPagado());
+        $em->persist($arNomRegistroExportacion);                            
     }
 
     /**

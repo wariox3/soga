@@ -26,6 +26,11 @@ class NomConfiguracion {
      * @ORM\Column(name="comprobante_prestaciones", type="string", length=5, nullable=false)
      */
     private $comprobantePrestaciones;    
+
+    /**
+     * @ORM\Column(name="comprobante_recibos", type="string", length=5, nullable=false)
+     */
+    private $comprobanteRecibos;     
     
     /**
      * @ORM\Column(name="ruta_exportacion", type="string", length=500, nullable=false)
@@ -67,6 +72,16 @@ class NomConfiguracion {
      * @ORM\Column(name="cuenta_debitar", type="string", length=20, nullable=false)
      */
     private $cuentaDebitar;    
+
+    /**
+     * @ORM\Column(name="tipo_cuenta", type="string", length=1, nullable=false)
+     */
+    private $tipoCuenta;    
+    
+    /**
+     * @ORM\Column(name="secuencia", type="string", length=1, nullable=false)
+     */
+    private $secuencia;    
     
     /**
      * Get codigoConfiguracionPk
@@ -306,5 +321,74 @@ class NomConfiguracion {
     public function getCuentaDebitar()
     {
         return $this->cuentaDebitar;
+    }
+
+    /**
+     * Set tipoCuenta
+     *
+     * @param string $tipoCuenta
+     * @return NomConfiguracion
+     */
+    public function setTipoCuenta($tipoCuenta)
+    {
+        $this->tipoCuenta = $tipoCuenta;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoCuenta
+     *
+     * @return string 
+     */
+    public function getTipoCuenta()
+    {
+        return $this->tipoCuenta;
+    }
+
+    /**
+     * Set secuencia
+     *
+     * @param string $secuencia
+     * @return NomConfiguracion
+     */
+    public function setSecuencia($secuencia)
+    {
+        $this->secuencia = $secuencia;
+
+        return $this;
+    }
+
+    /**
+     * Get secuencia
+     *
+     * @return string 
+     */
+    public function getSecuencia()
+    {
+        return $this->secuencia;
+    }
+
+    /**
+     * Set comprobanteRecibos
+     *
+     * @param string $comprobanteRecibos
+     * @return NomConfiguracion
+     */
+    public function setComprobanteRecibos($comprobanteRecibos)
+    {
+        $this->comprobanteRecibos = $comprobanteRecibos;
+
+        return $this;
+    }
+
+    /**
+     * Get comprobanteRecibos
+     *
+     * @return string 
+     */
+    public function getComprobanteRecibos()
+    {
+        return $this->comprobanteRecibos;
     }
 }

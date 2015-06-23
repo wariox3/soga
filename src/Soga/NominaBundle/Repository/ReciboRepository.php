@@ -16,16 +16,10 @@ class ReciboRepository extends EntityRepository
      * Devuelve los registros de nomina sin exportar
      * @return type Objeto de tipo query de la clase nomina
      */
-    public function DevDqlRecibosSinExportar($strDesde = "", $strHasta = "") {
+    public function DevDqlDetalleRecibo($strConsecutivo) {
         $em = $this->getEntityManager();         
-        $dql = "SELECT recibo FROM SogaNominaBundle:Recibo recibo WHERE recibo.exportadoContabilidad = 0";
-        if($strDesde != "") {
-           $dql = $dql . " AND recibo.fechaRe >='". $strDesde ."'" ;
-        }
-        if($strHasta != "") {
-           $dql = $dql . " AND recibo.fechaRe <='". $strHasta ."'" ;
-        }
+        $dql = "SELECT recibo FROM SogaNominaBundle:Recibo recibo WHERE recibo.nroCaja = " . $strConsecutivo;
         $objQuery = $em->createQuery($dql);       
         return $objQuery;                
-    }    
+    }      
 }

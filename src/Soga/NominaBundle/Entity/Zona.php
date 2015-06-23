@@ -32,6 +32,11 @@ class Zona
     private $tipoempresa;     
     
     /**
+     * @ORM\Column(name="vr_pago_temporal", type="float", nullable=false)
+     */    
+    private $vrPagoTemporal;    
+    
+    /**
      * Set codzona
      *
      * @param string $codzona
@@ -122,5 +127,28 @@ class Zona
     public function getZona()
     {
         return $this->zona;
+    }
+
+    /**
+     * Set vrPagoTemporal
+     *
+     * @param integer $vrPagoTemporal
+     * @return Zona
+     */
+    public function setVrPagoTemporal($vrPagoTemporal)
+    {
+        $this->vrPagoTemporal = $vrPagoTemporal;
+
+        return $this;
+    }
+
+    /**
+     * Get vrPagoTemporal
+     *
+     * @return integer 
+     */
+    public function getVrPagoTemporal()
+    {
+        return $this->vrPagoTemporal;
     }
 }

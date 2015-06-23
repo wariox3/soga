@@ -30,6 +30,16 @@ class Empleado
      * @ORM\Column(name="nomemple1", type="string", length=25, nullable=false)
      */    
     private $nomemple1;
+
+    /**
+     * @ORM\Column(name="apemple", type="string", length=25, nullable=false)
+     */    
+    private $apemple;    
+
+    /**
+     * @ORM\Column(name="apemple1", type="string", length=25, nullable=false)
+     */    
+    private $apemple1;    
     
     /**
      * @ORM\Column(name="cuenta", type="string", length=20, nullable=false)
@@ -61,6 +71,46 @@ class Empleado
      */    
     private $nivel;     
 
+    /**
+     * @ORM\Column(name="tipod", type="string", length=5, nullable=false)
+     */    
+    private $tipod;    
+
+    /**
+     * @ORM\Column(name="diremple", type="string", length=40, nullable=false)
+     */    
+    private $diremple;  
+    
+    /**
+     * @ORM\Column(name="codmuni", type="string", length=10, nullable=false)
+     */    
+    private $codmuni;      
+    
+    /**
+     * @ORM\Column(name="telemple", type="string", length=7, nullable=false)
+     */    
+    private $telemple;  
+    
+    /**
+     * @ORM\Column(name="municipio", type="string", length=20, nullable=false)
+     */    
+    private $municipio; 
+
+    /**
+     * @ORM\Column(name="email", type="string", length=40, nullable=false)
+     */    
+    private $email;    
+    
+    /**
+     * @ORM\Column(name="celular", type="string", length=15, nullable=false)
+     */    
+    private $celular;    
+    
+    /**
+     * @ORM\Column(name="exportado_contabilidad", type="integer", nullable=true)
+     */    
+    private $exportadoContabilidad;     
+    
     /**
      * Set codemple
      *
@@ -293,5 +343,235 @@ class Empleado
     public function getNivel()
     {
         return $this->nivel;
+    }
+
+    /**
+     * Set exportadoContabilidad
+     *
+     * @param integer $exportadoContabilidad
+     * @return Empleado
+     */
+    public function setExportadoContabilidad($exportadoContabilidad)
+    {
+        $this->exportadoContabilidad = $exportadoContabilidad;
+
+        return $this;
+    }
+
+    /**
+     * Get exportadoContabilidad
+     *
+     * @return integer 
+     */
+    public function getExportadoContabilidad()
+    {
+        return $this->exportadoContabilidad;
+    }
+
+    /**
+     * Set apemple
+     *
+     * @param string $apemple
+     * @return Empleado
+     */
+    public function setApemple($apemple)
+    {
+        $this->apemple = $apemple;
+
+        return $this;
+    }
+
+    /**
+     * Get apemple
+     *
+     * @return string 
+     */
+    public function getApemple()
+    {
+        return $this->apemple;
+    }
+
+    /**
+     * Set apemple1
+     *
+     * @param string $apemple1
+     * @return Empleado
+     */
+    public function setApemple1($apemple1)
+    {
+        $this->apemple1 = $apemple1;
+
+        return $this;
+    }
+
+    /**
+     * Get apemple1
+     *
+     * @return string 
+     */
+    public function getApemple1()
+    {
+        return $this->apemple1;
+    }
+
+    /**
+     * Set tipod
+     *
+     * @param string $tipod
+     * @return Empleado
+     */
+    public function setTipod($tipod)
+    {
+        $this->tipod = $tipod;
+
+        return $this;
+    }
+
+    /**
+     * Get tipod
+     *
+     * @return string 
+     */
+    public function getTipod()
+    {
+        return $this->tipod;
+    }
+
+    /**
+     * Set diremple
+     *
+     * @param string $diremple
+     * @return Empleado
+     */
+    public function setDiremple($diremple)
+    {
+        $this->diremple = $diremple;
+
+        return $this;
+    }
+
+    /**
+     * Get diremple
+     *
+     * @return string 
+     */
+    public function getDiremple()
+    {
+        return $this->diremple;
+    }
+
+    /**
+     * Set codmuni
+     *
+     * @param string $codmuni
+     * @return Empleado
+     */
+    public function setCodmuni($codmuni)
+    {
+        $this->codmuni = $codmuni;
+
+        return $this;
+    }
+
+    /**
+     * Get codmuni
+     *
+     * @return string 
+     */
+    public function getCodmuni()
+    {
+        return $this->codmuni;
+    }
+
+    /**
+     * Set telemple
+     *
+     * @param string $telemple
+     * @return Empleado
+     */
+    public function setTelemple($telemple)
+    {
+        $this->telemple = $telemple;
+
+        return $this;
+    }
+
+    /**
+     * Get telemple
+     *
+     * @return string 
+     */
+    public function getTelemple()
+    {
+        return $this->telemple;
+    }
+
+    /**
+     * Set municipio
+     *
+     * @param string $municipio
+     * @return Empleado
+     */
+    public function setMunicipio($municipio)
+    {
+        $this->municipio = $municipio;
+
+        return $this;
+    }
+
+    /**
+     * Get municipio
+     *
+     * @return string 
+     */
+    public function getMunicipio()
+    {
+        return $this->municipio;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     * @return Empleado
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string 
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set celular
+     *
+     * @param string $celular
+     * @return Empleado
+     */
+    public function setCelular($celular)
+    {
+        $this->celular = $celular;
+
+        return $this;
+    }
+
+    /**
+     * Get celular
+     *
+     * @return string 
+     */
+    public function getCelular()
+    {
+        return $this->celular;
     }
 }

@@ -12,5 +12,10 @@ use Doctrine\ORM\EntityRepository;
  */
 class EmpleadoRepository extends EntityRepository
 {   
-  
+    public function DevDqlEmpleadosSinExportar() {
+        $em = $this->getEntityManager();         
+        $dql = "SELECT empleado FROM SogaNominaBundle:Empleado empleado WHERE empleado.exportadoContabilidad = 0";
+        $objQuery = $em->createQuery($dql);       
+        return $objQuery;                
+    }        
 }

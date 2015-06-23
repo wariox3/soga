@@ -82,9 +82,7 @@ class HerIntCtiController extends Controller {
                                 $douCreditos = $douCreditos + ($arDenomina->getDeduccion()*-1);
                             }
 
-                            $em->persist($arNomRegistroExportacion);
-                            $em->flush();                          
-                            
+                            $em->persist($arNomRegistroExportacion);                                                      
                         }
                         if($arZona->getTipoempresa() == "NO") {
                             $this->CuentasPrincipales($arNomina, $douDebitos, $douCreditos, $arNomConfiguracion->getComprobanteInterface(), $arNomConfiguracion->getCuentaTrabajadoresMision(), "NOMINA POR PAGAR");
@@ -92,9 +90,9 @@ class HerIntCtiController extends Controller {
                             $this->CuentasPrincipales($arNomina, $douDebitos, $douCreditos, $arNomConfiguracion->getComprobanteInterface(), $arNomConfiguracion->getCuentaTrabajadoresPlanta(), "NOMINA POR PAGAR");
                         }                             
                         $arNomina->setExportadoContabilidad(1);
-                        $em->persist($arNomina);
-                        $em->flush();
+                        $em->persist($arNomina);                        
                     }
+                    $em->flush();
                     break;
 
                 case "OpExportarTodos";
@@ -160,9 +158,7 @@ class HerIntCtiController extends Controller {
                                     $arNomRegistroExportacion->setValor($arDenomina->getDeduccion() * -1);
                                     $douCreditos = $douCreditos + ($arDenomina->getDeduccion()*-1);
                                 }
-
                                 $em->persist($arNomRegistroExportacion);
-                                $em->flush();                          
                             }
                         }
                         if($arZona->getTipoempresa() == "NO") {
@@ -172,9 +168,9 @@ class HerIntCtiController extends Controller {
                         }                            
                         
                         $arNomina->setExportadoContabilidad(1);
-                        $em->persist($arNomina);
-                        $em->flush();                        
+                        $em->persist($arNomina);                        
                     }
+                    $em->flush();                        
                     break;                    
                     
                 case "OpGenerarPlano";
@@ -272,9 +268,7 @@ class HerIntCtiController extends Controller {
         $arNomRegistroExportacion->setPlazo(0);                            
         $arNomRegistroExportacion->setCuenta($strCuenta);         
         $arNomRegistroExportacion->setValor($douDebitos - $douCreditos);
-
-        $em->persist($arNomRegistroExportacion);
-        $em->flush();         
+        $em->persist($arNomRegistroExportacion);         
     }
     
     /**

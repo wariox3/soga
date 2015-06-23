@@ -80,17 +80,12 @@ class Recibo
      * @ORM\Column(name="codzona", type="string", length=3, nullable=false)
      */    
     private $codZona;      
-    
-    
-    /**
-     * @ORM\Column(name="exportado_contabilidad", type="integer", nullable=true)
-     */    
-    private $exportadoContabilidad;     
+       
 
     /**
      * Set Id
      *
-     * @param string $id
+     * @param integer $id
      * @return Recibo
      */
     public function setId($id)
@@ -103,7 +98,7 @@ class Recibo
     /**
      * Get Id
      *
-     * @return string 
+     * @return integer 
      */
     public function getId()
     {
@@ -407,28 +402,5 @@ class Recibo
     public function getCodZona()
     {
         return $this->codZona;
-    }
-
-    /**
-     * Set exportadoContabilidad
-     *
-     * @param integer $exportadoContabilidad
-     * @return Recibo
-     */
-    public function setExportadoContabilidad($exportadoContabilidad)
-    {
-        $this->exportadoContabilidad = $exportadoContabilidad;
-
-        return $this;
-    }
-
-    /**
-     * Get exportadoContabilidad
-     *
-     * @return integer 
-     */
-    public function getExportadoContabilidad()
-    {
-        return $this->exportadoContabilidad;
     }
 }

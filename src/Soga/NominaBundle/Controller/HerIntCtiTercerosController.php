@@ -30,26 +30,35 @@ class HerIntCtiTercerosController extends Controller {
                         foreach ($arrSeleccionados AS $codigo) {                        
                             $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
                             $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($codigo);
-                            fputs($ar, $arEmpleado->getCedemple() . "\t");
-                            fputs($ar, $arEmpleado->getTipod() . "\t");
-                            fputs($ar, $arEmpleado->getNomemple() . "\t");
-                            fputs($ar, $arEmpleado->getDiremple() . "\t");
-                            fputs($ar, $arEmpleado->getCodmuni() . "\t");
-                            fputs($ar, $arEmpleado->getTelemple() . "\t");
-                            fputs($ar, $arEmpleado->getMunicipio() . "\t");
-                            fputs($ar, "S" . "\t");
-                            fputs($ar, "S" . "\t");
-                            fputs($ar, "169" . "\t");
-                            fputs($ar, $arEmpleado->getNomemple() . "\t");
-                            fputs($ar, $arEmpleado->getNomemple1() . "\t");
-                            fputs($ar, $arEmpleado->getApemple() . "\t");
-                            fputs($ar, $arEmpleado->getApemple1() . "\t");
-                            fputs($ar, $arEmpleado->getEmail() . "\t");
-                            fputs($ar, $arEmpleado->getCelular() . "\t");
+                            $strTipoDocumento = "C";
+                            if($arEmpleado->getTipod() == "CC") {
+                                $strTipoDocumento = "C";
+                            } else {
+                                $strTipoDocumento = "A";
+                            }
+                            $strNombreCompleto = $arEmpleado->getNomemple() . " " . $arEmpleado->getNomemple1() . " " . $arEmpleado->getApemple() . " " . $arEmpleado->getApemple1();
+                            $arMunicipio = new \Soga\NominaBundle\Entity\Municipio();
+                            $arMunicipio = $em->getRepository('SogaNominaBundle:Municipio')->find($arEmpleado->getCodmuni());
+                            fputs($ar, $arEmpleado->getCedemple() . ";");
+                            fputs($ar, $strTipoDocumento . ";");
+                            fputs($ar, $strNombreCompleto . ";");
+                            fputs($ar, $arEmpleado->getDiremple() . ";");
+                            fputs($ar, $arMunicipio->getMunicipio() . ";");
+                            fputs($ar, $arEmpleado->getTelemple() . ";");
+                            fputs($ar, $arEmpleado->getCodmuni() . ";");
+                            fputs($ar, "S" . ";");
+                            fputs($ar, "N" . ";");
+                            fputs($ar, "169" . ";");
+                            fputs($ar, $arEmpleado->getNomemple() . ";");
+                            fputs($ar, $arEmpleado->getNomemple1() . ";");
+                            fputs($ar, $arEmpleado->getApemple() . ";");
+                            fputs($ar, $arEmpleado->getApemple1() . ";");
+                            fputs($ar, $arEmpleado->getEmail() . ";");
+                            fputs($ar, $arEmpleado->getCelular() . ";");
                             fputs($ar, "\n");                                                                                   
 
-                            //$arEmpleado->setExportadoContabilidad(1);
-                            //$em->persist($arEmpleado);
+                            $arEmpleado->setExportadoContabilidad(1);
+                            $em->persist($arEmpleado);
                         }  
                         fclose($ar);
                         //header ("Content-Type: application/octet-stream");

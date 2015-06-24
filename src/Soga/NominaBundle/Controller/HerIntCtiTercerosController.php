@@ -37,9 +37,9 @@ class HerIntCtiTercerosController extends Controller {
                             fputs($ar, $arEmpleado->getCodmuni() . "\t");
                             fputs($ar, $arEmpleado->getTelemple() . "\t");
                             fputs($ar, $arEmpleado->getMunicipio() . "\t");
-                            fputs($ar, "1" . "\t");
                             fputs($ar, "S" . "\t");
-                            fputs($ar, "5" . "\t");
+                            fputs($ar, "S" . "\t");
+                            fputs($ar, "169" . "\t");
                             fputs($ar, $arEmpleado->getNomemple() . "\t");
                             fputs($ar, $arEmpleado->getNomemple1() . "\t");
                             fputs($ar, $arEmpleado->getApemple() . "\t");

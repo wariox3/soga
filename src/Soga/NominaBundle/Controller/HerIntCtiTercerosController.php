@@ -52,13 +52,23 @@ class HerIntCtiTercerosController extends Controller {
                             //$em->persist($arEmpleado);
                         }  
                         fclose($ar);
-                        header ("Content-Type: application/octet-stream");
-                        header ("Content-Disposition: attachment; filename=" . $strNombreArchivo);
-                        header ("Content-Length: ".filesize($strRutaArchivo.$strNombreArchivo));
-                        readfile($strRutaArchivo.$strNombreArchivo);                        
+                        //header ("Content-Type: application/octet-stream");
+                        //header ("Content-Disposition: attachment; filename=" . $strNombreArchivo);
+                        //header ("Content-Length: ".filesize($strRutaArchivo.$strNombreArchivo));
+                        //readfile($strRutaArchivo.$strNombreArchivo);                        
+                        $strArchivo = $strRutaArchivo.$strNombreArchivo;
+                        header('Content-Description: File Transfer');
+                        header('Content-Type: text/csv; charset=ISO-8859-15');
+                        header('Content-Disposition: attachment; filename='.basename($strArchivo));
+                        header('Expires: 0');
+                        header('Cache-Control: must-revalidate');
+                        header('Pragma: public');
+                        header('Content-Length: ' . filesize($strArchivo));
+                        readfile($strArchivo);                                            
                     }
                     
                     $em->flush();
+                    exit;
                     break;
             }
         }

@@ -81,7 +81,6 @@ class HerIntCtiController extends Controller {
                                 $arNomRegistroExportacion->setValor($arDenomina->getDeduccion() * -1);
                                 $douCreditos = $douCreditos + ($arDenomina->getDeduccion()*-1);
                             }
-
                             $em->persist($arNomRegistroExportacion);                                                      
                         }
                         if($arZona->getTipoempresa() == "NO") {

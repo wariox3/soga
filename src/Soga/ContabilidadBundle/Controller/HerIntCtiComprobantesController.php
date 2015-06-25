@@ -33,74 +33,126 @@ class HerIntCtiComprobantesController extends Controller {
                         $arComprobante = new \Soga\ContabilidadBundle\Entity\Comprobantes();
                         $objQuery = $em->getRepository('SogaContabilidadBundle:Comprobantes')->DevDqlComprobanteDetalle($strNumero);
                         $arComprobante = $objQuery->getResult();  
-                        foreach ($arComprobante as $arComprobante) {                            
-                            $arZona = new \Soga\NominaBundle\Entity\Zona();
-                            $arZona = $em->getRepository('SogaNominaBundle:Zona')->findOneByNitzona($arComprobante->getNitzona());                         
-                            $arBanco = new \Soga\ContabilidadBundle\Entity\Bancos();
-                            $arBanco = $em->getRepository('SogaContabilidadBundle:Bancos')->find($arComprobante->getCodbanco());                         
-                            $strNumeroDocumento = $this->RellenarNr((int)$strNumero, "0", 9);
-                            if(count($arZona) == 1) {
-                                //Registro pago de la nomina
-                                $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
-                                $arNomRegistroExportacion->setConsecutivo($strNumero);                                                        
-                                $arNomRegistroExportacion->setComprobante($arConConfiguracion->getComprobanteComprobantes());
-                                $arNomRegistroExportacion->setFecha($arComprobante->getFecha());
-                                $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
-                                $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
-                                $arNomRegistroExportacion->setNit($arComprobante->getNitprove());                            
-                                $arNomRegistroExportacion->setDetalle('PAGO DE ' . $arMaestroComprobante->getTipop());
-                                $arNomRegistroExportacion->setTipo(1);                                
-                                $arNomRegistroExportacion->setBase(0);
-                                $arNomRegistroExportacion->setPlazo(0);  
-                                if($arZona->getTipoempresa() == "NO") {
-                                    if($arMaestroComprobante->getTipop() == 'PRIMAS') {
-                                        $arNomRegistroExportacion->setCuenta($arConConfiguracion->getCuentaPrimaTrabajadoresMision());
-                                    }else {
-                                        $arNomRegistroExportacion->setCuenta($arConConfiguracion->getCuentaTrabajadoresMision());
-                                    }
-                                    
-                                } else {
-                                    if($arMaestroComprobante->getTipop() == 'PRIMAS') {
-                                        $arNomRegistroExportacion->setCuenta($arConConfiguracion->getCuentaPrimaTrabajadoresPlanta());
-                                    }else {
-                                        $arNomRegistroExportacion->setCuenta($arConConfiguracion->getCuentaTrabajadoresPlanta());
-                                    }                                                                        
-                                }                            
-                                $arNomRegistroExportacion->setValor($arComprobante->getValor());
-                                $em->persist($arNomRegistroExportacion);
-                                $em->flush();  
+                        foreach ($arComprobante as $arComprobante) {   
+                            if($arMaestroComprobante->getTipop() == 'PRIMAS' || $arMaestroComprobante->getTipop() == 'NOMINA') {
+                                $arZona = new \Soga\NominaBundle\Entity\Zona();
+                                $arZona = $em->getRepository('SogaNominaBundle:Zona')->findOneByNitzona($arComprobante->getNitzona());                         
+                                $arBanco = new \Soga\ContabilidadBundle\Entity\Bancos();
+                                $arBanco = $em->getRepository('SogaContabilidadBundle:Bancos')->find($arComprobante->getCodbanco());                         
+                                $strNumeroDocumento = $this->RellenarNr((int)$strNumero, "0", 9);
+                                if(count($arZona) == 1) {
+                                    //Registro pago de la nomina
+                                    $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
+                                    $arNomRegistroExportacion->setConsecutivo($strNumero);                                                        
+                                    $arNomRegistroExportacion->setComprobante($arConConfiguracion->getComprobanteComprobantes());
+                                    $arNomRegistroExportacion->setFecha($arComprobante->getFecha());
+                                    $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
+                                    $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
+                                    $arNomRegistroExportacion->setNit($arComprobante->getNitprove());                            
+                                    $arNomRegistroExportacion->setDetalle('PAGO DE ' . $arMaestroComprobante->getTipop());
+                                    $arNomRegistroExportacion->setTipo(1);                                
+                                    $arNomRegistroExportacion->setBase(0);
+                                    $arNomRegistroExportacion->setPlazo(0);  
+                                    if($arZona->getTipoempresa() == "NO") {
+                                        if($arMaestroComprobante->getTipop() == 'PRIMAS') {
+                                            $arNomRegistroExportacion->setCuenta($arConConfiguracion->getCuentaPrimaTrabajadoresMision());
+                                        }else {
+                                            $arNomRegistroExportacion->setCuenta($arConConfiguracion->getCuentaTrabajadoresMision());
+                                        }
 
-                                //Registro cuenta del banco
-                                $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
-                                $arNomRegistroExportacion->setConsecutivo($strNumero);                                                        
-                                $arNomRegistroExportacion->setComprobante($arConConfiguracion->getComprobanteComprobantes());
-                                $arNomRegistroExportacion->setFecha($arComprobante->getFecha());
-                                $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
-                                $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);                            
-                                $arNomRegistroExportacion->setTipo(2);                                
-                                $arNomRegistroExportacion->setBase(0);
-                                $arNomRegistroExportacion->setPlazo(0);  
-                                if($arComprobante->getCuenta() == 'AHORRO') {
-                                    $arNomRegistroExportacion->setCuenta($arBanco->getCuentaAhorro());
-                                    $arNomRegistroExportacion->setDetalle('AHORROS ' . $arBanco->getBancos());
-                                } 
-                                if($arComprobante->getCuenta() == 'CORRIENTE') {
-                                    $arNomRegistroExportacion->setCuenta($arBanco->getCuentaCorriente());
-                                    $arNomRegistroExportacion->setDetalle('CORRIENTE ' . $arBanco->getBancos());
-                                }                                                        
-                                if($arComprobante->getCuenta() == 'OFICINA') {
-                                    $arNomRegistroExportacion->setCuenta($arBanco->getCuentaOficina());
-                                    $arNomRegistroExportacion->setDetalle('OFICINA ' . $arBanco->getBancos());
-                                }                            
-                                $arNomRegistroExportacion->setValor($arComprobante->getValor());
-                                $em->persist($arNomRegistroExportacion);
-                                $em->flush();                                                                                          
+                                    } else {
+                                        if($arMaestroComprobante->getTipop() == 'PRIMAS') {
+                                            $arNomRegistroExportacion->setCuenta($arConConfiguracion->getCuentaPrimaTrabajadoresPlanta());
+                                        }else {
+                                            $arNomRegistroExportacion->setCuenta($arConConfiguracion->getCuentaTrabajadoresPlanta());
+                                        }                                                                        
+                                    }                            
+                                    $arNomRegistroExportacion->setValor($arComprobante->getValor());
+                                    $em->persist($arNomRegistroExportacion);  
+
+                                    //Registro cuenta del banco
+                                    $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
+                                    $arNomRegistroExportacion->setConsecutivo($strNumero);                                                        
+                                    $arNomRegistroExportacion->setComprobante($arConConfiguracion->getComprobanteComprobantes());
+                                    $arNomRegistroExportacion->setFecha($arComprobante->getFecha());
+                                    $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
+                                    $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);                            
+                                    $arNomRegistroExportacion->setTipo(2);                                
+                                    $arNomRegistroExportacion->setBase(0);
+                                    $arNomRegistroExportacion->setPlazo(0);  
+                                    if($arComprobante->getCuenta() == 'AHORRO') {
+                                        $arNomRegistroExportacion->setCuenta($arBanco->getCuentaAhorro());
+                                        $arNomRegistroExportacion->setDetalle('AHORROS ' . $arBanco->getBancos());
+                                    } 
+                                    if($arComprobante->getCuenta() == 'CORRIENTE') {
+                                        $arNomRegistroExportacion->setCuenta($arBanco->getCuentaCorriente());
+                                        $arNomRegistroExportacion->setDetalle('CORRIENTE ' . $arBanco->getBancos());
+                                    }                                                        
+                                    if($arComprobante->getCuenta() == 'OFICINA') {
+                                        $arNomRegistroExportacion->setCuenta($arBanco->getCuentaOficina());
+                                        $arNomRegistroExportacion->setDetalle('OFICINA ' . $arBanco->getBancos());
+                                    }                            
+                                    $arNomRegistroExportacion->setValor($arComprobante->getValor());
+                                    $em->persist($arNomRegistroExportacion);                                                                                          
+                                }                                
+                            }
+                            if($arMaestroComprobante->getTipop() == 'PRESTACIONES' || $arMaestroComprobante->getTipop() == 'PRESTACION') {                                
+                                $arZona = new \Soga\NominaBundle\Entity\Zona();
+                                $arZona = $em->getRepository('SogaNominaBundle:Zona')->findOneByNitzona($arComprobante->getNitzona());                         
+                                $arBanco = new \Soga\ContabilidadBundle\Entity\Bancos();
+                                $arBanco = $em->getRepository('SogaContabilidadBundle:Bancos')->find($arComprobante->getCodbanco());                         
+                                $strNumeroDocumento = $this->RellenarNr((int)$strNumero, "0", 9);
+                                if(count($arZona) == 1) {
+                                    //Registro pago de la nomina
+                                    $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
+                                    $arNomRegistroExportacion->setConsecutivo($strNumero);                                                        
+                                    $arNomRegistroExportacion->setComprobante($arConConfiguracion->getComprobanteComprobantes());
+                                    $arNomRegistroExportacion->setFecha($arComprobante->getFecha());
+                                    $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
+                                    $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
+                                    $arNomRegistroExportacion->setNit($arComprobante->getNitprove());                            
+                                    $arNomRegistroExportacion->setDetalle('PAGO DE ' . $arMaestroComprobante->getTipop());
+                                    $arNomRegistroExportacion->setTipo(1);                                
+                                    $arNomRegistroExportacion->setBase(0);
+                                    $arNomRegistroExportacion->setPlazo(0);  
+                                    if($arZona->getTipoempresa() == "NO") {                            
+                                        $arNomRegistroExportacion->setCuenta($arConConfiguracion->getCuentaPrestacionTrabajadoresMision());                             
+                                    } else {
+                                        $arNomRegistroExportacion->setCuenta($arConConfiguracion->getCuentaPrestacionTrabajadoresPlanta());                                                                      
+                                    }                            
+                                    $arNomRegistroExportacion->setValor($arComprobante->getValor());
+                                    $em->persist($arNomRegistroExportacion);  
+
+                                    //Registro cuenta del banco
+                                    $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
+                                    $arNomRegistroExportacion->setConsecutivo($strNumero);                                                        
+                                    $arNomRegistroExportacion->setComprobante($arConConfiguracion->getComprobanteComprobantes());
+                                    $arNomRegistroExportacion->setFecha($arComprobante->getFecha());
+                                    $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
+                                    $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);                            
+                                    $arNomRegistroExportacion->setTipo(2);                                
+                                    $arNomRegistroExportacion->setBase(0);
+                                    $arNomRegistroExportacion->setPlazo(0);  
+                                    if($arComprobante->getCuenta() == 'AHORRO') {
+                                        $arNomRegistroExportacion->setCuenta($arBanco->getCuentaAhorro());
+                                        $arNomRegistroExportacion->setDetalle('AHORROS ' . $arBanco->getBancos());
+                                    } 
+                                    if($arComprobante->getCuenta() == 'CORRIENTE') {
+                                        $arNomRegistroExportacion->setCuenta($arBanco->getCuentaCorriente());
+                                        $arNomRegistroExportacion->setDetalle('CORRIENTE ' . $arBanco->getBancos());
+                                    }                                                        
+                                    if($arComprobante->getCuenta() == 'OFICINA') {
+                                        $arNomRegistroExportacion->setCuenta($arBanco->getCuentaOficina());
+                                        $arNomRegistroExportacion->setDetalle('OFICINA ' . $arBanco->getBancos());
+                                    }                            
+                                    $arNomRegistroExportacion->setValor($arComprobante->getValor());
+                                    $em->persist($arNomRegistroExportacion);                                                                                          
+                                }                                                                
                             }
                         }    
                         $arMaestroComprobante->setExportadoContabilidad(1);
                         $em->persist($arMaestroComprobante);
-                        $em->flush(); 
-                        
+                        $em->flush();                         
                     }
                     break;
 

@@ -18,7 +18,7 @@ class MaestroComprobantesRepository extends EntityRepository
      */
     public function DevDqlComprobantesSinExportar($strDesde = "", $strHasta = "") {
         $em = $this->getEntityManager();         
-        $dql = "SELECT maestrocomprobantes FROM SogaContabilidadBundle:MaestroComprobantes maestrocomprobantes WHERE (maestrocomprobantes.tipop = 'NOMINA' OR maestrocomprobantes.tipop = 'PRIMAS') AND maestrocomprobantes.exportadoContabilidad = 0";
+        $dql = "SELECT maestrocomprobantes FROM SogaContabilidadBundle:MaestroComprobantes maestrocomprobantes WHERE (maestrocomprobantes.tipop = 'NOMINA' OR maestrocomprobantes.tipop = 'PRIMAS' OR maestrocomprobantes.tipop = 'PRESTACIONES' OR maestrocomprobantes.tipop = 'PRESTACION') AND maestrocomprobantes.exportadoContabilidad = 0";
         if($strDesde != "") {
            $dql = $dql . " AND maestrocomprobantes.fechapago >='". $strDesde ."'" ;
         }

@@ -43,6 +43,16 @@ class ConConfiguracion {
     private $cuentaPrimaTrabajadoresPlanta;     
     
     /**
+     * @ORM\Column(name="cuenta_prestacion_trabajadores_mision", type="string", length=10, nullable=false)
+     */
+    private $cuentaPrestacionTrabajadoresMision;      
+
+    /**
+     * @ORM\Column(name="cuenta_prestacion_trabajadores_planta", type="string", length=10, nullable=false)
+     */
+    private $cuentaPrestacionTrabajadoresPlanta;     
+    
+    /**
      * Get codigoConfiguracionPk
      *
      * @return integer 
@@ -165,5 +175,51 @@ class ConConfiguracion {
     public function getCuentaPrimaTrabajadoresPlanta()
     {
         return $this->cuentaPrimaTrabajadoresPlanta;
+    }
+
+    /**
+     * Set cuentaPrestacionTrabajadoresMision
+     *
+     * @param string $cuentaPrestacionTrabajadoresMision
+     * @return ConConfiguracion
+     */
+    public function setCuentaPrestacionTrabajadoresMision($cuentaPrestacionTrabajadoresMision)
+    {
+        $this->cuentaPrestacionTrabajadoresMision = $cuentaPrestacionTrabajadoresMision;
+
+        return $this;
+    }
+
+    /**
+     * Get cuentaPrestacionTrabajadoresMision
+     *
+     * @return string 
+     */
+    public function getCuentaPrestacionTrabajadoresMision()
+    {
+        return $this->cuentaPrestacionTrabajadoresMision;
+    }
+
+    /**
+     * Set cuentaPrestacionTrabajadoresPlanta
+     *
+     * @param string $cuentaPrestacionTrabajadoresPlanta
+     * @return ConConfiguracion
+     */
+    public function setCuentaPrestacionTrabajadoresPlanta($cuentaPrestacionTrabajadoresPlanta)
+    {
+        $this->cuentaPrestacionTrabajadoresPlanta = $cuentaPrestacionTrabajadoresPlanta;
+
+        return $this;
+    }
+
+    /**
+     * Get cuentaPrestacionTrabajadoresPlanta
+     *
+     * @return string 
+     */
+    public function getCuentaPrestacionTrabajadoresPlanta()
+    {
+        return $this->cuentaPrestacionTrabajadoresPlanta;
     }
 }

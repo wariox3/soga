@@ -303,42 +303,28 @@ class HerIntCtiComprobantesController extends Controller {
                 readfile($strArchivo);                 
                 exit;
             }
-        }
-        /*if ($request->getMethod() == 'POST') {
-            $arrControles = $request->request->All();
-            $arrSeleccionados = $request->request->get('ChkSeleccionar');
-            if($arrControles['TxtFechaDesde'] != "") {
-                $strDesde = $arrControles['TxtFechaDesde'];
-            }
-            if($arrControles['TxtFechaHasta'] != "") {
-                $strHasta = $arrControles['TxtFechaHasta'];
-            }
-            switch ($request->request->get('OpSubmit')) {
-                case "OpCargarComprobante";
-                    if($arrControles['TxtNumeroConsecutivoDesde'] && $arrControles['TxtNumeroConsecutivoHasta']){
-                        $intNumeroDesde = $arrControles['TxtNumeroConsecutivoDesde'];
-                        $intNumeroHasta = $arrControles['TxtNumeroConsecutivoHasta'];
-                        if($intNumeroDesde <= $intNumeroHasta) {
-                            if(($intNumeroHasta - $intNumeroDesde) < 1000) {
-                                for ($i = $intNumeroDesde; $i <= $intNumeroHasta; $i++) {
-                                    $strNumero = $this->RellenarNr($i, "0", 6);
-                                    $arMaestroComprobante = new \Soga\ContabilidadBundle\Entity\MaestroComprobantes();
-                                    $arMaestroComprobante = $em->getRepository('SogaContabilidadBundle:MaestroComprobantes')->find($strNumero);
-                                    if(count($arMaestroComprobante) > 0) {
-                                        $arMaestroComprobante->setExportadoContabilidad(0);
-                                        $em->persist($arMaestroComprobante);
-                                        $em->flush();
-                                    }
+            if($form->get('BtnCargar')->isClicked()) {
+                if($form->get('TxtNumeroDesde')->getData() != "" && $form->get('TxtNumeroHasta')->getData() != "") {
+                    $intNumeroDesde = $form->get('TxtNumeroDesde')->getData();
+                    $intNumeroHasta = $form->get('TxtNumeroHasta')->getData();
+                    if($intNumeroDesde <= $intNumeroHasta) {
+                        if(($intNumeroHasta - $intNumeroDesde) < 1000) {
+                            for ($i = $intNumeroDesde; $i <= $intNumeroHasta; $i++) {
+                                $strNumero = $this->RellenarNr($i, "0", 6);
+                                $arMaestroComprobante = new \Soga\ContabilidadBundle\Entity\MaestroComprobantes();
+                                $arMaestroComprobante = $em->getRepository('SogaContabilidadBundle:MaestroComprobantes')->find($strNumero);
+                                if(count($arMaestroComprobante) > 0) {
+                                    $arMaestroComprobante->setExportadoContabilidad(0);
+                                    $em->persist($arMaestroComprobante);
                                 }
                             }
+                            $em->flush();                            
                         }
-
-                    }
-                    break;
-            }
+                    }                   
+                }
+            }                        
+            
         }
-         *
-         */
 
         $arMaestroComprobantes = $paginator->paginate($em->createQuery($this->strListaDql), $this->getRequest()->query->get('page', 1), 200);
         return $this->render('SogaContabilidadBundle:Herramientas/Intercambio/Comprobantes:lista.html.twig', array(
@@ -392,8 +378,11 @@ class HerIntCtiComprobantesController extends Controller {
                     ), 'data' => $session->get('filtroTipoComprobante')))
             ->add('TxtFechaDesde', 'text', array('label'  => 'Desde','data' => $session->get('filtroFechaDesde')))
             ->add('TxtFechaHasta', 'text', array('label'  => 'Hasta','data' => $session->get('filtroFechaHasta')))
+            ->add('TxtNumeroDesde', 'text', array('label'  => 'Desde'))
+            ->add('TxtNumeroHasta', 'text', array('label'  => 'Hasta'))                
             ->add('BtnExportarSeleccionados', 'submit', array('label'  => 'Exportar seleccionados'))
             ->add('BtnGenerarPlano', 'submit', array('label'  => 'Generar plano',))
+            ->add('BtnCargar', 'submit', array('label'  => 'Cargar',))
             ->add('BtnFiltrar', 'submit', array('label'  => 'Filtrar',))
             ->getForm();
         return $form;

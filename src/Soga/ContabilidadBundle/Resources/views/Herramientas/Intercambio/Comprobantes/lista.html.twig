@@ -32,10 +32,22 @@
                     <div class="col-sm-10">
                         {{ form_widget(form.TxtFechaHasta, { 'attr': {'class': 'form-control'} }) }}
                     </div>
+                </div>         
+                <div class="form-group form-group-sm">
+                    <label for="form_TxtNumeroDesde" class="col-sm-2 control-label">Numero desde:</label>
+                    <div class="col-sm-10">
+                        {{ form_widget(form.TxtNumeroDesde, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label for="form_TxtNumeroHasta" class="col-sm-2 control-label">Numero hasta:</label>
+                    <div class="col-sm-10">
+                        {{ form_widget(form.TxtNumeroHasta, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
                 </div>                    
                 <div class="form-group form-group-sm">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        {{ form_widget(form.BtnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    <div class="col-sm-offset-2 col-sm-10">                        
+                        {{ form_widget(form.BtnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}                        
                     </div>
                 </div>
             </div>
@@ -72,63 +84,16 @@
         <!-- Botones Menu Items -->
         <div class="btn-toolbar" style="float: right">
             <div class="btn-group">
+                {{ form_widget(form.BtnCargar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}                
+            </div>
+            <div class="btn-group">
                 {{ form_widget(form.BtnExportarSeleccionados, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}                
             </div>
             <div class="btn-group">
                 {{ form_widget(form.BtnGenerarPlano, { 'attr': {'class': 'btn btn-danger btn-sm', 'style':'float:right'} }) }}
             </div>
         </div>
-        <br /><br />
-        <hr/>
-        <div class="panel panel-default">
-            <div class="panel-heading">Cargar comprobantes</div>
-            <div class="panel-body">
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label for="TxtNumeroConsecutivoDesde" class="col-sm-2 control-label">Desde:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="TxtNumeroConsecutivoDesde" name="TxtNumeroConsecutivoDesde"/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="TxtNumeroConsecutivoHasta" class="col-sm-2 control-label">Hasta:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="TxtNumeroConsecutivoHasta" name="TxtNumeroConsecutivoHasta"/>
-                        </div>
-                    </div>                    
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button class="btn btn-primary" type="submit" name="OpSubmit" value="OpCargarComprobante">Cargar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>        
-        
-        <hr/>
-        <!-- Fin Botones Menu Items --> 
-        <div class="form-horizontal">
-            <div class="well">
-                <div class="form-group">
-                    <label for="TxtFechaDesde" class="col-sm-2 control-label">Desde</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="TxtFechaDesde" name="TxtFechaDesde" placeholder="Fecha desde aaaa-mm-dd" {% if arrControles is not null %} value="{{arrControles.TxtFechaDesde}}" {% endif%}/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="TxtFechaHasta" class="col-sm-2 control-label">Hasta</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="TxtFechaHasta" name="TxtFechaHasta" placeholder="Fecha desde aaaa-mm-dd" {% if arrControles is not null %} value="{{arrControles.TxtFechaHasta}}" {% endif%}/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button class="btn btn-primary" type="submit" name="OpSubmit" value="OpBuscar">Buscar</button>
-                    </div>
-                </div>
-                <!-- Fin formulario de busqueda -->
-            </div>
-        </div>        
+        <br /><br />       
         {{ form_rest(form) }}
     {{ form_end(form) }}    
 </div>

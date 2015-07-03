@@ -35,7 +35,7 @@ class HerIntCtiComprobantesController extends Controller {
                     $arComprobante = new \Soga\ContabilidadBundle\Entity\Comprobantes();
                     $objQuery = $em->getRepository('SogaContabilidadBundle:Comprobantes')->DevDqlComprobanteDetalle($strNumero);
                     $arComprobante = $objQuery->getResult();
-                    foreach ($arComprobante as $arComprobante) {
+                    foreach ($arComprobante as $arComprobante) {                       
                         if($arMaestroComprobante->getId() == 4 || $arMaestroComprobante->getId() == 1) {
                             $arZona = new \Soga\NominaBundle\Entity\Zona();
                             $arZona = $em->getRepository('SogaNominaBundle:Zona')->findOneByNitzona($arComprobante->getNitzona());
@@ -210,15 +210,17 @@ class HerIntCtiComprobantesController extends Controller {
                         if($arMaestroComprobante->getId() == 2) {
                             $arBanco = new \Soga\ContabilidadBundle\Entity\Bancos();
                             $arBanco = $em->getRepository('SogaContabilidadBundle:Bancos')->find($arComprobante->getCodbanco());
+                            $arProveedor = new \Soga\ContabilidadBundle\Entity\Proveedor();
+                            $arProveedor = $em->getRepository('SogaContabilidadBundle:Proveedor')->find($arComprobante->getNitprove());
                             $strNumeroDocumento = $this->RellenarNr((int)$strNumero, "0", 9);
-
+                            $strNumeroDocumentoReferencia = $this->RellenarNr($arComprobante->getNrofactura(), "0", 9);
                             //Registro pago de la nomina
                             $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
                             $arNomRegistroExportacion->setConsecutivo($strNumero);
                             $arNomRegistroExportacion->setComprobante($arConConfiguracion->getComprobanteComprobantes());
                             $arNomRegistroExportacion->setFecha($arComprobante->getFecha());
                             $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
-                            $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
+                            $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumentoReferencia);
                             $arNomRegistroExportacion->setNit($arComprobante->getNitprove());
                             $arNomRegistroExportacion->setDetalle('PAGO FRA ' . $arComprobante->getNrofactura());
                             $arNomRegistroExportacion->setTipo(1);
@@ -239,17 +241,15 @@ class HerIntCtiComprobantesController extends Controller {
                             $arNomRegistroExportacion->setBase(0);
                             $arNomRegistroExportacion->setPlazo(0);
                             if($arComprobante->getCuenta() == 'AHORRO') {
-                                $arNomRegistroExportacion->setCuenta($arBanco->getCuentaAhorro());
-                                $arNomRegistroExportacion->setDetalle('AHORROS ' . $arBanco->getBancos());
+                                $arNomRegistroExportacion->setCuenta($arBanco->getCuentaAhorro());                                
                             }
                             if($arComprobante->getCuenta() == 'CORRIENTE') {
-                                $arNomRegistroExportacion->setCuenta($arBanco->getCuentaCorriente());
-                                $arNomRegistroExportacion->setDetalle('CORRIENTE ' . $arBanco->getBancos());
+                                $arNomRegistroExportacion->setCuenta($arBanco->getCuentaCorriente());                                
                             }
                             if($arComprobante->getCuenta() == 'OFICINA') {
-                                $arNomRegistroExportacion->setCuenta($arBanco->getCuentaOficina());
-                                $arNomRegistroExportacion->setDetalle('OFICINA ' . $arBanco->getBancos());
+                                $arNomRegistroExportacion->setCuenta($arBanco->getCuentaOficina());                                
                             }
+                            $arNomRegistroExportacion->setDetalle($arProveedor->getNomprove());
                             $arNomRegistroExportacion->setValor($arComprobante->getValor());
                             $em->persist($arNomRegistroExportacion);
                         }

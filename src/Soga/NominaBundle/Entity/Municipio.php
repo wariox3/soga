@@ -21,7 +21,11 @@ class Municipio
      */    
     private $municipio;     
     
-
+    /**
+     * @ORM\Column(name="codepart", type="string", length=2, nullable=false)
+     */    
+    private $codepart;    
+    
     /**
      * Set codmuni
      *
@@ -66,5 +70,28 @@ class Municipio
     public function getMunicipio()
     {
         return $this->municipio;
+    }
+
+    /**
+     * Set codepart
+     *
+     * @param string $codepart
+     * @return Municipio
+     */
+    public function setCodepart($codepart)
+    {
+        $this->codepart = $codepart;
+
+        return $this;
+    }
+
+    /**
+     * Get codepart
+     *
+     * @return string 
+     */
+    public function getCodepart()
+    {
+        return $this->codepart;
     }
 }

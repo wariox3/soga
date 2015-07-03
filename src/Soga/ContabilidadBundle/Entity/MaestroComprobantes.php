@@ -47,9 +47,9 @@ class MaestroComprobantes
     private $letras;
     
     /**
-     * @ORM\Column(name="tipop", type="string", length=20, nullable=false)
+     * @ORM\Column(name="id", type="integer")
      */    
-    private $tipop;     
+    private $id;     
 
     /**
      * @ORM\Column(name="exportado_contabilidad", type="integer", nullable=true)
@@ -263,5 +263,28 @@ class MaestroComprobantes
     public function getExportadoContabilidad()
     {
         return $this->exportadoContabilidad;
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return MaestroComprobantes
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

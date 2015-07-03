@@ -17,180 +17,89 @@ class UtiPilaController extends Controller {
             $arrControles = $request->request->All();
             $arrSeleccionados = $request->request->get('ChkSeleccionar');
             switch ($request->request->get('OpSubmit')) {
+                case "OpGenerar";
+                    foreach ($arrSeleccionados as $codigoPeriodo) {
+                        $em->getRepository('SogaNominaBundle:SsoPila')->crearRegistro($codigoPeriodo);                                                    
+                    }
+                    break;    
+                    
                 case "OpExportar";
-                    $arNomConfiguracion->setFechaDesdeExportarNomina($frmExportacion->get('TxtFechaDesde')->getData());
-                    $arNomConfiguracion->setFechaHastaExportarNomina($frmExportacion->get('TxtFechaHasta')->getData());
-                    $arNomConfiguracion->setFechaPago($frmExportacion->get('TxtFechaPago')->getData());
-                    $arNomConfiguracion->setFechaAplicacionPago($frmExportacion->get('TxtFechaAplicacion')->getData());
-                    $arNomConfiguracion->setCuentaDebitar($frmExportacion->get('TxtCuenta')->getData());
-                    $arNomConfiguracion->setSecuencia($frmExportacion->get('TxtSecuencia')->getData());
-                    $arNomConfiguracion->setTipoCuenta($frmExportacion->get('CboTipoCuenta')->getData());
-                    $em->persist($arNomConfiguracion);
-                    $em->flush();
-                    $strRutaArchivo = $arNomConfiguracion->getRutaExportacion();
-                    $strNombreArchivo = "PagoNomina" . date('YmdHis') . ".txt";
-                    
-                    $ar = fopen($strRutaArchivo . $strNombreArchivo, "a") or
-                            die("Problemas en la creacion del archivo plano");
-                    // Encabezado
-                    $strNitEmpresa = $this->RellenarNr("900456778", "0", 10);
-                    $strNombreEmpresa = "JGEFECTIVOS S.A.";
-                    $strTipoPagoSecuencia = "225PAGO NOMI ";
-                    $strFechaCreacion = $arNomConfiguracion->getFechaPago();
-                    $strSecuencia = $arNomConfiguracion->getSecuencia();
-                    $strFechaAplicacion = $arNomConfiguracion->getFechaAplicacionPago();
-
-                    $strCuenta = $arNomConfiguracion->getCuentaDebitar();
-                    $strTipoCuenta = $arNomConfiguracion->getTipoCuenta();
-
-                    $douTotal = 0;
-                    $IntNumeroRegistros = 0;
-                    foreach ($arrSeleccionados AS $codzona) {
-                        $arZonaMap = new ResultSetMapping;
-                        $arZonaMap->addEntityResult('SogaNominaBundle:Empleado', 'emp');
-                        $arZonaMap->addFieldResult('emp', 'codemple', 'codemple'); // ($alias, $columnName, $fieldName)
-                        $arZonaMap->addFieldResult('emp', 'cedemple', 'cedemple');
-                        $arZonaMap->addFieldResult('emp', 'nomemple', 'nomemple');
-                        $arZonaMap->addFieldResult('emp', 'cuenta', 'cuenta');
-                        $arZonaMap->addFieldResult('emp', 'nivel', 'nivel');
-
-                        $strSql = "SELECT empleado.codemple, empleado.cedemple, LEFT(CONCAT(empleado.nomemple, ' ', empleado.nomemple1, ' ', empleado.apemple, ' ', empleado.apemple1), 18) as nomemple,
-                                          empleado.cuenta, nomina.neto as nivel
-                                    FROM empleado,banco,periodo,zona,nomina
-                                    WHERE
-                                    zona.codzona=periodo.codzona AND
-                                    zona.codzona=empleado.codzona AND
-                                    empleado.codbanco=banco.codbanco AND
-                                    banco.codbanco='07' AND
-                                    nomina.neto > 0 AND
-                                    empleado.cedemple=nomina.cedemple AND
-                                    periodo.codigo=nomina.codigo AND
-                                    periodo.desde='" . $arNomConfiguracion->getFechaDesdeExportarNomina() . "' AND periodo.hasta='" . $arNomConfiguracion->getFechaHastaExportarNomina() ."' AND
-                                    zona.codzona='" . $codzona . "'ORDER BY empleado.nomemple,empleado.nomemple1,empleado.apemple,empleado.apemple1";
-                        $query = $em->createNativeQuery($strSql, $arZonaMap);
-                        $arEmpleados = new \Soga\NominaBundle\Entity\Empleado();
-                        $arEmpleados = $query->getResult();
-                        foreach ($arEmpleados AS $arEmpleado) {
-                            if($arEmpleado->getCuenta() != "") {
-                                $douTotal = $douTotal + $arEmpleado->getNivel();
-                                $IntNumeroRegistros++;
+                    $arNomConfiguracion = new \Soga\NominaBundle\Entity\NomConfiguracion();
+                    $arNomConfiguracion = $em->getRepository('SogaNominaBundle:NomConfiguracion')->find(1);                    
+                    if(count($arrSeleccionados) > 0) {
+                        $strRutaArchivo = $arNomConfiguracion->getRutaExportacion();
+                        $strNombreArchivo = "pila" . date('YmdHis') . ".txt";                        
+                        $ar = fopen($strRutaArchivo . $strNombreArchivo, "a") or
+                            die("Problemas en la creacion del archivo plano");                        
+                        foreach ($arrSeleccionados AS $codigoPeriodo) { 
+                            $arPeriodo = new \Soga\NominaBundle\Entity\SsoPeriodo();
+                            $arPeriodo = $em->getRepository('SogaNominaBundle:SsoPeriodo')->find($codigoPeriodo);                                                    
+                            $arSsoPila = new \Soga\NominaBundle\Entity\SsoPila();                                                                
+                            $arSsoPila = $em->getRepository('SogaNominaBundle:SsoPila')->findBy(array('codigoPeriodoFk' => $codigoPeriodo));                                                    
+                            foreach($arSsoPila as $arSsoPila) {
+                                fputs($ar, $arSsoPila->getTipoRegistro());
+                                fputs($ar, $arSsoPila->getSecuencia());
+                                fputs($ar, $arSsoPila->getTipoDocumento());
+                                fputs($ar, $arSsoPila->getNumeroIdentificacion());
+                                fputs($ar, $arSsoPila->getTipo());
+                                fputs($ar, $arSsoPila->getSubtipo());
+                                fputs($ar, $arSsoPila->getExtranjeroNoObligadoCotizarPensiones());
+                                fputs($ar, $arSsoPila->getColombianoResidenteExterior());
+                                fputs($ar, $arSsoPila->getCodigoDepartamento());
+                                fputs($ar, $arSsoPila->getCodigoMunicipio());
+                                fputs($ar, $arSsoPila->getPrimerApellido());
+                                fputs($ar, $arSsoPila->getSegundoApellido());
+                                fputs($ar, $arSsoPila->getPrimerNombre());
+                                fputs($ar, $arSsoPila->getSegundoNombre());
+                                fputs($ar, $arSsoPila->getIngreso());
+                                fputs($ar, $arSsoPila->getRetiro());
+                                fputs($ar, $arSsoPila->getTrasladoDesdeOtraEps());
+                                fputs($ar, $arSsoPila->getTrasladoAOtraEps());
+                                fputs($ar, $arSsoPila->getTrasladoDesdeOtraPension());
+                                fputs($ar, $arSsoPila->getTrasladoAOtraPension());
+                                fputs($ar, $arSsoPila->getVariacionPermanenteSalario());
+                                fputs($ar, $arSsoPila->getCorrecciones());
+                                fputs($ar, $arSsoPila->getVariacionTransitoriaSalario());
+                                fputs($ar, $arSsoPila->getSuspensionTemporalContratoLicenciaServicios());
+                                fputs($ar, $arSsoPila->getIncapacidadGeneral());
+                                fputs($ar, $arSsoPila->getLicenciaMaternidad());
+                                fputs($ar, $arSsoPila->getVacaciones());
+                                fputs($ar, $arSsoPila->getAporteVoluntario());
+                                fputs($ar, $arSsoPila->getVariacionCentrosTrabajo());
+                                fputs($ar, $arSsoPila->getIncapacidadAccidenteTrabajoEnfermedadProfesional());
+                                fputs($ar, $arSsoPila->getCodigoEntidadPensionPertenece());
+                                fputs($ar, $arSsoPila->getCodigoEntidadPensionTraslada());
+                                fputs($ar, $arSsoPila->getCodigoEntidadSaludPertenece());
+                                fputs($ar, $arSsoPila->getCodigoEntidadSaludTraslada());
+                                fputs($ar, $arSsoPila->getCodigoEntidadCajaPertenece());
+                                fputs($ar, "\n");                                                                                                                                               
                             }
-
-                        }
-                    }
-                    $strNumeroRegistros = $this->RellenarNr($IntNumeroRegistros, "0", 6);
-                    $strValorTotal = $this->RellenarNr($douTotal, "0", 24);
-                    fputs($ar, "1" . $strNitEmpresa . $strNombreEmpresa . $strTipoPagoSecuencia . $strFechaCreacion . $strSecuencia . $strFechaAplicacion . $strNumeroRegistros . $strValorTotal . $strCuenta . $strTipoCuenta . "\n");
-
-                    foreach ($arrSeleccionados AS $codzona) {
-                        $arZonaExportar = new \Soga\NominaBundle\Entity\Zona();
-                        $arZonaExportar = $em->getRepository('SogaNominaBundle:Zona')->find($codzona);
-
-                        $arZonaMap = new ResultSetMapping;
-                        $arZonaMap->addEntityResult('SogaNominaBundle:Empleado', 'emp');
-                        $arZonaMap->addFieldResult('emp', 'codemple', 'codemple'); // ($alias, $columnName, $fieldName)
-                        $arZonaMap->addFieldResult('emp', 'cedemple', 'cedemple');
-                        $arZonaMap->addFieldResult('emp', 'nomemple', 'nomemple');
-                        $arZonaMap->addFieldResult('emp', 'cuenta', 'cuenta');
-                        $arZonaMap->addFieldResult('emp', 'nivel', 'nivel');
-
-                        $strSql = "SELECT empleado.codemple, empleado.cedemple, LEFT(CONCAT(empleado.nomemple, ' ', empleado.nomemple1, ' ', empleado.apemple, ' ', empleado.apemple1), 18) as nomemple,
-                                          empleado.cuenta, nomina.neto as nivel
-                                    FROM empleado,banco,periodo,zona,nomina
-                                    WHERE
-                                    zona.codzona=periodo.codzona AND
-                                    zona.codzona=empleado.codzona AND
-                                    empleado.codbanco=banco.codbanco AND
-                                    banco.codbanco='07' AND
-                                    nomina.neto > 0 AND
-                                    empleado.cedemple=nomina.cedemple AND
-                                    periodo.codigo=nomina.codigo AND
-                                    periodo.desde='" . $arNomConfiguracion->getFechaDesdeExportarNomina() . "' AND periodo.hasta='" . $arNomConfiguracion->getFechaHastaExportarNomina() ."' AND
-                                    zona.codzona='" . $codzona . "'ORDER BY empleado.nomemple,empleado.nomemple1,empleado.apemple,empleado.apemple1";
-                        $query = $em->createNativeQuery($strSql, $arZonaMap);
-                        //$query->setParameter(1, 'romanb');
-                        $arEmpleados = new \Soga\NominaBundle\Entity\Empleado();
-                        $arEmpleados = $query->getResult();
-
-                        foreach ($arEmpleados AS $arEmpleado) {
-                            if($arEmpleado->getCuenta() != "") {
-                                fputs($ar, "6" . $this->RellenarNr($arEmpleado->getCedemple(), "0", 15));
-                                fputs($ar, $this->RellenarNr($arEmpleado->getNomemple(),"0", 18));
-                                fputs($ar, "005600078");
-                                fputs($ar, $this->RellenarNr($arEmpleado->getCuenta(), "0", 17));
-                                fputs($ar, "S37");
-                                fputs($ar, $this->RellenarNr($arEmpleado->getNivel(), "0", 10));
-                                fputs($ar, "                      ");
-                                fputs($ar, "\n");
-                            }
-
-                        }
-
-                    }
-                    fclose($ar);
-                    $strArchivo = $strRutaArchivo.$strNombreArchivo;
-                    header('Content-Description: File Transfer');
-                    header('Content-Type: text/csv; charset=ISO-8859-15');
-                    header('Content-Disposition: attachment; filename='.basename($strArchivo));
-                    header('Expires: 0');
-                    header('Cache-Control: must-revalidate');
-                    header('Pragma: public');
-                    header('Content-Length: ' . filesize($strArchivo));
-                    readfile($strArchivo);
-                    exit;
-                    break;
-                    
-                case "OpCalcular";
-                    $arMapeo = new ResultSetMapping;
-                    $arMapeo->addEntityResult('SogaNominaBundle:Zona', 'z');
-                    $arMapeo->addFieldResult('z', 'codzona', 'codzona'); // ($alias, $columnName, $fieldName)
-                    $arMapeo->addFieldResult('z', 'zona', 'zona'); // ($alias, $columnName, $fieldName)
-                    $arMapeo->addFieldResult('z', 'vr_pago_temporal', 'vrPagoTemporal'); // ($alias, $columnName, $fieldName)
-
-                    $strSql = "SELECT zona.codzona, zona.zona, vr_pago_temporal "
-                            . "FROM zona "
-                            . "LEFT JOIN periodo ON zona.codzona = periodo.codzona "
-                            . "WHERE periodo.desde='" . $frmExportacion->get('TxtFechaDesde')->getData() . "' "
-                            . "AND periodo.hasta='" . $frmExportacion->get('TxtFechaHasta')->getData() . "' "
-                            . "AND periodo.pagado = ''";
-                    $objQuery = $em->createNativeQuery($strSql, $arMapeo);
-                    $arZonaCalcular = $objQuery->getResult();
-                    //$arZonaCalcular = $paginator->paginate($arZonaCalcular, $this->getRequest()->query->get('page', 1), 50);                    
-                    foreach($arZonaCalcular as $arZonaCalcular) {
-                        $arZonaMap = new ResultSetMapping;
-                        $arZonaMap->addEntityResult('SogaNominaBundle:Empleado', 'emp');
-                        $arZonaMap->addFieldResult('emp', 'codemple', 'codemple'); // ($alias, $columnName, $fieldName)
-                        $arZonaMap->addFieldResult('emp', 'nivel', 'nivel');
-
-                        $strSql = "SELECT COUNT(codemple) as codemple, SUM(nomina.neto) as nivel
-                                    FROM empleado,banco,periodo,zona,nomina
-                                    WHERE
-                                    zona.codzona=periodo.codzona AND
-                                    zona.codzona=empleado.codzona AND
-                                    empleado.codbanco=banco.codbanco AND
-                                    banco.codbanco='07' AND
-                                    nomina.neto > 0 AND
-                                    empleado.cedemple=nomina.cedemple AND
-                                    periodo.codigo=nomina.codigo AND
-                                    periodo.desde='" . $arNomConfiguracion->getFechaDesdeExportarNomina() . "' AND periodo.hasta='" . $arNomConfiguracion->getFechaHastaExportarNomina() ."' AND
-                                    zona.codzona='" . $arZonaCalcular->getCodZona() . "'ORDER BY empleado.nomemple,empleado.nomemple1,empleado.apemple,empleado.apemple1";
-                        $query = $em->createNativeQuery($strSql, $arZonaMap);
-                        //$query->setParameter(1, 'romanb');
-                        $arEmpleados = new \Soga\NominaBundle\Entity\Empleado();
-                        $arEmpleados = $query->getResult();                        
-                        
-                        $arZonaActualizar = new \Soga\NominaBundle\Entity\Zona();
-                        $arZonaActualizar = $em->getRepository('SogaNominaBundle:Zona')->find($arZonaCalcular->getCodZona());
-                        $arZonaActualizar->setVrPagoTemporal($arEmpleados[0]->getNivel());
-                        $em->persist($arZonaActualizar);
+                        }  
+                        fclose($ar);                        
+                        $strArchivo = $strRutaArchivo.$strNombreArchivo;
+                        header('Content-Description: File Transfer');
+                        header('Content-Type: text/csv; charset=ISO-8859-15');
+                        header('Content-Disposition: attachment; filename='.basename($strArchivo));
+                        header('Expires: 0');
+                        header('Cache-Control: must-revalidate');
+                        header('Pragma: public');
+                        header('Content-Length: ' . filesize($strArchivo));
+                        readfile($strArchivo);                                            
                         $em->flush();
+                        exit;
                     }
-                    break;
+                    
+
+                    break;                    
             }
         }
-
+        
+        $objQueryPeriodos = $em->getRepository('SogaNominaBundle:SsoPeriodo')->DevDqlPeriodos();
+        $arPeriodos = $paginator->paginate($objQueryPeriodos, $this->getRequest()->query->get('page', 1), 200);        
+        
         return $this->render('SogaNominaBundle:Utilidades/Pila:lista.html.twig', array(
-        ));
+            'arPeriodos' => $arPeriodos
+                ));
         set_time_limit(60);
     }
 

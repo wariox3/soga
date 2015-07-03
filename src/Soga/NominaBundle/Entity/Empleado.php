@@ -57,6 +57,11 @@ class Empleado
     private $codpension;    
 
     /**
+     * @ORM\Column(name="codigo_caja_fk", type="integer")
+     */    
+    private $codigoCajaFk;    
+    
+    /**
      * @ORM\Column(name="codzona", type="string", length=3, nullable=false)
      */    
     private $codzona;    
@@ -573,5 +578,28 @@ class Empleado
     public function getCelular()
     {
         return $this->celular;
+    }
+
+    /**
+     * Set codigoCajaFk
+     *
+     * @param integer $codigoCajaFk
+     * @return Empleado
+     */
+    public function setCodigoCajaFk($codigoCajaFk)
+    {
+        $this->codigoCajaFk = $codigoCajaFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoCajaFk
+     *
+     * @return integer 
+     */
+    public function getCodigoCajaFk()
+    {
+        return $this->codigoCajaFk;
     }
 }

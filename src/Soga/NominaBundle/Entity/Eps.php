@@ -26,6 +26,10 @@ class Eps
      */    
     private $nit;
 
+    /**
+     * @ORM\Column(name="codigo_interface_pila", type="string", length=6)
+     */    
+    private $codigoInterfacePila;    
 
 
 
@@ -96,5 +100,28 @@ class Eps
     public function getNit()
     {
         return $this->nit;
+    }
+
+    /**
+     * Set codigoInterfacePila
+     *
+     * @param string $codigoInterfacePila
+     * @return Eps
+     */
+    public function setCodigoInterfacePila($codigoInterfacePila)
+    {
+        $this->codigoInterfacePila = $codigoInterfacePila;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoInterfacePila
+     *
+     * @return string 
+     */
+    public function getCodigoInterfacePila()
+    {
+        return $this->codigoInterfacePila;
     }
 }

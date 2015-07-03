@@ -26,6 +26,10 @@ class Pension
      */    
     private $nit;
 
+    /**
+     * @ORM\Column(name="codigo_interface_pila", type="string", length=6)
+     */    
+    private $codigoInterfacePila;        
 
     /**
      * Set codpension
@@ -94,5 +98,28 @@ class Pension
     public function getNit()
     {
         return $this->nit;
+    }
+
+    /**
+     * Set codigoInterfacePila
+     *
+     * @param string $codigoInterfacePila
+     * @return Pension
+     */
+    public function setCodigoInterfacePila($codigoInterfacePila)
+    {
+        $this->codigoInterfacePila = $codigoInterfacePila;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoInterfacePila
+     *
+     * @return string 
+     */
+    public function getCodigoInterfacePila()
+    {
+        return $this->codigoInterfacePila;
     }
 }

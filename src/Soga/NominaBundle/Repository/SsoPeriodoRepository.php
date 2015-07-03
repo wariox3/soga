@@ -12,5 +12,10 @@ use Doctrine\ORM\EntityRepository;
  */
 class SsoPeriodoRepository extends EntityRepository
 {   
-
+    public function DevDqlPeriodos() {
+        $em = $this->getEntityManager();         
+        $dql = "SELECT periodo FROM SogaNominaBundle:SsoPeriodo periodo WHERE periodo.anio = 2015";
+        $objQuery = $em->createQuery($dql);       
+        return $objQuery;                
+    }    
 }

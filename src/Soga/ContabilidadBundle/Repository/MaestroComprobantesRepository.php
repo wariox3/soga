@@ -16,16 +16,19 @@ class MaestroComprobantesRepository extends EntityRepository
      * Devuelve los registros de comprobantes sin exportar
      * @return type Objeto de tipo query de la clase maestro comprobantes
      */
-    public function DevDqlComprobantesSinExportar($strDesde = "", $strHasta = "") {
+    public function DevDqlComprobantesSinExportar($strDesde = "", $strHasta = "", $intTipoComprobante) {
         $em = $this->getEntityManager();         
-        $dql = "SELECT maestrocomprobantes FROM SogaContabilidadBundle:MaestroComprobantes maestrocomprobantes WHERE (maestrocomprobantes.tipop = 'NOMINA' OR maestrocomprobantes.tipop = 'PRIMAS' OR maestrocomprobantes.tipop = 'PRESTACIONES' OR maestrocomprobantes.tipop = 'PRESTACION') AND maestrocomprobantes.exportadoContabilidad = 0";
+        $dql = "SELECT maestrocomprobantes FROM SogaContabilidadBundle:MaestroComprobantes maestrocomprobantes WHERE (maestrocomprobantes.id = 1 OR maestrocomprobantes.id = 3 OR maestrocomprobantes.id = 4 OR maestrocomprobantes.id = 13 OR maestrocomprobantes.id = 2) AND maestrocomprobantes.exportadoContabilidad = 0";
         if($strDesde != "") {
            $dql = $dql . " AND maestrocomprobantes.fechapago >='". $strDesde ."'" ;
         }
         if($strHasta != "") {
            $dql = $dql . " AND maestrocomprobantes.fechapago <='". $strHasta ."'" ;
+        } 
+        if($intTipoComprobante != "") {
+            $dql = $dql . " AND maestrocomprobantes.id =" . $intTipoComprobante ;
         }
-        $objQuery = $em->createQuery($dql);       
-        return $objQuery;                
+        $dql .= " ORDER BY maestrocomprobantes.fechapago DESC";
+        return $dql;                
     }    
 }

@@ -6,6 +6,10 @@ soga_nomina_herramientas_intercambio_contai_prestaciones:
     pattern:  /nomina/herramientas/intercambio/contai/prestaciones/
     defaults: { _controller: SogaNominaBundle:HerIntCtiPrestaciones:lista }
 
+soga_nomina_herramientas_intercambio_contai_vacaciones:
+    pattern:  /nomina/herramientas/intercambio/contai/vacaciones/
+    defaults: { _controller: SogaNominaBundle:HerIntCtiVacaciones:lista }
+
 soga_nomina_herramientas_intercambio_contai_recibos:
     pattern:  /nomina/herramientas/intercambio/contai/recibos/
     defaults: { _controller: SogaNominaBundle:HerIntCtiRecibos:lista }

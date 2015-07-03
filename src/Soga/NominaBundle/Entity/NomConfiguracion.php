@@ -28,6 +28,11 @@ class NomConfiguracion {
     private $comprobantePrestaciones;    
 
     /**
+     * @ORM\Column(name="comprobante_vacaciones", type="string", length=5, nullable=false)
+     */
+    private $comprobanteVacaciones;     
+    
+    /**
      * @ORM\Column(name="comprobante_recibos", type="string", length=5, nullable=false)
      */
     private $comprobanteRecibos;     
@@ -390,5 +395,28 @@ class NomConfiguracion {
     public function getComprobanteRecibos()
     {
         return $this->comprobanteRecibos;
+    }
+
+    /**
+     * Set comprobanteVacaciones
+     *
+     * @param string $comprobanteVacaciones
+     * @return NomConfiguracion
+     */
+    public function setComprobanteVacaciones($comprobanteVacaciones)
+    {
+        $this->comprobanteVacaciones = $comprobanteVacaciones;
+
+        return $this;
+    }
+
+    /**
+     * Get comprobanteVacaciones
+     *
+     * @return string 
+     */
+    public function getComprobanteVacaciones()
+    {
+        return $this->comprobanteVacaciones;
     }
 }

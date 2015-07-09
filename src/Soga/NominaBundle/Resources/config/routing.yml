@@ -45,3 +45,7 @@ soga_nomina_configuracion:
 soga_nomina_utilidades_pila:
     pattern:  /nomina/utilidades/pila
     defaults: { _controller: SogaNominaBundle:UtiPila:lista }     
+    
+soga_nomina_procesos_procesar_nomina:
+    pattern:  /nomina/procesos/procesar/nomina
+    defaults: { _controller: SogaNominaBundle:ProProcesarNomina:lista }     

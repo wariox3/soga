@@ -95,7 +95,11 @@ class Nomina
      * @ORM\Column(name="exportado_contabilidad", type="integer", nullable=true)
      */    
     private $exportadoContabilidad;    
-    
+
+    /**
+     * @ORM\Column(name="proceso_auxiliar", type="integer", nullable=true)
+     */    
+    private $procesoAuxiliar;      
 
     /**
      * Set consecutivo
@@ -486,5 +490,28 @@ class Nomina
     public function getExportadoContabilidad()
     {
         return $this->exportadoContabilidad;
+    }
+
+    /**
+     * Set procesoAuxiliar
+     *
+     * @param integer $procesoAuxiliar
+     * @return Nomina
+     */
+    public function setProcesoAuxiliar($procesoAuxiliar)
+    {
+        $this->procesoAuxiliar = $procesoAuxiliar;
+
+        return $this;
+    }
+
+    /**
+     * Get procesoAuxiliar
+     *
+     * @return integer 
+     */
+    public function getProcesoAuxiliar()
+    {
+        return $this->procesoAuxiliar;
     }
 }

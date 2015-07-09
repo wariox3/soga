@@ -28,6 +28,11 @@ class SsoPila {
     private $codigoPeriodoFk;
 
     /**
+     * @ORM\Column(name="codigo_sucursal_fk", type="integer")
+     */
+    private $codigoSucursalFk;    
+    
+    /**
      * @ORM\Column(name="codigo_empleado_fk", type="string", length=5)
      */
     private $codigoEmpleadoFk;    
@@ -2295,5 +2300,28 @@ class SsoPila {
     public function getCodigoContratoFk()
     {
         return $this->codigoContratoFk;
+    }
+
+    /**
+     * Set codigoSucursalFk
+     *
+     * @param integer $codigoSucursalFk
+     * @return SsoPila
+     */
+    public function setCodigoSucursalFk($codigoSucursalFk)
+    {
+        $this->codigoSucursalFk = $codigoSucursalFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoSucursalFk
+     *
+     * @return integer 
+     */
+    public function getCodigoSucursalFk()
+    {
+        return $this->codigoSucursalFk;
     }
 }

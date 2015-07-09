@@ -19,75 +19,142 @@ class SsoPilaRepository extends EntityRepository
         $arContratos = new \Soga\NominaBundle\Entity\Contrato();                        
         $arContratos = $em->getRepository('SogaNominaBundle:Contrato')->devDqlContratosPeriodo($arPeriodo->getFechaDesde()->format('Y-m-d'), $arPeriodo->getFechaHasta()->format('Y-m-d'));                                                
         $i = 1;
-        foreach ($arContratos as $arContrato) {
+        foreach ($arContratos as $arContrato) {            
+            
             $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
             $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arContrato->getCodemple());        
-            $arEmpleadoSeguridadSocial = new \Soga\NominaBundle\Entity\SsoEmpleado();
-            $arEmpleadoSeguridadSocial = $em->getRepository('SogaNominaBundle:SsoEmpleado')->findOneBy(array('numeroIdentificacion' => $arEmpleado->getCedemple()));
-            //$arMunicipio = new \Soga\NominaBundle\Entity\Municipio();
-            //$arMunicipio = $em->getRepository('SogaNominaBundle:Municipio')->find($arEmpleado->getCodmuni());        
-            $arEps = new \Soga\NominaBundle\Entity\Eps();
-            $arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arEmpleado->getCodeps());                
-            $arPension = new \Soga\NominaBundle\Entity\Pension();
-            $arPension = $em->getRepository('SogaNominaBundle:Pension')->find($arEmpleado->getCodpension());                        
-            $arCaja = new \Soga\NominaBundle\Entity\Caja();
-            $arCaja = $em->getRepository('SogaNominaBundle:Caja')->find($arEmpleado->getCodigoCajaFk());                                    
-            if($arEmpleadoSeguridadSocial != "") {                            
-                $arPila = new \Soga\NominaBundle\Entity\SsoPila();
-                $arPila->setCodigoContratoFk($arContrato->getContrato());
-                $arPila->setCodigoPeriodoFk($codigoPeriodo);
-                $arPila->setCodigoEmpleadoFk($arContrato->getCodemple());
-                $arPila->setNumeroIdentificacion($this->RellenarNr($arEmpleado->getCedemple(), " ", 16, "D"));
-                $arPila->setTipoRegistro('02');
-                $arPila->setSecuencia($this->RellenarNr($i, "0", 5, "I"));
-                $arPila->setTipoDocumento($arEmpleado->getTipod());
-                $arPila->setTipo($this->RellenarNr($arEmpleadoSeguridadSocial->getTipoCotizanteRel()->getCodigoPila(), "0", 2, "I"));
-                $arPila->setSubtipo($this->RellenarNr($arEmpleadoSeguridadSocial->getSubtipoCotizanteRel()->getCodigoPila(), "0", 2, "I"));
-                if($arEmpleadoSeguridadSocial->getExtranjeroNoObligadoCotizarPensiones() == 1) {
-                    $arPila->setExtranjeroNoObligadoCotizarPensiones('X');
-                } else {
-                    $arPila->setExtranjeroNoObligadoCotizarPensiones(' ');
-                }
-                if($arEmpleadoSeguridadSocial->getColombianoResidenteExterior() == 1) {
-                    $arPila->setColombianoResidenteExterior('X');
-                } else {
-                    $arPila->setColombianoResidenteExterior(' ');
-                }
-                $arPila->setCodigoMunicipio('001');
-                $arPila->setCodigoDepartamento('05');
-                $arPila->setPrimerNombre($this->RellenarNr($arEmpleado->getNomemple(), " ", 20, "D"));
-                $arPila->setSegundoNombre($this->RellenarNr($arEmpleado->getNomemple1(), " ", 30, "D"));
-                $arPila->setPrimerApellido($this->RellenarNr($arEmpleado->getApemple(), " ", 20, "D"));
-                $arPila->setSegundoApellido($this->RellenarNr($arEmpleado->getApemple1(), " ", 30, "D"));
-                $arPila->setIngreso(' ');
-                $arPila->setRetiro(' ');
-                $arPila->setTrasladoDesdeOtraEps(' ');
-                $arPila->setTrasladoAOtraEps(' ');
-                $arPila->setTrasladoDesdeOtraPension(' ');
-                $arPila->setTrasladoAOtraPension(' ');               
-                $arPila->setVariacionPermanenteSalario(' ');
-                $arPila->setCorrecciones(' ');
-                $arPila->setVariacionTransitoriaSalario(' ');
-                $arPila->setSuspensionTemporalContratoLicenciaServicios(' ');
-                $arPila->setIncapacidadGeneral(' ');
-                $arPila->setLicenciaMaternidad(' ');
-                $arPila->setVacaciones(' ');
-                $arPila->setAporteVoluntario(' ');
-                $arPila->setVariacionCentrosTrabajo(' ');                
-                $arPila->setIncapacidadAccidenteTrabajoEnfermedadProfesional('00');                
-                $arPila->setCodigoEntidadPensionPertenece($this->RellenarNr($arPension->getCodigoInterfacePila(), " ", 6, "D"));
-                $arPila->setCodigoEntidadPensionTraslada('      ');
-                $arPila->setCodigoEntidadSaludPertenece($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));
-                $arPila->setCodigoEntidadSaludTraslada('      ');
-                $arPila->setCodigoEntidadCajaPertenece($this->RellenarNr($arCaja->getCodigoInterfacePila(), " ", 6, "D"));
-                $arPila->setDiasCotizadosPension('00');
-                $arPila->setDiasCotizadosSalud('00');
-                $arPila->setDiasCotizadosRiesgosProfesionales('00');
-                $arPila->setDiasCotizadosCajaCompensacion('00');
-                $em->persist($arPila);
-                $i++;
-            }
+            if($arEmpleado->getCodigoSucursalFk() == $arPeriodo->getCodigoSucursalFk()) {
+                if($arEmpleado->getCedemple() == '71397283') {
+                    $dateFechaDesde =  "";
+                    $dateFechaHasta =  "";
+                    $intDiasCotizar = 0;
+                    $fechaTerminaCotrato = $arContrato->getFechater()->format('Y-m-d');
+                    if($fechaTerminaCotrato == '-0001-11-30') {
+                        $dateFechaHasta = $arPeriodo->getFechaHasta();
+                    } else {
+                        //Falta comparar porque puede ser que se genere despues de que ya se termino el contrato                        
+                         $dateFechaHasta = $arContrato->getFechater();
+                    }
+
+                    if($arContrato->getFechainic() <  $arPeriodo->getFechaDesde() == true) {
+                        $dateFechaDesde = $arPeriodo->getFechaDesde();
+                    } else {
+                        $dateFechaDesde = $arContrato->getFechainic();
+                    }   
+
+                    if($dateFechaDesde != "" && $dateFechaHasta != "") {
+                        $intDias = $dateFechaDesde->diff($dateFechaHasta);
+                        $intDias = $intDias->format('%a');
+                        $intDiasCotizar = $intDias + 1;                                      
+                    }            
+
+                    $arEps = new \Soga\NominaBundle\Entity\Eps();
+                    $arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arEmpleado->getCodeps());                
+                    $arPension = new \Soga\NominaBundle\Entity\Pension();
+                    $arPension = $em->getRepository('SogaNominaBundle:Pension')->find($arEmpleado->getCodpension());                        
+                    $arCaja = new \Soga\NominaBundle\Entity\Caja();
+                    $arCaja = $em->getRepository('SogaNominaBundle:Caja')->find($arEmpleado->getCodigoCajaPk());                                    
+                    $arTipoCotizante = $em->getRepository('SogaNominaBundle:SsoTipoCotizante')->find($arEmpleado->getCodigoTipoCotizanteFk());
+                    $arSubtipoCotizante = $em->getRepository('SogaNominaBundle:SsoSubtipoCotizante')->find($arEmpleado->getCodigoSubtipoCotizanteFk());
+                    //Se crea el registro
+                    $arPila = new \Soga\NominaBundle\Entity\SsoPila();
+                    $arPila->setCodigoContratoFk($arContrato->getContrato());
+                    $arPila->setCodigoPeriodoFk($codigoPeriodo);
+                    $arPila->setCodigoSucursalFk($arEmpleado->getCodigoSucursalFk());
+                    $arPila->setCodigoEmpleadoFk($arContrato->getCodemple());
+                    $arPila->setNumeroIdentificacion($this->RellenarNr($arEmpleado->getCedemple(), " ", 16, "D"));
+                    $arPila->setTipoRegistro('02');
+                    $arPila->setSecuencia($this->RellenarNr($i, "0", 5, "I"));
+                    $arPila->setTipoDocumento($arEmpleado->getTipod());
+                    $arPila->setTipo($this->RellenarNr($arTipoCotizante->getCodigoPila(), "0", 2, "I"));
+                    $arPila->setSubtipo($this->RellenarNr($arSubtipoCotizante->getCodigoPila(), "0", 2, "I"));
+                    if($arEmpleado->getExtranjeroNoObligadoCotizarPensiones() == 1) {
+                        $arPila->setExtranjeroNoObligadoCotizarPensiones('X');
+                    } else {
+                        $arPila->setExtranjeroNoObligadoCotizarPensiones(' ');
+                    }
+                    if($arEmpleado->getColombianoResidenteExterior() == 1) {
+                        $arPila->setColombianoResidenteExterior('X');
+                    } else {
+                        $arPila->setColombianoResidenteExterior(' ');
+                    }
+                    $arPila->setCodigoMunicipio('001');
+                    $arPila->setCodigoDepartamento('05');
+                    $arPila->setPrimerNombre($this->RellenarNr($arEmpleado->getNomemple(), " ", 20, "D"));
+                    $arPila->setSegundoNombre($this->RellenarNr($arEmpleado->getNomemple1(), " ", 30, "D"));
+                    $arPila->setPrimerApellido($this->RellenarNr($arEmpleado->getApemple(), " ", 20, "D"));
+                    $arPila->setSegundoApellido($this->RellenarNr($arEmpleado->getApemple1(), " ", 30, "D"));
+                    $arPila->setIngreso(' ');
+                    $arPila->setRetiro(' ');
+                    $arPila->setTrasladoDesdeOtraEps(' ');
+                    $arPila->setTrasladoAOtraEps(' ');
+                    $arPila->setTrasladoDesdeOtraPension(' ');
+                    $arPila->setTrasladoAOtraPension(' ');               
+                    $arPila->setVariacionPermanenteSalario(' ');
+                    $arPila->setCorrecciones(' ');
+                    $arPila->setVariacionTransitoriaSalario(' ');
+                    $arPila->setSuspensionTemporalContratoLicenciaServicios(' ');
+                    $arPila->setIncapacidadGeneral(' ');
+                    $arPila->setLicenciaMaternidad(' ');
+                    $arPila->setVacaciones(' ');
+                    $arPila->setAporteVoluntario(' ');
+                    $arPila->setVariacionCentrosTrabajo(' ');                
+                    $arPila->setIncapacidadAccidenteTrabajoEnfermedadProfesional('00');                
+                    $arPila->setCodigoEntidadPensionPertenece($this->RellenarNr($arPension->getCodigoInterfacePila(), " ", 6, "D"));
+                    $arPila->setCodigoEntidadPensionTraslada('      ');
+                    $arPila->setCodigoEntidadSaludPertenece($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));
+                    $arPila->setCodigoEntidadSaludTraslada('      ');
+                    $arPila->setCodigoEntidadCajaPertenece($this->RellenarNr($arCaja->getCodigoInterfacePila(), " ", 6, "D"));
+                    $arPila->setDiasCotizadosPension($this->RellenarNr($intDiasCotizar, "0", 2, "I"));
+                    $arPila->setDiasCotizadosSalud($this->RellenarNr($intDiasCotizar, "0", 2, "I"));
+                    $arPila->setDiasCotizadosRiesgosProfesionales($this->RellenarNr($intDiasCotizar, "0", 2, "I"));
+                    $arPila->setDiasCotizadosCajaCompensacion($this->RellenarNr($intDiasCotizar, "0", 2, "I"));
+                    $arPila->setSalarioBasico($this->RellenarNr($arContrato->getSalario(), "0", 9, "I"));
+                    $arPila->setSalarioIntegral(' ');
+                    $arPila->setIbcPension('000000000');
+                    $arPila->setIbcSalud('000000000');
+                    $arPila->setIbcRiesgosProfesionales('000000000');
+                    $arPila->setIbcCaja('000644350');
+                    $arPila->setTarifaAportesPensiones($this->RellenarNr(($arEmpleado->getPension() + 4)/100, 0, 7, "D"));
+                    $arPila->setCotizacionObligatoria('000000000');
+                    $arPila->setAporteVoluntarioFondoPensionesObligatorias('000000000');
+                    $arPila->setCotizacionVoluntarioFondoPensionesObligatorias('000000000');
+                    $arPila->setTotalCotizacion('000000000');
+                    $arPila->setAportesFondoSolidaridadPensionalSolidaridad('000000000');
+                    $arPila->setAportesFondoSolidaridadPensionalSubsistencia('000000000');
+                    $arPila->setValorNoRetenidoAportesVoluntarios('000000000');
+                    $arPila->setTarifaAportesSalud('0.12500');
+                    $arPila->setCotizacionObligatoriaSalud('000000000');
+                    $arPila->setValorUpcAdicional('000000000');
+                    $arPila->setNumeroAutorizacionIncapacidadEnfermedadGeneral('               ');
+                    $arPila->setValorIncapacidadEnfermedadGeneral('000000000');
+                    $arPila->setNumeroAutorizacionLicenciaMaternidadPaternidad('               ');
+                    $arPila->setValorLicenciaMaternidadPaternidad('000000000');
+                    $arPila->setTarifaAportesRiesgosProfesionales($this->RellenarNr($arEmpleado->getNivel()/100, 0, 9, "D"));
+                    $arPila->setCentroTrabajoCodigoCt($this->RellenarNr($arEmpleado->getCodzona(), "0", 9, "I"));
+                    $arPila->setCotizacionObligatoriaRiesgos('000000000');
+                    $arPila->setTarifaAportesCCF('0.04000');
+                    $arPila->setValorAporteCCF('000000000');
+                    $arPila->setTarifaAportesSENA('0.00000');
+                    $arPila->setValorAportesSENA('000000000');
+                    $arPila->setTarifaAportesICBF('0.00000');
+                    $arPila->setValorAporteICBF('000000000');
+                    $arPila->setTarifaAportesESAP('0.00000');
+                    $arPila->setValorAporteESAP('000000000');
+                    $arPila->setTarifaAportesMEN('0.00000');
+                    $arPila->setValorAporteMEN('000000000');
+                    $arPila->setTipoDocumentoResponsableUPC('  ');
+                    $arPila->setNumeroIdentificacionResponsableUPCAdicional('                ');
+                    $arPila->setCotizanteExoneradoPagoAporteParafiscalesSalud(' ');
+                    $arPila->setCodigoAdministradoraRiesgosLaborales('      ');
+                    $arPila->setClaseRiesgoAfiliado(' ');
+                    $em->persist($arPila);
+                    $i++;                    
+                }                
+            }            
         }
+        $arPeriodo->setNumeroEmpleados($i - 1);
+        $em->persist($arPeriodo);
         $em->flush();        
         return true;
     }   

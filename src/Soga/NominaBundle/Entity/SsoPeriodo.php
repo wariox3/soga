@@ -26,6 +26,11 @@ class SsoPeriodo {
      * @ORM\Column(name="mes", type="integer")
      */
     private $mes;
+    
+    /**
+     * @ORM\Column(name="mes_salud", type="integer")
+     */
+    private $mesSalud;    
 
     /**
      * @ORM\Column(name="fecha_desde", type="date")
@@ -41,6 +46,32 @@ class SsoPeriodo {
      * @ORM\Column(name="estado_generado", type="boolean")
      */    
     private $estadoGenerado = 0;     
+
+    /**
+     * @ORM\Column(name="codigo_sucursal_fk", type="integer", nullable=true)
+     */    
+    private $codigoSucursalFk;    
+
+    /**
+     * @ORM\Column(name="fecha_pago", type="date")
+     */
+    private $fechaPago;    
+
+    /**
+     * @ORM\Column(name="numero_empleados", type="integer", nullable=true)
+     */    
+    private $numeroEmpleados;
+    
+    /**
+     * @ORM\Column(name="vr_nomina", type="float")
+     */    
+    private $vrNomina;    
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="SsoSucursal", inversedBy="periodosSucursalRel")
+     * @ORM\JoinColumn(name="codigo_sucursal_fk", referencedColumnName="codigo_sucursal_pk")
+     */
+    protected $sucursalRel;    
 
 
     /**
@@ -97,6 +128,29 @@ class SsoPeriodo {
     public function getMes()
     {
         return $this->mes;
+    }
+
+    /**
+     * Set mesSalud
+     *
+     * @param integer $mesSalud
+     * @return SsoPeriodo
+     */
+    public function setMesSalud($mesSalud)
+    {
+        $this->mesSalud = $mesSalud;
+
+        return $this;
+    }
+
+    /**
+     * Get mesSalud
+     *
+     * @return integer 
+     */
+    public function getMesSalud()
+    {
+        return $this->mesSalud;
     }
 
     /**
@@ -166,5 +220,120 @@ class SsoPeriodo {
     public function getEstadoGenerado()
     {
         return $this->estadoGenerado;
+    }
+
+    /**
+     * Set codigoSucursalFk
+     *
+     * @param integer $codigoSucursalFk
+     * @return SsoPeriodo
+     */
+    public function setCodigoSucursalFk($codigoSucursalFk)
+    {
+        $this->codigoSucursalFk = $codigoSucursalFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoSucursalFk
+     *
+     * @return integer 
+     */
+    public function getCodigoSucursalFk()
+    {
+        return $this->codigoSucursalFk;
+    }
+
+    /**
+     * Set fechaPago
+     *
+     * @param \DateTime $fechaPago
+     * @return SsoPeriodo
+     */
+    public function setFechaPago($fechaPago)
+    {
+        $this->fechaPago = $fechaPago;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaPago
+     *
+     * @return \DateTime 
+     */
+    public function getFechaPago()
+    {
+        return $this->fechaPago;
+    }
+
+    /**
+     * Set numeroEmpleados
+     *
+     * @param integer $numeroEmpleados
+     * @return SsoPeriodo
+     */
+    public function setNumeroEmpleados($numeroEmpleados)
+    {
+        $this->numeroEmpleados = $numeroEmpleados;
+
+        return $this;
+    }
+
+    /**
+     * Get numeroEmpleados
+     *
+     * @return integer 
+     */
+    public function getNumeroEmpleados()
+    {
+        return $this->numeroEmpleados;
+    }
+
+    /**
+     * Set vrNomina
+     *
+     * @param float $vrNomina
+     * @return SsoPeriodo
+     */
+    public function setVrNomina($vrNomina)
+    {
+        $this->vrNomina = $vrNomina;
+
+        return $this;
+    }
+
+    /**
+     * Get vrNomina
+     *
+     * @return float 
+     */
+    public function getVrNomina()
+    {
+        return $this->vrNomina;
+    }
+
+    /**
+     * Set sucursalRel
+     *
+     * @param \Soga\NominaBundle\Entity\SsoSucursal $sucursalRel
+     * @return SsoPeriodo
+     */
+    public function setSucursalRel(\Soga\NominaBundle\Entity\SsoSucursal $sucursalRel = null)
+    {
+        $this->sucursalRel = $sucursalRel;
+
+        return $this;
+    }
+
+    /**
+     * Get sucursalRel
+     *
+     * @return \Soga\NominaBundle\Entity\SsoSucursal 
+     */
+    public function getSucursalRel()
+    {
+        return $this->sucursalRel;
     }
 }

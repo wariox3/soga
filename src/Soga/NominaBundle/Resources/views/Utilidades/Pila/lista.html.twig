@@ -11,8 +11,13 @@
                 <th>CODIGO</th>
                 <th>AÑO</th>
                 <th>MES</th>
+                <th>MES S</th>
                 <th>DESDE</th>
                 <th>HASTA</th>
+                <th>SUCURSAL</th>
+                <th>FECHA PAGO</th>
+                <th>NUMERO</th>
+                <th>VALOR</th>                
                 <th></th>
             </tr>
 
@@ -21,8 +26,13 @@
                 <td><input type="hidden" name="LblCodigo[]" value="{{ arPeriodos.codigoPeriodoPk }}">{{ arPeriodos.codigoPeriodoPk }}</td>
                 <td>{{ arPeriodos.anio }}</td>
                 <td>{{ arPeriodos.mes }}</td>
+                <td>{{ arPeriodos.mesSalud }}</td>
                 <td>{{ arPeriodos.fechaDesde |date("Y/m/d")  }}</td>
-                <td>{{ arPeriodos.fechaHasta |date("Y/m/d")  }}</td>                                
+                <td>{{ arPeriodos.fechaHasta |date("Y/m/d")  }}</td>
+                <td>{{ arPeriodos.sucursalRel.nombre  }}</td>                
+                <td>{{ arPeriodos.fechaPago |date("Y/m/d")  }}</td>
+                <td style="text-align: right">{{ arPeriodos.numeroEmpleados | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arPeriodos.vrNomina | number_format(0, '.', ',') }}</td>
                 <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPeriodos.codigoPeriodoPk }}" /></td>
             </tr>
             {% endfor %}

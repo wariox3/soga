@@ -57,9 +57,9 @@ class Empleado
     private $codpension;    
 
     /**
-     * @ORM\Column(name="codigo_caja_fk", type="integer")
+     * @ORM\Column(name="codigo_caja_pk", type="integer")
      */    
-    private $codigoCajaFk;    
+    private $codigoCajaPk;    
     
     /**
      * @ORM\Column(name="codzona", type="string", length=3, nullable=false)
@@ -112,10 +112,44 @@ class Empleado
     private $celular;    
     
     /**
+     * @ORM\Column(name="pension", type="float")
+     */    
+    private $pension;     
+    
+    /**
+     * @ORM\Column(name="codigo_tipo_cotizante_fk", type="integer")
+     */    
+    private $codigoTipoCotizanteFk;         
+
+    /**
+     * @ORM\Column(name="codigo_subtipo_cotizante_fk", type="integer")
+     */    
+    private $codigoSubtipoCotizanteFk;    
+    
+    /**
+     * @ORM\Column(name="extranjero_no_obligado_cotizar_pensiones", type="boolean")
+     */    
+    private $extranjeroNoObligadoCotizarPensiones;     
+
+    /**
+     * @ORM\Column(name="colombiano_residente_exterior", type="boolean")
+     */    
+    private $colombianoResidenteExterior;    
+    
+    /**
+     * @ORM\Column(name="codigo_sso_sucursal_fk", type="integer")
+     */    
+    private $codigoSucursalFk;     
+    
+    /**
      * @ORM\Column(name="exportado_contabilidad", type="integer", nullable=true)
      */    
     private $exportadoContabilidad;     
     
+   
+
+
+
     /**
      * Set codemple
      *
@@ -137,6 +171,144 @@ class Empleado
     public function getCodemple()
     {
         return $this->codemple;
+    }
+
+    /**
+     * Set cedemple
+     *
+     * @param string $cedemple
+     * @return Empleado
+     */
+    public function setCedemple($cedemple)
+    {
+        $this->cedemple = $cedemple;
+
+        return $this;
+    }
+
+    /**
+     * Get cedemple
+     *
+     * @return string 
+     */
+    public function getCedemple()
+    {
+        return $this->cedemple;
+    }
+
+    /**
+     * Set nomemple
+     *
+     * @param string $nomemple
+     * @return Empleado
+     */
+    public function setNomemple($nomemple)
+    {
+        $this->nomemple = $nomemple;
+
+        return $this;
+    }
+
+    /**
+     * Get nomemple
+     *
+     * @return string 
+     */
+    public function getNomemple()
+    {
+        return $this->nomemple;
+    }
+
+    /**
+     * Set nomemple1
+     *
+     * @param string $nomemple1
+     * @return Empleado
+     */
+    public function setNomemple1($nomemple1)
+    {
+        $this->nomemple1 = $nomemple1;
+
+        return $this;
+    }
+
+    /**
+     * Get nomemple1
+     *
+     * @return string 
+     */
+    public function getNomemple1()
+    {
+        return $this->nomemple1;
+    }
+
+    /**
+     * Set apemple
+     *
+     * @param string $apemple
+     * @return Empleado
+     */
+    public function setApemple($apemple)
+    {
+        $this->apemple = $apemple;
+
+        return $this;
+    }
+
+    /**
+     * Get apemple
+     *
+     * @return string 
+     */
+    public function getApemple()
+    {
+        return $this->apemple;
+    }
+
+    /**
+     * Set apemple1
+     *
+     * @param string $apemple1
+     * @return Empleado
+     */
+    public function setApemple1($apemple1)
+    {
+        $this->apemple1 = $apemple1;
+
+        return $this;
+    }
+
+    /**
+     * Get apemple1
+     *
+     * @return string 
+     */
+    public function getApemple1()
+    {
+        return $this->apemple1;
+    }
+
+    /**
+     * Set cuenta
+     *
+     * @param string $cuenta
+     * @return Empleado
+     */
+    public function setCuenta($cuenta)
+    {
+        $this->cuenta = $cuenta;
+
+        return $this;
+    }
+
+    /**
+     * Get cuenta
+     *
+     * @return string 
+     */
+    public function getCuenta()
+    {
+        return $this->cuenta;
     }
 
     /**
@@ -186,26 +358,26 @@ class Empleado
     }
 
     /**
-     * Set cedemple
+     * Set codigoCajaPk
      *
-     * @param string $cedemple
+     * @param integer $codigoCajaPk
      * @return Empleado
      */
-    public function setCedemple($cedemple)
+    public function setCodigoCajaPk($codigoCajaPk)
     {
-        $this->cedemple = $cedemple;
+        $this->codigoCajaPk = $codigoCajaPk;
 
         return $this;
     }
 
     /**
-     * Get cedemple
+     * Get codigoCajaPk
      *
-     * @return string 
+     * @return integer 
      */
-    public function getCedemple()
+    public function getCodigoCajaPk()
     {
-        return $this->cedemple;
+        return $this->codigoCajaPk;
     }
 
     /**
@@ -255,82 +427,9 @@ class Empleado
     }
 
     /**
-     * Set nomemple
-     *
-     * @param string $nomemple
-     *
-     * @return Empleado
-     */
-    public function setNomemple($nomemple)
-    {
-        $this->nomemple = $nomemple;
-
-        return $this;
-    }
-
-    /**
-     * Get nomemple
-     *
-     * @return string
-     */
-    public function getNomemple()
-    {
-        return $this->nomemple;
-    }
-
-    /**
-     * Set nomemple1
-     *
-     * @param string $nomemple1
-     *
-     * @return Empleado
-     */
-    public function setNomemple1($nomemple1)
-    {
-        $this->nomemple1 = $nomemple1;
-
-        return $this;
-    }
-
-    /**
-     * Get nomemple1
-     *
-     * @return string
-     */
-    public function getNomemple1()
-    {
-        return $this->nomemple1;
-    }
-
-    /**
-     * Set cuenta
-     *
-     * @param string $cuenta
-     *
-     * @return Empleado
-     */
-    public function setCuenta($cuenta)
-    {
-        $this->cuenta = $cuenta;
-
-        return $this;
-    }
-
-    /**
-     * Get cuenta
-     *
-     * @return string
-     */
-    public function getCuenta()
-    {
-        return $this->cuenta;
-    }
-
-    /**
      * Set nivel
      *
      * @param integer $nivel
-     *
      * @return Empleado
      */
     public function setNivel($nivel)
@@ -343,80 +442,11 @@ class Empleado
     /**
      * Get nivel
      *
-     * @return integer
+     * @return integer 
      */
     public function getNivel()
     {
         return $this->nivel;
-    }
-
-    /**
-     * Set exportadoContabilidad
-     *
-     * @param integer $exportadoContabilidad
-     * @return Empleado
-     */
-    public function setExportadoContabilidad($exportadoContabilidad)
-    {
-        $this->exportadoContabilidad = $exportadoContabilidad;
-
-        return $this;
-    }
-
-    /**
-     * Get exportadoContabilidad
-     *
-     * @return integer 
-     */
-    public function getExportadoContabilidad()
-    {
-        return $this->exportadoContabilidad;
-    }
-
-    /**
-     * Set apemple
-     *
-     * @param string $apemple
-     * @return Empleado
-     */
-    public function setApemple($apemple)
-    {
-        $this->apemple = $apemple;
-
-        return $this;
-    }
-
-    /**
-     * Get apemple
-     *
-     * @return string 
-     */
-    public function getApemple()
-    {
-        return $this->apemple;
-    }
-
-    /**
-     * Set apemple1
-     *
-     * @param string $apemple1
-     * @return Empleado
-     */
-    public function setApemple1($apemple1)
-    {
-        $this->apemple1 = $apemple1;
-
-        return $this;
-    }
-
-    /**
-     * Get apemple1
-     *
-     * @return string 
-     */
-    public function getApemple1()
-    {
-        return $this->apemple1;
     }
 
     /**
@@ -581,25 +611,163 @@ class Empleado
     }
 
     /**
-     * Set codigoCajaFk
+     * Set pension
      *
-     * @param integer $codigoCajaFk
+     * @param float $pension
      * @return Empleado
      */
-    public function setCodigoCajaFk($codigoCajaFk)
+    public function setPension($pension)
     {
-        $this->codigoCajaFk = $codigoCajaFk;
+        $this->pension = $pension;
 
         return $this;
     }
 
     /**
-     * Get codigoCajaFk
+     * Get pension
+     *
+     * @return float 
+     */
+    public function getPension()
+    {
+        return $this->pension;
+    }
+
+    /**
+     * Set codigoTipoCotizanteFk
+     *
+     * @param integer $codigoTipoCotizanteFk
+     * @return Empleado
+     */
+    public function setCodigoTipoCotizanteFk($codigoTipoCotizanteFk)
+    {
+        $this->codigoTipoCotizanteFk = $codigoTipoCotizanteFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoTipoCotizanteFk
      *
      * @return integer 
      */
-    public function getCodigoCajaFk()
+    public function getCodigoTipoCotizanteFk()
     {
-        return $this->codigoCajaFk;
+        return $this->codigoTipoCotizanteFk;
+    }
+
+    /**
+     * Set codigoSubtipoCotizanteFk
+     *
+     * @param integer $codigoSubtipoCotizanteFk
+     * @return Empleado
+     */
+    public function setCodigoSubtipoCotizanteFk($codigoSubtipoCotizanteFk)
+    {
+        $this->codigoSubtipoCotizanteFk = $codigoSubtipoCotizanteFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoSubtipoCotizanteFk
+     *
+     * @return integer 
+     */
+    public function getCodigoSubtipoCotizanteFk()
+    {
+        return $this->codigoSubtipoCotizanteFk;
+    }
+
+    /**
+     * Set extranjeroNoObligadoCotizarPensiones
+     *
+     * @param boolean $extranjeroNoObligadoCotizarPensiones
+     * @return Empleado
+     */
+    public function setExtranjeroNoObligadoCotizarPensiones($extranjeroNoObligadoCotizarPensiones)
+    {
+        $this->extranjeroNoObligadoCotizarPensiones = $extranjeroNoObligadoCotizarPensiones;
+
+        return $this;
+    }
+
+    /**
+     * Get extranjeroNoObligadoCotizarPensiones
+     *
+     * @return boolean 
+     */
+    public function getExtranjeroNoObligadoCotizarPensiones()
+    {
+        return $this->extranjeroNoObligadoCotizarPensiones;
+    }
+
+    /**
+     * Set colombianoResidenteExterior
+     *
+     * @param boolean $colombianoResidenteExterior
+     * @return Empleado
+     */
+    public function setColombianoResidenteExterior($colombianoResidenteExterior)
+    {
+        $this->colombianoResidenteExterior = $colombianoResidenteExterior;
+
+        return $this;
+    }
+
+    /**
+     * Get colombianoResidenteExterior
+     *
+     * @return boolean 
+     */
+    public function getColombianoResidenteExterior()
+    {
+        return $this->colombianoResidenteExterior;
+    }
+
+    /**
+     * Set codigoSucursalFk
+     *
+     * @param integer $codigoSucursalFk
+     * @return Empleado
+     */
+    public function setCodigoSucursalFk($codigoSucursalFk)
+    {
+        $this->codigoSucursalFk = $codigoSucursalFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoSucursalFk
+     *
+     * @return integer 
+     */
+    public function getCodigoSucursalFk()
+    {
+        return $this->codigoSucursalFk;
+    }
+
+    /**
+     * Set exportadoContabilidad
+     *
+     * @param integer $exportadoContabilidad
+     * @return Empleado
+     */
+    public function setExportadoContabilidad($exportadoContabilidad)
+    {
+        $this->exportadoContabilidad = $exportadoContabilidad;
+
+        return $this;
+    }
+
+    /**
+     * Get exportadoContabilidad
+     *
+     * @return integer 
+     */
+    public function getExportadoContabilidad()
+    {
+        return $this->exportadoContabilidad;
     }
 }

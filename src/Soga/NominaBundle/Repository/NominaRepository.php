@@ -28,4 +28,16 @@ class NominaRepository extends EntityRepository
         $objQuery = $em->createQuery($dql);       
         return $objQuery;                
     }    
+    
+    public function dqlNominaSinProcesar($strDesde = "", $strHasta = "") {
+        $em = $this->getEntityManager();         
+        $dql = "SELECT nomina FROM SogaNominaBundle:Nomina nomina WHERE nomina.procesoAuxiliar = 0";
+        if($strDesde != "") {
+           $dql = $dql . " AND nomina.fechaDesde >='". $strDesde ."'" ;
+        }
+        if($strHasta != "") {
+           $dql = $dql . " AND nomina.fechaDesde <='". $strHasta ."'" ;
+        }        
+        return $dql;                
+    }    
 }

@@ -35,13 +35,13 @@ class Periodo
      * @ORM\Column(name="hasta", type="date", nullable=true)
      */    
     private $hasta;     
-   
+
+
 
     /**
      * Set codigo
      *
      * @param string $codigo
-     *
      * @return Periodo
      */
     public function setCodigo($codigo)
@@ -54,7 +54,7 @@ class Periodo
     /**
      * Get codigo
      *
-     * @return string
+     * @return string 
      */
     public function getCodigo()
     {
@@ -65,7 +65,6 @@ class Periodo
      * Set codzona
      *
      * @param string $codzona
-     *
      * @return Periodo
      */
     public function setCodzona($codzona)
@@ -78,7 +77,7 @@ class Periodo
     /**
      * Get codzona
      *
-     * @return string
+     * @return string 
      */
     public function getCodzona()
     {
@@ -89,7 +88,6 @@ class Periodo
      * Set pagado
      *
      * @param string $pagado
-     *
      * @return Periodo
      */
     public function setPagado($pagado)
@@ -102,7 +100,7 @@ class Periodo
     /**
      * Get pagado
      *
-     * @return string
+     * @return string 
      */
     public function getPagado()
     {
@@ -113,7 +111,6 @@ class Periodo
      * Set desde
      *
      * @param \DateTime $desde
-     *
      * @return Periodo
      */
     public function setDesde($desde)
@@ -126,7 +123,7 @@ class Periodo
     /**
      * Get desde
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getDesde()
     {
@@ -137,7 +134,6 @@ class Periodo
      * Set hasta
      *
      * @param \DateTime $hasta
-     *
      * @return Periodo
      */
     public function setHasta($hasta)
@@ -150,7 +146,7 @@ class Periodo
     /**
      * Get hasta
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getHasta()
     {

@@ -31,7 +31,11 @@ class Contrato
      */
     private $codemple;     
     
-
+    /**
+     * @ORM\Column(name="salario", type="string", length=10)
+     */
+    private $salario; 
+    
     /**
      * Set contrato
      *
@@ -122,5 +126,28 @@ class Contrato
     public function getFechater()
     {
         return $this->fechater;
+    }
+
+    /**
+     * Set salario
+     *
+     * @param string $salario
+     * @return Contrato
+     */
+    public function setSalario($salario)
+    {
+        $this->salario = $salario;
+
+        return $this;
+    }
+
+    /**
+     * Get salario
+     *
+     * @return string 
+     */
+    public function getSalario()
+    {
+        return $this->salario;
     }
 }

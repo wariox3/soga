@@ -22,6 +22,6 @@ class DenominaRepository extends EntityRepository
         $dql = "SELECT denomina FROM SogaNominaBundle:Denomina denomina WHERE denomina.consecutivo = " . $strConsecutivo;
         $objQuery = $em->createQuery($dql);       
         return $objQuery;                
-    }      
+    }        
   
 }

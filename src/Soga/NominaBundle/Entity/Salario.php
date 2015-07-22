@@ -62,6 +62,21 @@ class Salario
     private $nitEmpresaUsuaria;    
     
     /**
+     * @ORM\Column(name="abreviatura", type="string", length=5)
+     */
+    private $abreviatura;        
+
+    /**
+     * @ORM\Column(name="prestacion", type="string", length=2)
+     */
+    private $prestacion;               
+
+    /**
+     * @ORM\Column(name="genera_ibc", type="integer")
+     */
+    private $genera_ibc;     
+
+    /**
      * Set codsala
      *
      * @param string $codsala
@@ -82,6 +97,29 @@ class Salario
     public function getCodsala()
     {
         return $this->codsala;
+    }
+
+    /**
+     * Set desala
+     *
+     * @param string $desala
+     * @return Salario
+     */
+    public function setDesala($desala)
+    {
+        $this->desala = $desala;
+
+        return $this;
+    }
+
+    /**
+     * Get desala
+     *
+     * @return string 
+     */
+    public function getDesala()
+    {
+        return $this->desala;
     }
 
     /**
@@ -108,6 +146,52 @@ class Salario
     }
 
     /**
+     * Set cuenta2
+     *
+     * @param string $cuenta2
+     * @return Salario
+     */
+    public function setCuenta2($cuenta2)
+    {
+        $this->cuenta2 = $cuenta2;
+
+        return $this;
+    }
+
+    /**
+     * Get cuenta2
+     *
+     * @return string 
+     */
+    public function getCuenta2()
+    {
+        return $this->cuenta2;
+    }
+
+    /**
+     * Set cuenta3
+     *
+     * @param string $cuenta3
+     * @return Salario
+     */
+    public function setCuenta3($cuenta3)
+    {
+        $this->cuenta3 = $cuenta3;
+
+        return $this;
+    }
+
+    /**
+     * Get cuenta3
+     *
+     * @return string 
+     */
+    public function getCuenta3()
+    {
+        return $this->cuenta3;
+    }
+
+    /**
      * Set tipo_asiento
      *
      * @param integer $tipoAsiento
@@ -128,29 +212,6 @@ class Salario
     public function getTipoAsiento()
     {
         return $this->tipo_asiento;
-    }
-
-    /**
-     * Set desala
-     *
-     * @param string $desala
-     * @return Salario
-     */
-    public function setDesala($desala)
-    {
-        $this->desala = $desala;
-
-        return $this;
-    }
-
-    /**
-     * Get desala
-     *
-     * @return string 
-     */
-    public function getDesala()
-    {
-        return $this->desala;
     }
 
     /**
@@ -246,48 +307,71 @@ class Salario
     }
 
     /**
-     * Set cuenta2
+     * Set abreviatura
      *
-     * @param string $cuenta2
+     * @param string $abreviatura
      * @return Salario
      */
-    public function setCuenta2($cuenta2)
+    public function setAbreviatura($abreviatura)
     {
-        $this->cuenta2 = $cuenta2;
+        $this->abreviatura = $abreviatura;
 
         return $this;
     }
 
     /**
-     * Get cuenta2
+     * Get abreviatura
      *
      * @return string 
      */
-    public function getCuenta2()
+    public function getAbreviatura()
     {
-        return $this->cuenta2;
+        return $this->abreviatura;
     }
 
     /**
-     * Set cuenta3
+     * Set prestacion
      *
-     * @param string $cuenta3
+     * @param string $prestacion
      * @return Salario
      */
-    public function setCuenta3($cuenta3)
+    public function setPrestacion($prestacion)
     {
-        $this->cuenta3 = $cuenta3;
+        $this->prestacion = $prestacion;
 
         return $this;
     }
 
     /**
-     * Get cuenta3
+     * Get prestacion
      *
      * @return string 
      */
-    public function getCuenta3()
+    public function getPrestacion()
     {
-        return $this->cuenta3;
+        return $this->prestacion;
+    }
+
+    /**
+     * Set genera_ibc
+     *
+     * @param integer $generaIbc
+     * @return Salario
+     */
+    public function setGeneraIbc($generaIbc)
+    {
+        $this->genera_ibc = $generaIbc;
+
+        return $this;
+    }
+
+    /**
+     * Get genera_ibc
+     *
+     * @return integer 
+     */
+    public function getGeneraIbc()
+    {
+        return $this->genera_ibc;
     }
 }

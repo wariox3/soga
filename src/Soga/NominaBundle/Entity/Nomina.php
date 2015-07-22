@@ -102,6 +102,11 @@ class Nomina
     private $procesoAuxiliar;      
 
     /**
+     * @ORM\Column(name="ibc_tiempo_suple", type="integer", nullable=true)
+     */    
+    private $ibcTiempoSuple;      
+    
+    /**
      * Set consecutivo
      *
      * @param string $consecutivo
@@ -513,5 +518,28 @@ class Nomina
     public function getProcesoAuxiliar()
     {
         return $this->procesoAuxiliar;
+    }
+
+    /**
+     * Set ibcTiempoSuple
+     *
+     * @param integer $ibcTiempoSuple
+     * @return Nomina
+     */
+    public function setIbcTiempoSuple($ibcTiempoSuple)
+    {
+        $this->ibcTiempoSuple = $ibcTiempoSuple;
+
+        return $this;
+    }
+
+    /**
+     * Get ibcTiempoSuple
+     *
+     * @return integer 
+     */
+    public function getIbcTiempoSuple()
+    {
+        return $this->ibcTiempoSuple;
     }
 }

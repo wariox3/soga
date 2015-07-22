@@ -17,37 +17,39 @@
                 <th>SUCURSAL</th>
                 <th>FECHA PAGO</th>
                 <th>NUMERO</th>
-                <th>VALOR</th>                
+                <th>VALOR</th>
+                <th>E.G</th>
+                <th>GENERADO</th>
+                <th></th>
+                <th></th>
+                <th></th>
                 <th></th>
             </tr>
 
-            {% for arPeriodos in arPeriodos %}
+            {% for arPeriodoDetalles in arPeriodoDetalles %}
             <tr>
-                <td><input type="hidden" name="LblCodigo[]" value="{{ arPeriodos.codigoPeriodoPk }}">{{ arPeriodos.codigoPeriodoPk }}</td>
-                <td>{{ arPeriodos.anio }}</td>
-                <td>{{ arPeriodos.mes }}</td>
-                <td>{{ arPeriodos.mesSalud }}</td>
-                <td>{{ arPeriodos.fechaDesde |date("Y/m/d")  }}</td>
-                <td>{{ arPeriodos.fechaHasta |date("Y/m/d")  }}</td>
-                <td>{{ arPeriodos.sucursalRel.nombre  }}</td>                
-                <td>{{ arPeriodos.fechaPago |date("Y/m/d")  }}</td>
-                <td style="text-align: right">{{ arPeriodos.numeroEmpleados | number_format(0, '.', ',') }}</td>
-                <td style="text-align: right">{{ arPeriodos.vrNomina | number_format(0, '.', ',') }}</td>
-                <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPeriodos.codigoPeriodoPk }}" /></td>
+                <td><input type="hidden" name="LblCodigo[]" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}">{{ arPeriodoDetalles.codigoPeriodoDetallePk }}</td>
+                <td>{{ arPeriodoDetalles.anio }}</td>
+                <td>{{ arPeriodoDetalles.mes }}</td>
+                <td>{{ arPeriodoDetalles.mesSalud }}</td>
+                <td>{{ arPeriodoDetalles.fechaDesde |date("Y/m/d")  }}</td>
+                <td>{{ arPeriodoDetalles.fechaHasta |date("Y/m/d")  }}</td>
+                <td>({{ arPeriodoDetalles.codigoSucursalFk  }}){{ arPeriodoDetalles.sucursalRel.nombre  }}</td>                
+                <td>{{ arPeriodoDetalles.fechaPago |date("Y/m/d")  }}</td>
+                <td style="text-align: right">{{ arPeriodoDetalles.numeroEmpleados | number_format(0, '.', ',') }}</td>
+                <td style="text-align: right">{{ arPeriodoDetalles.vrNomina | number_format(0, '.', ',') }}</td>
+                <td>{{ arPeriodoDetalles.generarEmpleados  }}</td>                                
+                <td>{% if arPeriodoDetalles.estadoGenerado == 1 %} SI {% else %} NO {% endif %}</td>   
+                <td>{% if arPeriodoDetalles.estadoGenerado == 1 %}<button class="btn btn-default btn-xs" type="submit" name="OpExportar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Pila</button>{% endif %}</td>
+                <td>{% if arPeriodoDetalles.estadoGenerado == 1 %}<button class="btn btn-default btn-xs" type="submit" name="OpExportarExcel" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Excel</button>{% endif %}</td>
+                <td>{% if arPeriodoDetalles.estadoGenerado == 1 %}<button class="btn btn-default btn-xs" type="submit" name="OpDesgenerar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Desgenerar</button>{% endif %}</td>                
+                <td>{% if arPeriodoDetalles.estadoGenerado == 0 %}<button class="btn btn-default btn-xs" type="submit" name="OpGenerar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Generar</button>{% endif %}</td>                                                
             </tr>
             {% endfor %}
         </table>
 
         <div class="navigation">
-            {{ knp_pagination_render(arPeriodos) }}
-        </div>
-
-        <!-- Botones Menu Items -->
-        <div class="btn-toolbar" style="float: right">
-            <div class="btn-group">
-                <button class="btn btn-default" type="submit" name="OpSubmit" value="OpExportar" >Exportar</button>                
-                <button class="btn btn-default" type="submit" name="OpSubmit" value="OpGenerar" >Generar</button>                
-            </div>
+            {{ knp_pagination_render(arPeriodoDetalles) }}
         </div>
         <br /><br />
         <hr/>

@@ -11,13 +11,13 @@ use Doctrine\ORM\EntityRepository;
  * repository methods below.
  */
 class NominaRepository extends EntityRepository
-{   
+{
     /**
      * Devuelve los registros de nomina sin exportar
      * @return type Objeto de tipo query de la clase nomina
      */
     public function DevDqlNominaSinExportar($strDesde = "", $strHasta = "") {
-        $em = $this->getEntityManager();         
+        $em = $this->getEntityManager();
         $dql = "SELECT nomina FROM SogaNominaBundle:Nomina nomina WHERE nomina.exportadoContabilidad = 0";
         if($strDesde != "") {
            $dql = $dql . " AND nomina.fechaDesde >='". $strDesde ."'" ;
@@ -25,19 +25,199 @@ class NominaRepository extends EntityRepository
         if($strHasta != "") {
            $dql = $dql . " AND nomina.fechaDesde <='". $strHasta ."'" ;
         }
-        $objQuery = $em->createQuery($dql);       
-        return $objQuery;                
-    }    
-    
+        $objQuery = $em->createQuery($dql);
+        return $objQuery;
+    }
+
     public function dqlNominaSinProcesar($strDesde = "", $strHasta = "") {
-        $em = $this->getEntityManager();         
+        $em = $this->getEntityManager();
         $dql = "SELECT nomina FROM SogaNominaBundle:Nomina nomina WHERE nomina.procesoAuxiliar = 0";
         if($strDesde != "") {
            $dql = $dql . " AND nomina.fechaDesde >='". $strDesde ."'" ;
         }
         if($strHasta != "") {
            $dql = $dql . " AND nomina.fechaDesde <='". $strHasta ."'" ;
-        }        
-        return $dql;                
-    }    
+        }
+        return $dql;
+    }
+
+    public function generarAuxiliar($strConsecutivo) {
+        $em = $this->getEntityManager();
+        $arNomina = new \Soga\NominaBundle\Entity\Nomina();
+        $arNomina = $em->getRepository('SogaNominaBundle:Nomina')->find($strConsecutivo);
+
+        $douSalario = 0;
+        $douSuplementario = 0;
+        $douLicencia = 0;
+        $douIncapacidad = 0;
+        $douAdicional = 0;
+
+        $arDenominas = new \Soga\NominaBundle\Entity\Denomina();
+        $arDenominas = $em->getRepository('SogaNominaBundle:Denomina')->findBy(array('consecutivo' => $strConsecutivo));
+        foreach ($arDenominas AS $arDenomina) {
+            $arSalario = new \Soga\NominaBundle\Entity\Salario();
+            $arSalario = $em->getRepository('SogaNominaBundle:Salario')->find($arDenomina->getCodsala());
+            if($arSalario->getGeneraIbc() == 1) {
+                switch ($arSalario->getAbreviatura()) {
+                    case 'AUTO':
+                        if($arDenomina->getCodsala() == '01') {
+                            $douSalario += $arDenomina->getIbcprestacional();
+                        }                    
+                    break;
+
+                    case '5COMP':
+                       $douSuplementario += $arDenomina->getIbcprestacional();
+                    break;
+
+                    case '1BONI':
+                       $douAdicional += $arDenomina->getIbcprestacional();
+                    break;
+
+                    case '3COMI':
+                       $douAdicional += $arDenomina->getIbcprestacional();
+                    break;
+
+                    case '0LICE':
+                       $douLicencia += $arDenomina->getIbcprestacional();
+                    break;
+
+                    case '0INCA':
+                       $douIncapacidad += $arDenomina->getIbcprestacional();
+                    break;
+                }                
+            }
+        }
+
+        if($arNomina->getFechaDesde()->format('m') != $arNomina->getFechaHasta()->format('m')) {
+            $fechaDesde = $arNomina->getFechaDesde();
+            $fechaHasta = $arNomina->getFechaHasta();
+
+            //Mes 1
+            $intUltimoDiaMes = $this->ultimoDiaMes($arNomina->getFechaDesde()->format('Y'), $arNomina->getFechaDesde()->format('m'));
+            $strHastaMes = $arNomina->getFechaDesde()->format('Y/m') . "/" . $intUltimoDiaMes;
+            $fechaHastaMes = date_create($strHastaMes);
+
+            $intDias = $fechaDesde->diff($fechaHastaMes);
+            $intDias = $intDias->format('%a');
+            $intDiasMes1 = $intDias + 1;
+
+            //Mes 2
+            $intPrimerDiaMes = 1;
+            $strDesdeMes = $arNomina->getFechaHasta()->format('Y/m') . "/" . $intPrimerDiaMes;
+            $fechaDesdeMes = date_create($strDesdeMes);
+
+            $intDias = $fechaDesdeMes->diff($fechaHasta);
+            $intDias = $intDias->format('%a');
+            $intDiasMes2 = $intDias + 1;
+
+            $intTotalDias = $intDiasMes1 + $intDiasMes2;
+
+            $arNominaDetalleAuxiliar = new \Soga\NominaBundle\Entity\NominaDetalleAuxiliar();
+            $arNominaDetalleAuxiliar->setCodigoNominaFk($strConsecutivo);
+            $arNominaDetalleAuxiliar->setNumeroIdentificacion($arNomina->getCedulaEmpleado());
+            $arNominaDetalleAuxiliar->setAnio($arNomina->getFechaDesde()->format('Y'));
+            $arNominaDetalleAuxiliar->setMes($arNomina->getFechaDesde()->format('m'));
+            $arNominaDetalleAuxiliar->setDias($intDiasMes1);
+            $arNominaDetalleAuxiliar->setFechaDesde($fechaDesde);
+            $arNominaDetalleAuxiliar->setFechaHasta($fechaHastaMes);
+            $floIngresoBaseCotizacion = ($arNomina->getPresta() / $intTotalDias) * $intDiasMes1;
+            $douSalarioPeriodo = ($douSalario / $intTotalDias) * $intDiasMes1;
+            $douSuplementarioPeriodo = ($douSuplementario / $intTotalDias) * $intDiasMes1;
+            $douLicenciaPeriodo = ($douLicencia / $intTotalDias) * $intDiasMes1;
+            $douIncapacidadPeriodo = ($douIncapacidad / $intTotalDias) * $intDiasMes1;
+            $douAdicionalPeriodo = ($douAdicional / $intTotalDias) * $intDiasMes1;
+            $arNominaDetalleAuxiliar->setIngresoBaseCotizacion($floIngresoBaseCotizacion);
+            $arNominaDetalleAuxiliar->setVrSalario($douSalarioPeriodo);
+            $arNominaDetalleAuxiliar->setVrSuplementario($douSuplementarioPeriodo);
+            $arNominaDetalleAuxiliar->setVrLicencia($douLicenciaPeriodo);
+            $arNominaDetalleAuxiliar->setVrIncapacidad($douIncapacidadPeriodo);
+            $arNominaDetalleAuxiliar->setVrAdicional($douAdicionalPeriodo);
+            
+            $em->persist($arNominaDetalleAuxiliar);
+
+            $arNominaDetalleAuxiliar = new \Soga\NominaBundle\Entity\NominaDetalleAuxiliar();
+            $arNominaDetalleAuxiliar->setCodigoNominaFk($strConsecutivo);
+            $arNominaDetalleAuxiliar->setNumeroIdentificacion($arNomina->getCedulaEmpleado());
+            $arNominaDetalleAuxiliar->setAnio($arNomina->getFechaHasta()->format('Y'));
+            $arNominaDetalleAuxiliar->setMes($arNomina->getFechaHasta()->format('m'));
+            $arNominaDetalleAuxiliar->setDias($intDiasMes2);
+            $arNominaDetalleAuxiliar->setFechaDesde($fechaDesdeMes);
+            $arNominaDetalleAuxiliar->setFechaHasta($fechaHasta);
+            $floIngresoBaseCotizacion = ($arNomina->getPresta() / $intTotalDias) * $intDiasMes2;
+            $douSalarioPeriodo = ($douSalario / $intTotalDias) * $intDiasMes2;
+            $douSuplementarioPeriodo = ($douSuplementario / $intTotalDias) * $intDiasMes2;
+            $douLicenciaPeriodo = ($douLicencia / $intTotalDias) * $intDiasMes2;
+            $douIncapacidadPeriodo = ($douIncapacidad / $intTotalDias) * $intDiasMes2;
+            $douAdicionalPeriodo = ($douAdicional / $intTotalDias) * $intDiasMes2;
+            $arNominaDetalleAuxiliar->setIngresoBaseCotizacion($floIngresoBaseCotizacion);
+            $arNominaDetalleAuxiliar->setVrSalario($douSalarioPeriodo);
+            $arNominaDetalleAuxiliar->setVrSuplementario($douSuplementarioPeriodo);
+            $arNominaDetalleAuxiliar->setVrLicencia($douLicenciaPeriodo);
+            $arNominaDetalleAuxiliar->setVrIncapacidad($douIncapacidadPeriodo);
+            $arNominaDetalleAuxiliar->setVrAdicional($douAdicionalPeriodo);
+            $em->persist($arNominaDetalleAuxiliar);
+
+        } else {
+            $fechaDesde = $arNomina->getFechaDesde();
+            $fechaHasta = $arNomina->getFechaHasta();
+            $intDias = $fechaDesde->diff($fechaHasta);
+            $intDias = $intDias->format('%a');
+            $intDiasPeriodo = $intDias + 1;
+
+            $arNominaDetalleAuxiliar = new \Soga\NominaBundle\Entity\NominaDetalleAuxiliar();
+            $arNominaDetalleAuxiliar->setCodigoNominaFk($strConsecutivo);
+            $arNominaDetalleAuxiliar->setNumeroIdentificacion($arNomina->getCedulaEmpleado());
+            $arNominaDetalleAuxiliar->setAnio($arNomina->getFechaDesde()->format('Y'));
+            $arNominaDetalleAuxiliar->setMes($arNomina->getFechaDesde()->format('m'));
+            $arNominaDetalleAuxiliar->setDias($intDiasPeriodo);
+            $arNominaDetalleAuxiliar->setFechaDesde($fechaDesde);
+            $arNominaDetalleAuxiliar->setFechaHasta($fechaHasta);
+            $arNominaDetalleAuxiliar->setIngresoBaseCotizacion($arNomina->getPresta());
+            $arNominaDetalleAuxiliar->setVrSalario($douSalario);
+            $arNominaDetalleAuxiliar->setVrSuplementario($douSuplementario);
+            $arNominaDetalleAuxiliar->setVrLicencia($douLicencia);
+            $arNominaDetalleAuxiliar->setVrIncapacidad($douIncapacidad);
+            $arNominaDetalleAuxiliar->setVrAdicional($douAdicional);
+            $em->persist($arNominaDetalleAuxiliar);
+        }
+        $arNomina->setProcesoAuxiliar(1);
+        $em->persist($arNomina);
+        //$em->flush();
+    }
+
+    function ultimoDiaMes($elAnio,$elMes) {
+      return date("d",(mktime(0,0,0,$elMes+1,1,$elAnio)-1));
+    }
+    
+    public function devIbc($fechaDesde, $fechaHasta, $strIdentificacion) {
+        $em = $this->getEntityManager();         
+        $dql   = "SELECT SUM(nomina.presta) FROM SogaNominaBundle:Nomina nomina "
+                . "WHERE nomina.fechaDesde >= '" . $fechaDesde . "' "
+                . "AND nomina.fechaDesde <= '" . $fechaHasta .  "' "
+                . "AND nomina.cedulaEmpleado = '" . $strIdentificacion . "'";
+        $query = $em->createQuery($dql);
+        $douIBC = $query->getSingleScalarResult();
+        return $douIBC;               
+    }        
+    
+    public function devTiempoSuplementario($fechaDesde, $fechaHasta, $strIdentificacion) {
+        $em = $this->getEntityManager();         
+        $dql   = "SELECT SUM(nomina.ibcTiempoSuple) FROM SogaNominaBundle:Nomina nomina "
+                . "WHERE nomina.fechaDesde >= '" . $fechaDesde . "' "
+                . "AND nomina.fechaDesde <= '" . $fechaHasta .  "' "
+                . "AND nomina.cedulaEmpleado = '" . $strIdentificacion . "'";
+        $query = $em->createQuery($dql);
+        $douIbcTiempoSuplementario = $query->getSingleScalarResult();
+        return $douIbcTiempoSuplementario;               
+    }            
+    
+    public function nominasPeriodo($fechaDesde, $fechaHasta, $strIdentificacion) {
+        $em = $this->getEntityManager();         
+        $dql   = "SELECT nomina FROM SogaNominaBundle:Nomina nomina "
+                . "WHERE nomina.fechaDesde >= '" . $fechaDesde . "' "
+                . "AND nomina.fechaDesde <= '" . $fechaHasta .  "' "
+                . "AND nomina.cedulaEmpleado = '" . $strIdentificacion . "'";
+        $query = $em->createQuery($dql);        
+        return $query->getResult();               
+    }      
 }

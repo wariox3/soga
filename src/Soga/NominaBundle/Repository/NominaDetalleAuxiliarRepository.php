@@ -12,5 +12,14 @@ use Doctrine\ORM\EntityRepository;
  */
 class NominaDetalleAuxiliarRepository extends EntityRepository
 {   
-
+    public function devIbc($intAnio, $intMes, $strIdentificacion) {
+        $em = $this->getEntityManager();         
+        $dql   = "SELECT SUM(nomina.ingresoBaseCotizacion) FROM SogaNominaBundle:NominaDetalleAuxiliar nomina "
+                . "WHERE nomina.anio = " . $intAnio . " "
+                . "AND nomina.mes = " . $intMes .  " "
+                . "AND nomina.numeroIdentificacion = '" . $strIdentificacion . "'";
+        $query = $em->createQuery($dql);
+        $douIBC = $query->getSingleScalarResult();
+        return $douIBC;               
+    }    
 }

@@ -15,9 +15,22 @@ class ContratoRepository extends EntityRepository
     public function devDqlContratosPeriodo($fechaDesde = "", $fechaHasta = "") {
         $em = $this->getEntityManager();         
         $dql = "SELECT contrato FROM SogaNominaBundle:Contrato contrato "
-                . "WHERE (contrato.fechater >= '" . $fechaDesde . "' OR contrato.fechater = '0000-00-00') AND contrato.fechainic <='" . $fechaHasta . "'";       
+                . "WHERE (contrato.fechater >= '" . $fechaDesde . "' "
+                . "OR contrato.fechater = '0000-00-00') "
+                . "AND contrato.fechainic <='" . $fechaHasta . "' "
+                . "GROUP BY contrato.codemple";       
         $objQuery = $em->createQuery($dql);  
         $arContratos = $objQuery->getResult();
         return $arContratos;                
-    }            
+    }  
+    
+    public function devDqlContratosPeriodoEmpleado($fechaDesde = "", $fechaHasta = "", $strCodigoEmpleado) {
+        $em = $this->getEntityManager();         
+        $dql = "SELECT contrato FROM SogaNominaBundle:Contrato contrato "
+                . "WHERE (contrato.fechater >= '" . $fechaDesde . "' OR contrato.fechater = '0000-00-00') AND contrato.fechainic <='" . $fechaHasta . "' "
+                . "AND contrato.codemple = '" . $strCodigoEmpleado . "'";       
+        $objQuery = $em->createQuery($dql);  
+        $arContratos = $objQuery->getResult();
+        return $arContratos;                
+    }     
 }

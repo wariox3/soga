@@ -23,9 +23,9 @@ class SsoPila {
     private $codigoContratoFk;     
     
     /**
-     * @ORM\Column(name="codigo_periodo_fk", type="integer")
+     * @ORM\Column(name="codigo_periodo_detalle_fk", type="integer")
      */
-    private $codigoPeriodoFk;
+    private $codigoPeriodoDetalleFk;
 
     /**
      * @ORM\Column(name="codigo_sucursal_fk", type="integer")
@@ -183,7 +183,7 @@ class SsoPila {
     private $variacionCentrosTrabajo;         
     
     /**
-     * @ORM\Column(name="incapacidad_accidente_trabajo_enfermedad_profesional", type="string", length=2)
+     * @ORM\Column(name="incapacidad_accidente_trabajo_enfermedad_profesional", type="integer")
      */
     private $incapacidadAccidenteTrabajoEnfermedadProfesional;     
     
@@ -213,27 +213,27 @@ class SsoPila {
     private $codigoEntidadCajaPertenece;       
 
     /**
-     * @ORM\Column(name="dias_cotizados_pension", type="string", length=2)
+     * @ORM\Column(name="dias_cotizados_pension", type="integer")
      */
     private $diasCotizadosPension;
     
     /**
-     * @ORM\Column(name="dias_cotizados_salud", type="string", length=2)
+     * @ORM\Column(name="dias_cotizados_salud", type="integer")
      */
     private $diasCotizadosSalud;    
 
     /**
-     * @ORM\Column(name="dias_cotizados_riesgos_profesionales", type="string", length=2)
+     * @ORM\Column(name="dias_cotizados_riesgos_profesionales", type="integer")
      */
     private $diasCotizadosRiesgosProfesionales;    
         
     /**
-     * @ORM\Column(name="dias_cotizados_caja_compensacion", type="string", length=2)
+     * @ORM\Column(name="dias_cotizados_caja_compensacion", type="integer")
      */
     private $diasCotizadosCajaCompensacion;    
     
     /**
-     * @ORM\Column(name="salario_basico", type="string", length=9)
+     * @ORM\Column(name="salario_basico", type="float")
      */
     private $salarioBasico;
     
@@ -243,22 +243,27 @@ class SsoPila {
     private $salarioIntegral;    
     
     /**
-     * @ORM\Column(name="ibc_pension", type="string", length=9)
+     * @ORM\Column(name="tiempo_suplementario", type="float")
+     */
+    private $tiempoSuplementario;    
+    
+    /**
+     * @ORM\Column(name="ibc_pension", type="float")
      */
     private $ibcPension;     
 
     /**
-     * @ORM\Column(name="ibc_salud", type="string", length=9)
+     * @ORM\Column(name="ibc_salud", type="float")
      */
     private $ibcSalud;    
     
     /**
-     * @ORM\Column(name="ibc_riesgos_profesionales", type="string", length=9)
+     * @ORM\Column(name="ibc_riesgos_profesionales", type="float")
      */
     private $ibcRiesgosProfesionales;    
     
     /**
-     * @ORM\Column(name="ibc_caja", type="string", length=9)
+     * @ORM\Column(name="ibc_caja", type="float")
      */
     private $ibcCaja;    
 
@@ -268,7 +273,7 @@ class SsoPila {
     private $tarifaAportesPensiones;    
     
     /**
-     * @ORM\Column(name="cotizacion_obligatoria", type="string", length=9)
+     * @ORM\Column(name="cotizacion_obligatoria", type="float")
      */
     private $cotizacionObligatoria;    
     
@@ -283,7 +288,7 @@ class SsoPila {
     private $cotizacionVoluntarioFondoPensionesObligatorias;    
     
     /**
-     * @ORM\Column(name="total_cotizacion", type="string", length=9)
+     * @ORM\Column(name="total_cotizacion", type="float")
      */
     private $totalCotizacion;    
 
@@ -308,7 +313,7 @@ class SsoPila {
     private $tarifaAportesSalud;    
 
     /**
-     * @ORM\Column(name="cotizacion_obligatoria_salud", type="string", length=9)
+     * @ORM\Column(name="cotizacion_obligatoria_salud", type="float")
      */
     private $cotizacionObligatoriaSalud;        
     
@@ -348,7 +353,7 @@ class SsoPila {
     private $centroTrabajoCodigoCt; 
     
     /**
-     * @ORM\Column(name="cotizacion_obligatoria_riesgos", type="string", length=9)
+     * @ORM\Column(name="cotizacion_obligatoria_riesgos", type="float")
      */
     private $cotizacionObligatoriaRiesgos;   
     
@@ -358,7 +363,7 @@ class SsoPila {
     private $tarifaAportesCCF;     
 
     /**
-     * @ORM\Column(name="valor_aporte_ccf", type="string", length=9)
+     * @ORM\Column(name="valor_aporte_ccf", type="float")
      */
     private $valorAporteCCF;
     
@@ -429,6 +434,7 @@ class SsoPila {
     
     
 
+
     /**
      * Get codigoPilaPk
      *
@@ -440,26 +446,72 @@ class SsoPila {
     }
 
     /**
-     * Set codigoPeriodoFk
+     * Set codigoContratoFk
      *
-     * @param integer $codigoPeriodoFk
+     * @param string $codigoContratoFk
      * @return SsoPila
      */
-    public function setCodigoPeriodoFk($codigoPeriodoFk)
+    public function setCodigoContratoFk($codigoContratoFk)
     {
-        $this->codigoPeriodoFk = $codigoPeriodoFk;
+        $this->codigoContratoFk = $codigoContratoFk;
 
         return $this;
     }
 
     /**
-     * Get codigoPeriodoFk
+     * Get codigoContratoFk
+     *
+     * @return string 
+     */
+    public function getCodigoContratoFk()
+    {
+        return $this->codigoContratoFk;
+    }
+
+    /**
+     * Set codigoPeriodoDetalleFk
+     *
+     * @param integer $codigoPeriodoDetalleFk
+     * @return SsoPila
+     */
+    public function setCodigoPeriodoDetalleFk($codigoPeriodoDetalleFk)
+    {
+        $this->codigoPeriodoDetalleFk = $codigoPeriodoDetalleFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoPeriodoDetalleFk
      *
      * @return integer 
      */
-    public function getCodigoPeriodoFk()
+    public function getCodigoPeriodoDetalleFk()
     {
-        return $this->codigoPeriodoFk;
+        return $this->codigoPeriodoDetalleFk;
+    }
+
+    /**
+     * Set codigoSucursalFk
+     *
+     * @param integer $codigoSucursalFk
+     * @return SsoPila
+     */
+    public function setCodigoSucursalFk($codigoSucursalFk)
+    {
+        $this->codigoSucursalFk = $codigoSucursalFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoSucursalFk
+     *
+     * @return integer 
+     */
+    public function getCodigoSucursalFk()
+    {
+        return $this->codigoSucursalFk;
     }
 
     /**
@@ -1155,7 +1207,7 @@ class SsoPila {
     /**
      * Set incapacidadAccidenteTrabajoEnfermedadProfesional
      *
-     * @param string $incapacidadAccidenteTrabajoEnfermedadProfesional
+     * @param integer $incapacidadAccidenteTrabajoEnfermedadProfesional
      * @return SsoPila
      */
     public function setIncapacidadAccidenteTrabajoEnfermedadProfesional($incapacidadAccidenteTrabajoEnfermedadProfesional)
@@ -1168,7 +1220,7 @@ class SsoPila {
     /**
      * Get incapacidadAccidenteTrabajoEnfermedadProfesional
      *
-     * @return string 
+     * @return integer 
      */
     public function getIncapacidadAccidenteTrabajoEnfermedadProfesional()
     {
@@ -1293,7 +1345,7 @@ class SsoPila {
     /**
      * Set diasCotizadosPension
      *
-     * @param string $diasCotizadosPension
+     * @param integer $diasCotizadosPension
      * @return SsoPila
      */
     public function setDiasCotizadosPension($diasCotizadosPension)
@@ -1306,7 +1358,7 @@ class SsoPila {
     /**
      * Get diasCotizadosPension
      *
-     * @return string 
+     * @return integer 
      */
     public function getDiasCotizadosPension()
     {
@@ -1316,7 +1368,7 @@ class SsoPila {
     /**
      * Set diasCotizadosSalud
      *
-     * @param string $diasCotizadosSalud
+     * @param integer $diasCotizadosSalud
      * @return SsoPila
      */
     public function setDiasCotizadosSalud($diasCotizadosSalud)
@@ -1329,7 +1381,7 @@ class SsoPila {
     /**
      * Get diasCotizadosSalud
      *
-     * @return string 
+     * @return integer 
      */
     public function getDiasCotizadosSalud()
     {
@@ -1339,7 +1391,7 @@ class SsoPila {
     /**
      * Set diasCotizadosRiesgosProfesionales
      *
-     * @param string $diasCotizadosRiesgosProfesionales
+     * @param integer $diasCotizadosRiesgosProfesionales
      * @return SsoPila
      */
     public function setDiasCotizadosRiesgosProfesionales($diasCotizadosRiesgosProfesionales)
@@ -1352,7 +1404,7 @@ class SsoPila {
     /**
      * Get diasCotizadosRiesgosProfesionales
      *
-     * @return string 
+     * @return integer 
      */
     public function getDiasCotizadosRiesgosProfesionales()
     {
@@ -1362,7 +1414,7 @@ class SsoPila {
     /**
      * Set diasCotizadosCajaCompensacion
      *
-     * @param string $diasCotizadosCajaCompensacion
+     * @param integer $diasCotizadosCajaCompensacion
      * @return SsoPila
      */
     public function setDiasCotizadosCajaCompensacion($diasCotizadosCajaCompensacion)
@@ -1375,7 +1427,7 @@ class SsoPila {
     /**
      * Get diasCotizadosCajaCompensacion
      *
-     * @return string 
+     * @return integer 
      */
     public function getDiasCotizadosCajaCompensacion()
     {
@@ -1385,7 +1437,7 @@ class SsoPila {
     /**
      * Set salarioBasico
      *
-     * @param string $salarioBasico
+     * @param float $salarioBasico
      * @return SsoPila
      */
     public function setSalarioBasico($salarioBasico)
@@ -1398,7 +1450,7 @@ class SsoPila {
     /**
      * Get salarioBasico
      *
-     * @return string 
+     * @return float 
      */
     public function getSalarioBasico()
     {
@@ -1429,9 +1481,32 @@ class SsoPila {
     }
 
     /**
+     * Set tiempoSuplementario
+     *
+     * @param float $tiempoSuplementario
+     * @return SsoPila
+     */
+    public function setTiempoSuplementario($tiempoSuplementario)
+    {
+        $this->tiempoSuplementario = $tiempoSuplementario;
+
+        return $this;
+    }
+
+    /**
+     * Get tiempoSuplementario
+     *
+     * @return float 
+     */
+    public function getTiempoSuplementario()
+    {
+        return $this->tiempoSuplementario;
+    }
+
+    /**
      * Set ibcPension
      *
-     * @param string $ibcPension
+     * @param float $ibcPension
      * @return SsoPila
      */
     public function setIbcPension($ibcPension)
@@ -1444,7 +1519,7 @@ class SsoPila {
     /**
      * Get ibcPension
      *
-     * @return string 
+     * @return float 
      */
     public function getIbcPension()
     {
@@ -1454,7 +1529,7 @@ class SsoPila {
     /**
      * Set ibcSalud
      *
-     * @param string $ibcSalud
+     * @param float $ibcSalud
      * @return SsoPila
      */
     public function setIbcSalud($ibcSalud)
@@ -1467,7 +1542,7 @@ class SsoPila {
     /**
      * Get ibcSalud
      *
-     * @return string 
+     * @return float 
      */
     public function getIbcSalud()
     {
@@ -1477,7 +1552,7 @@ class SsoPila {
     /**
      * Set ibcRiesgosProfesionales
      *
-     * @param string $ibcRiesgosProfesionales
+     * @param float $ibcRiesgosProfesionales
      * @return SsoPila
      */
     public function setIbcRiesgosProfesionales($ibcRiesgosProfesionales)
@@ -1490,7 +1565,7 @@ class SsoPila {
     /**
      * Get ibcRiesgosProfesionales
      *
-     * @return string 
+     * @return float 
      */
     public function getIbcRiesgosProfesionales()
     {
@@ -1500,7 +1575,7 @@ class SsoPila {
     /**
      * Set ibcCaja
      *
-     * @param string $ibcCaja
+     * @param float $ibcCaja
      * @return SsoPila
      */
     public function setIbcCaja($ibcCaja)
@@ -1513,7 +1588,7 @@ class SsoPila {
     /**
      * Get ibcCaja
      *
-     * @return string 
+     * @return float 
      */
     public function getIbcCaja()
     {
@@ -1546,7 +1621,7 @@ class SsoPila {
     /**
      * Set cotizacionObligatoria
      *
-     * @param string $cotizacionObligatoria
+     * @param float $cotizacionObligatoria
      * @return SsoPila
      */
     public function setCotizacionObligatoria($cotizacionObligatoria)
@@ -1559,7 +1634,7 @@ class SsoPila {
     /**
      * Get cotizacionObligatoria
      *
-     * @return string 
+     * @return float 
      */
     public function getCotizacionObligatoria()
     {
@@ -1615,7 +1690,7 @@ class SsoPila {
     /**
      * Set totalCotizacion
      *
-     * @param string $totalCotizacion
+     * @param float $totalCotizacion
      * @return SsoPila
      */
     public function setTotalCotizacion($totalCotizacion)
@@ -1628,7 +1703,7 @@ class SsoPila {
     /**
      * Get totalCotizacion
      *
-     * @return string 
+     * @return float 
      */
     public function getTotalCotizacion()
     {
@@ -1730,7 +1805,7 @@ class SsoPila {
     /**
      * Set cotizacionObligatoriaSalud
      *
-     * @param string $cotizacionObligatoriaSalud
+     * @param float $cotizacionObligatoriaSalud
      * @return SsoPila
      */
     public function setCotizacionObligatoriaSalud($cotizacionObligatoriaSalud)
@@ -1743,7 +1818,7 @@ class SsoPila {
     /**
      * Get cotizacionObligatoriaSalud
      *
-     * @return string 
+     * @return float 
      */
     public function getCotizacionObligatoriaSalud()
     {
@@ -1914,7 +1989,7 @@ class SsoPila {
     /**
      * Set cotizacionObligatoriaRiesgos
      *
-     * @param string $cotizacionObligatoriaRiesgos
+     * @param float $cotizacionObligatoriaRiesgos
      * @return SsoPila
      */
     public function setCotizacionObligatoriaRiesgos($cotizacionObligatoriaRiesgos)
@@ -1927,7 +2002,7 @@ class SsoPila {
     /**
      * Get cotizacionObligatoriaRiesgos
      *
-     * @return string 
+     * @return float 
      */
     public function getCotizacionObligatoriaRiesgos()
     {
@@ -1960,7 +2035,7 @@ class SsoPila {
     /**
      * Set valorAporteCCF
      *
-     * @param string $valorAporteCCF
+     * @param float $valorAporteCCF
      * @return SsoPila
      */
     public function setValorAporteCCF($valorAporteCCF)
@@ -1973,7 +2048,7 @@ class SsoPila {
     /**
      * Get valorAporteCCF
      *
-     * @return string 
+     * @return float 
      */
     public function getValorAporteCCF()
     {
@@ -2277,51 +2352,5 @@ class SsoPila {
     public function getClaseRiesgoAfiliado()
     {
         return $this->claseRiesgoAfiliado;
-    }
-
-    /**
-     * Set codigoContratoFk
-     *
-     * @param string $codigoContratoFk
-     * @return SsoPila
-     */
-    public function setCodigoContratoFk($codigoContratoFk)
-    {
-        $this->codigoContratoFk = $codigoContratoFk;
-
-        return $this;
-    }
-
-    /**
-     * Get codigoContratoFk
-     *
-     * @return string 
-     */
-    public function getCodigoContratoFk()
-    {
-        return $this->codigoContratoFk;
-    }
-
-    /**
-     * Set codigoSucursalFk
-     *
-     * @param integer $codigoSucursalFk
-     * @return SsoPila
-     */
-    public function setCodigoSucursalFk($codigoSucursalFk)
-    {
-        $this->codigoSucursalFk = $codigoSucursalFk;
-
-        return $this;
-    }
-
-    /**
-     * Get codigoSucursalFk
-     *
-     * @return integer 
-     */
-    public function getCodigoSucursalFk()
-    {
-        return $this->codigoSucursalFk;
     }
 }

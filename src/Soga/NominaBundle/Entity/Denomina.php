@@ -36,8 +36,16 @@ class Denomina
      */    
     private $deduccion;           
     
-    
+    /**
+     * @ORM\Column(name="ibcprestacional", type="float")
+     */    
+    private $ibcprestacional;    
 
+    /**
+     * @ORM\Column(name="nrohora", type="integer")
+     */    
+    private $nrohora;     
+    
     /**
      * Set conse
      *
@@ -151,5 +159,51 @@ class Denomina
     public function getDeduccion()
     {
         return $this->deduccion;
+    }
+
+    /**
+     * Set ibcprestacional
+     *
+     * @param float $ibcprestacional
+     * @return Denomina
+     */
+    public function setIbcprestacional($ibcprestacional)
+    {
+        $this->ibcprestacional = $ibcprestacional;
+
+        return $this;
+    }
+
+    /**
+     * Get ibcprestacional
+     *
+     * @return float 
+     */
+    public function getIbcprestacional()
+    {
+        return $this->ibcprestacional;
+    }
+
+    /**
+     * Set nrohora
+     *
+     * @param integer $nrohora
+     * @return Denomina
+     */
+    public function setNrohora($nrohora)
+    {
+        $this->nrohora = $nrohora;
+
+        return $this;
+    }
+
+    /**
+     * Get nrohora
+     *
+     * @return integer 
+     */
+    public function getNrohora()
+    {
+        return $this->nrohora;
     }
 }

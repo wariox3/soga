@@ -35,7 +35,14 @@ class Contrato
      * @ORM\Column(name="salario", type="string", length=10)
      */
     private $salario; 
+
+    /**
+     * @ORM\Column(name="salario_ibc", type="integer")
+     */
+    private $salarioIbc;    
     
+
+
     /**
      * Set contrato
      *
@@ -83,29 +90,6 @@ class Contrato
     }
 
     /**
-     * Set codemple
-     *
-     * @param string $codemple
-     * @return Contrato
-     */
-    public function setCodemple($codemple)
-    {
-        $this->codemple = $codemple;
-
-        return $this;
-    }
-
-    /**
-     * Get codemple
-     *
-     * @return string 
-     */
-    public function getCodemple()
-    {
-        return $this->codemple;
-    }
-
-    /**
      * Set fechater
      *
      * @param \DateTime $fechater
@@ -129,6 +113,29 @@ class Contrato
     }
 
     /**
+     * Set codemple
+     *
+     * @param string $codemple
+     * @return Contrato
+     */
+    public function setCodemple($codemple)
+    {
+        $this->codemple = $codemple;
+
+        return $this;
+    }
+
+    /**
+     * Get codemple
+     *
+     * @return string 
+     */
+    public function getCodemple()
+    {
+        return $this->codemple;
+    }
+
+    /**
      * Set salario
      *
      * @param string $salario
@@ -149,5 +156,28 @@ class Contrato
     public function getSalario()
     {
         return $this->salario;
+    }
+
+    /**
+     * Set salarioIbc
+     *
+     * @param integer $salarioIbc
+     * @return Contrato
+     */
+    public function setSalarioIbc($salarioIbc)
+    {
+        $this->salarioIbc = $salarioIbc;
+
+        return $this;
+    }
+
+    /**
+     * Get salarioIbc
+     *
+     * @return integer 
+     */
+    public function getSalarioIbc()
+    {
+        return $this->salarioIbc;
     }
 }

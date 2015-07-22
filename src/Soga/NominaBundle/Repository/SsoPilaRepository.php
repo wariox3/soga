@@ -11,58 +11,134 @@ use Doctrine\ORM\EntityRepository;
  * repository methods below.
  */
 class SsoPilaRepository extends EntityRepository
-{   
-    public function crearRegistro($codigoPeriodo) {        
-        $em = $this->getEntityManager();           
-        $arPeriodo = new \Soga\NominaBundle\Entity\SsoPeriodo();
-        $arPeriodo = $em->getRepository('SogaNominaBundle:SsoPeriodo')->find($codigoPeriodo);                        
-        $arContratos = new \Soga\NominaBundle\Entity\Contrato();                        
-        $arContratos = $em->getRepository('SogaNominaBundle:Contrato')->devDqlContratosPeriodo($arPeriodo->getFechaDesde()->format('Y-m-d'), $arPeriodo->getFechaHasta()->format('Y-m-d'));                                                
+{
+    public function crearRegistro($codigoPeriodoDetalle) {
+        set_time_limit(0);
+        $em = $this->getEntityManager();
+        $arPeriodoDetalle = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
+        $arPeriodoDetalle = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->find($codigoPeriodoDetalle);
         $i = 1;
-        foreach ($arContratos as $arContrato) {            
-            
+        $arPeriodoEmpleados = new \Soga\NominaBundle\Entity\SsoPeriodoEmpleado();
+        $arPeriodoEmpleados = $em->getRepository('SogaNominaBundle:SsoPeriodoEmpleado')->findBy(array('anio' => $arPeriodoDetalle->getAnio(), 'mes' => $arPeriodoDetalle->getMes(), 'codigoSucursalFk' => $arPeriodoDetalle->getCodigoSucursalFk()));
+        foreach ($arPeriodoEmpleados AS $arPeriodoEmpleado) {
             $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
-            $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arContrato->getCodemple());        
-            if($arEmpleado->getCodigoSucursalFk() == $arPeriodo->getCodigoSucursalFk()) {
-                if($arEmpleado->getCedemple() == '71397283') {
+            $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arPeriodoEmpleado->getCodigoEmpleadoFk());
+            //if(1 == 1 && $i <= 1000) {
+            //if($arEmpleado->getCedemple() == '1214719340' || $arEmpleado->getCedemple() == '1045683705') {
+            if($arEmpleado->getCedemple() == '98525480') {
+                $arContratos = new \Soga\NominaBundle\Entity\Contrato();
+                $arContratos = $em->getRepository('SogaNominaBundle:Contrato')->devDqlContratosPeriodoEmpleado($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $arPeriodoEmpleado->getCodigoEmpleadoFk());
+                if(count($arContratos) <= 1) {
+                    foreach ($arContratos as $arContrato) {
+                    $i++;
                     $dateFechaDesde =  "";
                     $dateFechaHasta =  "";
+                    $strNovedadIngreso = " ";
+                    $strNovedadRetiro = " ";
                     $intDiasCotizar = 0;
                     $fechaTerminaCotrato = $arContrato->getFechater()->format('Y-m-d');
                     if($fechaTerminaCotrato == '-0001-11-30') {
-                        $dateFechaHasta = $arPeriodo->getFechaHasta();
+                        $dateFechaHasta = $arPeriodoDetalle->getFechaHasta();
                     } else {
-                        //Falta comparar porque puede ser que se genere despues de que ya se termino el contrato                        
-                         $dateFechaHasta = $arContrato->getFechater();
+                        if($arContrato->getFechater() > $arPeriodoDetalle->getFechaHasta()) {
+                            $dateFechaHasta = $arPeriodoDetalle->getFechaHasta();
+                        } else {
+                            $dateFechaHasta = $arContrato->getFechater();
+                        }
                     }
 
-                    if($arContrato->getFechainic() <  $arPeriodo->getFechaDesde() == true) {
-                        $dateFechaDesde = $arPeriodo->getFechaDesde();
+                    if($arContrato->getFechainic() <  $arPeriodoDetalle->getFechaDesde() == true) {
+                        $dateFechaDesde = $arPeriodoDetalle->getFechaDesde();
                     } else {
                         $dateFechaDesde = $arContrato->getFechainic();
-                    }   
+                    }
 
                     if($dateFechaDesde != "" && $dateFechaHasta != "") {
                         $intDias = $dateFechaDesde->diff($dateFechaHasta);
                         $intDias = $intDias->format('%a');
-                        $intDiasCotizar = $intDias + 1;                                      
-                    }            
+                        $intDiasCotizar = $intDias + 1;
+                    }
+
+                    if($arContrato->getFechainic() >= $arPeriodoDetalle->getFechaDesde()) {
+                        $strNovedadIngreso = "X";
+                    }
+
+                    if($fechaTerminaCotrato != '-0001-11-30') {
+                        if($arContrato->getFechater() <= $arPeriodoDetalle->getFechaHasta()) {
+                            $strNovedadRetiro = "X";
+                        }
+                    }
+
+                    
+                    $intDiasLicenciaNoRemunerada = 0;
+                    $intHorasLicenciaNoRemunerada = 0;
+                    $arNominas = new \Soga\NominaBundle\Entity\Nomina();
+                    $arNominas = $em->getRepository('SogaNominaBundle:Nomina')->nominasPeriodo($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $arEmpleado->getCedemple());
+                    foreach ($arNominas as $arNomina) {                        
+                        $arNominaDetalles = new \Soga\NominaBundle\Entity\Denomina();
+                        $arNominaDetalles = $em->getRepository('SogaNominaBundle:Denomina')->findBy(array('consecutivo' => $arNomina->getConsecutivo()));                        
+                        foreach ($arNominaDetalles as $arNominaDetalle) {                            
+                            if($arNominaDetalle->getCodsala() == '94' || $arNominaDetalle->getCodsala() == '95') {                                
+                                $intHorasLicenciaNoRemunerada += $arNominaDetalle->getNrohora();
+                            }
+                        }
+                    }
+                    $intDiasLicenciaNoRemunerada = round($intHorasLicenciaNoRemunerada / 8);                                                                        
+                    
+                    $floSuplementario = $em->getRepository('SogaNominaBundle:Nomina')->devTiempoSuplementario($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $arEmpleado->getCedemple());
+                    $douSalario = $arContrato->getSalarioIbc();
+                    
+                    $intDiasIncapacidadGeneral = $this->diasIncapacidadGeneral($arPeriodoDetalle, $arEmpleado->getCedemple());
+                    $strIncapacidadGeneral = " ";
+                    $floIbcIncapacidadGeneral = 0;
+                    if($intDiasIncapacidadGeneral > 0) {
+                        $strIncapacidadGeneral = "X"; 
+                        $floIbcIncapacidadGeneral = $this->liquidarIncapacidadGeneral($douSalario+$floSuplementario, $intDiasIncapacidadGeneral);                        
+                    }
+
+                    $intDiasIncapacidadLaboral = $this->diasIncapacidadLaboral($arPeriodoDetalle, $arEmpleado->getCedemple());
+                    $strIncapacidadLaboral = " ";
+                    if($intDiasIncapacidadLaboral > 0) {
+                        $strIncapacidadLaboral = "X";    
+                    }                    
+                    
+
+                    $floIbcTotal = $arContrato->getSalarioIbc() + $floSuplementario;
+                    
+                    $intDiasCotizarPension = $intDiasCotizar - $intDiasLicenciaNoRemunerada;
+                    $intDiasCotizarSalud = $intDiasCotizar - $intDiasLicenciaNoRemunerada;
+                    $intDiasCotizarRiesgos = $intDiasCotizar - $intDiasIncapacidadGeneral - $intDiasLicenciaNoRemunerada - $intDiasIncapacidadLaboral;
+                    $intDiasCotizarCaja = $intDiasCotizar - $intDiasIncapacidadGeneral - $intDiasLicenciaNoRemunerada - $intDiasIncapacidadLaboral;
+                    $floIbcBrutoSeguridadSocial = (($intDiasCotizarPension-$intDiasIncapacidadGeneral) * ($arContrato->getSalarioIbc() / 30) + $floIbcIncapacidadGeneral + $floSuplementario);
+                    $floIbcBrutoRiesgos = ($intDiasCotizarRiesgos * ($arContrato->getSalarioIbc() / 30)) + $floSuplementario;
+                    $floIbcBrutoCaja = ($intDiasCotizarCaja * ($arContrato->getSalarioIbc() / 30)) + $floSuplementario;
+                    
+                    $floIbcPension = $this->redondearIbc($intDiasCotizarPension, $floIbcBrutoSeguridadSocial, $floIbcTotal);
+                    $floIbcSalud = $this->redondearIbc($intDiasCotizarSalud, $floIbcBrutoSeguridadSocial, $floIbcTotal);
+                    $floIbcRiesgos = $this->redondearIbc($intDiasCotizarRiesgos, $floIbcBrutoRiesgos, $floIbcTotal);
+                    $floIbcCaja = $this->redondearIbc($intDiasCotizarCaja, $floIbcBrutoCaja, $floIbcTotal);
 
                     $arEps = new \Soga\NominaBundle\Entity\Eps();
-                    $arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arEmpleado->getCodeps());                
+                    $arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arEmpleado->getCodeps());
                     $arPension = new \Soga\NominaBundle\Entity\Pension();
-                    $arPension = $em->getRepository('SogaNominaBundle:Pension')->find($arEmpleado->getCodpension());                        
+                    $arPension = $em->getRepository('SogaNominaBundle:Pension')->find($arEmpleado->getCodpension());
                     $arCaja = new \Soga\NominaBundle\Entity\Caja();
-                    $arCaja = $em->getRepository('SogaNominaBundle:Caja')->find($arEmpleado->getCodigoCajaPk());                                    
+                    $arCaja = $em->getRepository('SogaNominaBundle:Caja')->find($arEmpleado->getCodigoCajaPk());
                     $arTipoCotizante = $em->getRepository('SogaNominaBundle:SsoTipoCotizante')->find($arEmpleado->getCodigoTipoCotizanteFk());
-                    $arSubtipoCotizante = $em->getRepository('SogaNominaBundle:SsoSubtipoCotizante')->find($arEmpleado->getCodigoSubtipoCotizanteFk());
+                    $arSubtipoCotizante = $em->getRepository('SogaNominaBundle:SsoSubtipoCotizante')->find($arEmpleado->getCodigoSubtipoCotizanteFk());                                                            
+                    
+                    $strVariacionTransitoriaSalario = ' ';
+                    if($floSuplementario > 0) {
+                        $strVariacionTransitoriaSalario = 'X';
+                    }
+
                     //Se crea el registro
                     $arPila = new \Soga\NominaBundle\Entity\SsoPila();
                     $arPila->setCodigoContratoFk($arContrato->getContrato());
-                    $arPila->setCodigoPeriodoFk($codigoPeriodo);
+                    $arPila->setCodigoPeriodoDetalleFk($codigoPeriodoDetalle);
                     $arPila->setCodigoSucursalFk($arEmpleado->getCodigoSucursalFk());
-                    $arPila->setCodigoEmpleadoFk($arContrato->getCodemple());
-                    $arPila->setNumeroIdentificacion($this->RellenarNr($arEmpleado->getCedemple(), " ", 16, "D"));
+                    $arPila->setCodigoEmpleadoFk($arEmpleado->getCodemple());
+                    $arPila->setNumeroIdentificacion($arEmpleado->getCedemple());
                     $arPila->setTipoRegistro('02');
                     $arPila->setSecuencia($this->RellenarNr($i, "0", 5, "I"));
                     $arPila->setTipoDocumento($arEmpleado->getTipod());
@@ -78,63 +154,104 @@ class SsoPilaRepository extends EntityRepository
                     } else {
                         $arPila->setColombianoResidenteExterior(' ');
                     }
-                    $arPila->setCodigoMunicipio('001');
-                    $arPila->setCodigoDepartamento('05');
+
+                    $strCodigoDepartamento = substr($arEmpleado->getCodmuni(), 0, 2);
+                    $strCodigoCiudad = substr($arEmpleado->getCodmuni(), 2, 3);
+                    $arPila->setCodigoMunicipio($strCodigoCiudad);
+                    $arPila->setCodigoDepartamento($strCodigoDepartamento);
                     $arPila->setPrimerNombre($this->RellenarNr($arEmpleado->getNomemple(), " ", 20, "D"));
                     $arPila->setSegundoNombre($this->RellenarNr($arEmpleado->getNomemple1(), " ", 30, "D"));
                     $arPila->setPrimerApellido($this->RellenarNr($arEmpleado->getApemple(), " ", 20, "D"));
                     $arPila->setSegundoApellido($this->RellenarNr($arEmpleado->getApemple1(), " ", 30, "D"));
-                    $arPila->setIngreso(' ');
-                    $arPila->setRetiro(' ');
+                    $arPila->setIngreso($strNovedadIngreso);
+                    $arPila->setRetiro($strNovedadRetiro);
                     $arPila->setTrasladoDesdeOtraEps(' ');
                     $arPila->setTrasladoAOtraEps(' ');
                     $arPila->setTrasladoDesdeOtraPension(' ');
-                    $arPila->setTrasladoAOtraPension(' ');               
+                    $arPila->setTrasladoAOtraPension(' ');
                     $arPila->setVariacionPermanenteSalario(' ');
                     $arPila->setCorrecciones(' ');
-                    $arPila->setVariacionTransitoriaSalario(' ');
+                    $arPila->setVariacionTransitoriaSalario($strVariacionTransitoriaSalario);
                     $arPila->setSuspensionTemporalContratoLicenciaServicios(' ');
-                    $arPila->setIncapacidadGeneral(' ');
+                    $arPila->setIncapacidadGeneral($strIncapacidadGeneral);
                     $arPila->setLicenciaMaternidad(' ');
                     $arPila->setVacaciones(' ');
                     $arPila->setAporteVoluntario(' ');
-                    $arPila->setVariacionCentrosTrabajo(' ');                
-                    $arPila->setIncapacidadAccidenteTrabajoEnfermedadProfesional('00');                
+                    $arPila->setVariacionCentrosTrabajo(' ');
+                    $arPila->setIncapacidadAccidenteTrabajoEnfermedadProfesional($intDiasIncapacidadLaboral);
                     $arPila->setCodigoEntidadPensionPertenece($this->RellenarNr($arPension->getCodigoInterfacePila(), " ", 6, "D"));
+                    if($arEmpleado->getCodpension() == 7) {
+                        $arPila->setCodigoEntidadPensionPertenece('      ');
+                    }
                     $arPila->setCodigoEntidadPensionTraslada('      ');
                     $arPila->setCodigoEntidadSaludPertenece($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));
                     $arPila->setCodigoEntidadSaludTraslada('      ');
                     $arPila->setCodigoEntidadCajaPertenece($this->RellenarNr($arCaja->getCodigoInterfacePila(), " ", 6, "D"));
-                    $arPila->setDiasCotizadosPension($this->RellenarNr($intDiasCotizar, "0", 2, "I"));
-                    $arPila->setDiasCotizadosSalud($this->RellenarNr($intDiasCotizar, "0", 2, "I"));
-                    $arPila->setDiasCotizadosRiesgosProfesionales($this->RellenarNr($intDiasCotizar, "0", 2, "I"));
-                    $arPila->setDiasCotizadosCajaCompensacion($this->RellenarNr($intDiasCotizar, "0", 2, "I"));
-                    $arPila->setSalarioBasico($this->RellenarNr($arContrato->getSalario(), "0", 9, "I"));
+                    $arPila->setDiasCotizadosPension($intDiasCotizarPension);
+                    if($arEmpleado->getCodpension() == 7) {
+                        $arPila->setDiasCotizadosPension(0);
+                    }
+                    $arPila->setDiasCotizadosSalud($intDiasCotizarSalud);
+                    $arPila->setDiasCotizadosRiesgosProfesionales($intDiasCotizarRiesgos);
+                    $arPila->setDiasCotizadosCajaCompensacion($intDiasCotizarCaja);
+                    
+                    $arPila->setSalarioBasico($this->RellenarNr($douSalario, "0", 9, "I"));
                     $arPila->setSalarioIntegral(' ');
-                    $arPila->setIbcPension('000000000');
-                    $arPila->setIbcSalud('000000000');
-                    $arPila->setIbcRiesgosProfesionales('000000000');
-                    $arPila->setIbcCaja('000644350');
-                    $arPila->setTarifaAportesPensiones($this->RellenarNr(($arEmpleado->getPension() + 4)/100, 0, 7, "D"));
-                    $arPila->setCotizacionObligatoria('000000000');
+                    $arPila->setTiempoSuplementario($floSuplementario);
+                    $arPila->setIbcPension($floIbcPension);
+                    $arPila->setIbcSalud($floIbcSalud);
+                    $arPila->setIbcRiesgosProfesionales($floIbcRiesgos);
+                    $arPila->setIbcCaja($floIbcCaja);                    
+                    $douCotizacionPension = 0;
+                    if($arEmpleado->getCodpension() == 7) {
+                        $arPila->setIbcPension(0);
+                        $arPila->setTarifaAportesPensiones('0.00000');
+                        $arPila->setCotizacionObligatoria(0);
+                        $arPila->setAportesFondoSolidaridadPensionalSolidaridad('000000000');
+                        $arPila->setAportesFondoSolidaridadPensionalSubsistencia('000000000');
+                    } else {
+                        $douTarifaPension = ($arEmpleado->getPension() + 4)/100;
+                        $arPila->setTarifaAportesPensiones($this->RellenarNr($douTarifaPension, 0, 7, "D"));
+                        $douCotizacionPension = $this->redondearAporte($floIbcTotal, $floIbcPension, $douTarifaPension, $intDiasCotizarPension);
+                        $arPila->setCotizacionObligatoria($douCotizacionPension);
+                        $douCotizacionFSPSolidaridad = 0;
+                        $douCotizacionFSPSubsistencia = 0;
+                        if($douSalario >= (644350 * 4)) {
+                            $douCotizacionFSPSolidaridad = round($floIbcPension * 0.005, -2, PHP_ROUND_HALF_DOWN);
+                            $douCotizacionFSPSubsistencia = round($floIbcPension * 0.005, -2, PHP_ROUND_HALF_DOWN);
+                        }
+                        $arPila->setAportesFondoSolidaridadPensionalSolidaridad($this->RellenarNr($douCotizacionFSPSolidaridad, "0", 9, "I"));
+                        $arPila->setAportesFondoSolidaridadPensionalSubsistencia($this->RellenarNr($douCotizacionFSPSubsistencia, "0", 9, "I"));                        
+                    }
+                    $floAporteVoluntarioFondoPensionesObligatorias = 0;
+                    $floCotizacionVoluntariaFondoPensionesObligatorias = 0;
+                    $floTotalCotizacion = $floAporteVoluntarioFondoPensionesObligatorias + $floCotizacionVoluntariaFondoPensionesObligatorias + $douCotizacionPension;
                     $arPila->setAporteVoluntarioFondoPensionesObligatorias('000000000');
                     $arPila->setCotizacionVoluntarioFondoPensionesObligatorias('000000000');
-                    $arPila->setTotalCotizacion('000000000');
-                    $arPila->setAportesFondoSolidaridadPensionalSolidaridad('000000000');
-                    $arPila->setAportesFondoSolidaridadPensionalSubsistencia('000000000');
+                    
+                    $arPila->setTotalCotizacion($floTotalCotizacion);
                     $arPila->setValorNoRetenidoAportesVoluntarios('000000000');
-                    $arPila->setTarifaAportesSalud('0.12500');
-                    $arPila->setCotizacionObligatoriaSalud('000000000');
+                    $douTarifaSalud = $em->getRepository('SogaNominaBundle:Centro')->devTarifaSalud($arEmpleado->getCedemple());
+                    $douTarifaSalud = $douTarifaSalud /100;
+                    $arPila->setTarifaAportesSalud($this->RellenarNr($douTarifaSalud, "0", 7, "D"));
+                    //$douCotizacionSalud = round($floIbc * $douTarifaSalud, -2, PHP_ROUND_HALF_DOWN);
+                    $douCotizacionSalud = $this->redondearAporte($floIbcTotal, $floIbcSalud, $douTarifaSalud, $intDiasCotizarSalud);
+                    $arPila->setCotizacionObligatoriaSalud($douCotizacionSalud);
                     $arPila->setValorUpcAdicional('000000000');
                     $arPila->setNumeroAutorizacionIncapacidadEnfermedadGeneral('               ');
                     $arPila->setValorIncapacidadEnfermedadGeneral('000000000');
                     $arPila->setNumeroAutorizacionLicenciaMaternidadPaternidad('               ');
                     $arPila->setValorLicenciaMaternidadPaternidad('000000000');
-                    $arPila->setTarifaAportesRiesgosProfesionales($this->RellenarNr($arEmpleado->getNivel()/100, 0, 9, "D"));
+                    $douTarifaRiesgos = $arEmpleado->getNivel()/100;
+                    $arPila->setTarifaAportesRiesgosProfesionales($this->RellenarNr($douTarifaRiesgos, 0, 9, "D"));
                     $arPila->setCentroTrabajoCodigoCt($this->RellenarNr($arEmpleado->getCodzona(), "0", 9, "I"));
-                    $arPila->setCotizacionObligatoriaRiesgos('000000000');
-                    $arPila->setTarifaAportesCCF('0.04000');
-                    $arPila->setValorAporteCCF('000000000');
+                    $douCotizacionRiesgos = $this->redondearAporte($floIbcTotal, $floIbcRiesgos, $douTarifaRiesgos, $intDiasCotizarRiesgos);
+                    $arPila->setCotizacionObligatoriaRiesgos($douCotizacionRiesgos);
+                    $douTarifaCaja = 0.04000;
+                    $arPila->setTarifaAportesCCF($this->RellenarNr($douTarifaCaja, "0", 7, "D"));
+                    //$douCotizacionCaja = round($floIbc * $douTarifaCaja, -2);
+                    $douCotizacionCaja = $this->redondearAporte($floIbcTotal, $floIbcCaja, $douTarifaCaja, $intDiasCotizarCaja);
+                    $arPila->setValorAporteCCF($douCotizacionCaja);
                     $arPila->setTarifaAportesSENA('0.00000');
                     $arPila->setValorAportesSENA('000000000');
                     $arPila->setTarifaAportesICBF('0.00000');
@@ -149,16 +266,179 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setCodigoAdministradoraRiesgosLaborales('      ');
                     $arPila->setClaseRiesgoAfiliado(' ');
                     $em->persist($arPila);
-                    $i++;                    
-                }                
-            }            
+                    
+                    if($intHorasLicenciaNoRemunerada > 0) {                                                
+                        $i++;                                                
+                        $floIbcPension = $this->redondearIbc($intDiasLicenciaNoRemunerada, $floIbcBrutoSeguridadSocial, $floIbcTotal);
+                        $floIbcSalud = $this->redondearIbc($intDiasLicenciaNoRemunerada, $floIbcBrutoSeguridadSocial, $floIbcTotal);
+                        $floIbcRiesgos = $this->redondearIbc($intDiasLicenciaNoRemunerada, $floIbcBrutoRiesgos, $floIbcTotal);
+                        $floIbcCaja = $this->redondearIbc($intDiasLicenciaNoRemunerada, $floIbcBrutoCaja, $floIbcTotal);
+                        //Se crea el registro
+                        $arPila = new \Soga\NominaBundle\Entity\SsoPila();
+                        $arPila->setCodigoContratoFk($arContrato->getContrato());
+                        $arPila->setCodigoPeriodoDetalleFk($codigoPeriodoDetalle);
+                        $arPila->setCodigoSucursalFk($arEmpleado->getCodigoSucursalFk());
+                        $arPila->setCodigoEmpleadoFk($arEmpleado->getCodemple());
+                        $arPila->setNumeroIdentificacion($arEmpleado->getCedemple());
+                        $arPila->setTipoRegistro('02');
+                        $arPila->setSecuencia($this->RellenarNr($i, "0", 5, "I"));
+                        $arPila->setTipoDocumento($arEmpleado->getTipod());
+                        $arPila->setTipo($this->RellenarNr($arTipoCotizante->getCodigoPila(), "0", 2, "I"));
+                        $arPila->setSubtipo($this->RellenarNr($arSubtipoCotizante->getCodigoPila(), "0", 2, "I"));
+                        if($arEmpleado->getExtranjeroNoObligadoCotizarPensiones() == 1) {
+                            $arPila->setExtranjeroNoObligadoCotizarPensiones('X');
+                        } else {
+                            $arPila->setExtranjeroNoObligadoCotizarPensiones(' ');
+                        }
+                        if($arEmpleado->getColombianoResidenteExterior() == 1) {
+                            $arPila->setColombianoResidenteExterior('X');
+                        } else {
+                            $arPila->setColombianoResidenteExterior(' ');
+                        }
+
+                        $strCodigoDepartamento = substr($arEmpleado->getCodmuni(), 0, 2);
+                        $strCodigoCiudad = substr($arEmpleado->getCodmuni(), 2, 3);
+                        $arPila->setCodigoMunicipio($strCodigoCiudad);
+                        $arPila->setCodigoDepartamento($strCodigoDepartamento);
+                        $arPila->setPrimerNombre($this->RellenarNr($arEmpleado->getNomemple(), " ", 20, "D"));
+                        $arPila->setSegundoNombre($this->RellenarNr($arEmpleado->getNomemple1(), " ", 30, "D"));
+                        $arPila->setPrimerApellido($this->RellenarNr($arEmpleado->getApemple(), " ", 20, "D"));
+                        $arPila->setSegundoApellido($this->RellenarNr($arEmpleado->getApemple1(), " ", 30, "D"));
+                        $arPila->setIngreso(' ');
+                        $arPila->setRetiro(' ');
+                        $arPila->setTrasladoDesdeOtraEps(' ');
+                        $arPila->setTrasladoAOtraEps(' ');
+                        $arPila->setTrasladoDesdeOtraPension(' ');
+                        $arPila->setTrasladoAOtraPension(' ');
+                        $arPila->setVariacionPermanenteSalario(' ');
+                        $arPila->setCorrecciones(' ');
+                        $arPila->setVariacionTransitoriaSalario(' ');
+                        $arPila->setSuspensionTemporalContratoLicenciaServicios('X');
+                        $arPila->setIncapacidadGeneral(' ');
+                        $arPila->setLicenciaMaternidad(' ');
+                        $arPila->setVacaciones(' ');
+                        $arPila->setAporteVoluntario(' ');
+                        $arPila->setVariacionCentrosTrabajo(' ');
+                        $arPila->setIncapacidadAccidenteTrabajoEnfermedadProfesional(0);
+                        $arPila->setCodigoEntidadPensionPertenece($this->RellenarNr($arPension->getCodigoInterfacePila(), " ", 6, "D"));
+                        if($arEmpleado->getCodpension() == 7) {
+                            $arPila->setCodigoEntidadPensionPertenece('      ');
+                        }
+                        $arPila->setCodigoEntidadPensionTraslada('      ');
+                        $arPila->setCodigoEntidadSaludPertenece($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));
+                        $arPila->setCodigoEntidadSaludTraslada('      ');
+                        $arPila->setCodigoEntidadCajaPertenece($this->RellenarNr($arCaja->getCodigoInterfacePila(), " ", 6, "D"));
+                        $arPila->setDiasCotizadosPension($intDiasLicenciaNoRemunerada);
+                        if($arEmpleado->getCodpension() == 7) {
+                            $arPila->setDiasCotizadosPension(0);
+                        }
+                        $arPila->setDiasCotizadosSalud($intDiasLicenciaNoRemunerada);
+                        $arPila->setDiasCotizadosRiesgosProfesionales($intDiasLicenciaNoRemunerada);
+                        $arPila->setDiasCotizadosCajaCompensacion($intDiasLicenciaNoRemunerada);
+
+                        $arPila->setSalarioBasico($douSalario);
+                        $arPila->setSalarioIntegral(' ');
+                        $arPila->setIbcPension($floIbcPension);
+                        $arPila->setIbcSalud($floIbcSalud);
+                        $arPila->setIbcRiesgosProfesionales($floIbcRiesgos);
+                        $arPila->setIbcCaja($floIbcCaja);
+                        $douCotizacionPension = 0;
+                        if($arEmpleado->getCodpension() == 7) {
+                            $arPila->setIbcPension(0);
+                            $arPila->setTarifaAportesPensiones('0.00000');
+                            $arPila->setCotizacionObligatoria(0);
+                            $arPila->setAportesFondoSolidaridadPensionalSolidaridad('000000000');
+                            $arPila->setAportesFondoSolidaridadPensionalSubsistencia('000000000');
+                        } else {
+                            $douTarifaPension = ($arEmpleado->getPension() + 4)/100;
+                            $arPila->setTarifaAportesPensiones($this->RellenarNr($douTarifaPension, 0, 7, "D"));
+                            $douCotizacionPension = $this->redondearAporte($douSalario, $floIbcPension, $douTarifaPension, $intDiasLicenciaNoRemunerada);
+                            $arPila->setCotizacionObligatoria($douCotizacionPension);
+                            $douCotizacionFSPSolidaridad = 0;
+                            $douCotizacionFSPSubsistencia = 0;
+                            $arPila->setAportesFondoSolidaridadPensionalSolidaridad($this->RellenarNr($douCotizacionFSPSolidaridad, "0", 9, "I"));
+                            $arPila->setAportesFondoSolidaridadPensionalSubsistencia($this->RellenarNr($douCotizacionFSPSubsistencia, "0", 9, "I"));                            
+                        }
+                        $floAporteVoluntarioFondoPensionesObligatorias = 0;
+                        $floCotizacionVoluntariaFondoPensionesObligatorias = 0;
+                        $floTotalCotizacion = $floAporteVoluntarioFondoPensionesObligatorias + $floCotizacionVoluntariaFondoPensionesObligatorias + $douCotizacionPension;                        
+                        $arPila->setAporteVoluntarioFondoPensionesObligatorias('000000000');
+                        $arPila->setCotizacionVoluntarioFondoPensionesObligatorias('000000000');
+                        $arPila->setTotalCotizacion($floTotalCotizacion);
+                        $arPila->setValorNoRetenidoAportesVoluntarios('000000000');                        
+                        $douTarifaSalud = 0;
+                        $arPila->setTarifaAportesSalud('0.00000');                        
+                        $douCotizacionSalud = $this->redondearAporte($douSalario, $floIbcSalud, $douTarifaSalud, $intDiasLicenciaNoRemunerada);
+                        $arPila->setCotizacionObligatoriaSalud($douCotizacionSalud);
+                        $arPila->setValorUpcAdicional('000000000');
+                        $arPila->setNumeroAutorizacionIncapacidadEnfermedadGeneral('               ');
+                        $arPila->setValorIncapacidadEnfermedadGeneral('000000000');
+                        $arPila->setNumeroAutorizacionLicenciaMaternidadPaternidad('               ');
+                        $arPila->setValorLicenciaMaternidadPaternidad('000000000');
+                        $douTarifaRiesgos = 0;
+                        $arPila->setTarifaAportesRiesgosProfesionales('0.0000000');
+                        $arPila->setCentroTrabajoCodigoCt($this->RellenarNr($arEmpleado->getCodzona(), "0", 9, "I"));
+                        $douCotizacionRiesgos = $this->redondearAporte($douSalario, $floIbcRiesgos, $douTarifaRiesgos, $intDiasLicenciaNoRemunerada);
+                        $arPila->setCotizacionObligatoriaRiesgos($douCotizacionRiesgos);
+                        $douTarifaCaja = 0;
+                        $arPila->setTarifaAportesCCF('0.00000');
+                        $douCotizacionCaja = $this->redondearAporte($douSalario, $floIbcCaja, $douTarifaCaja, $intDiasLicenciaNoRemunerada);
+                        $arPila->setValorAporteCCF($douCotizacionCaja);
+                        $arPila->setTarifaAportesSENA('0.00000');
+                        $arPila->setValorAportesSENA('000000000');
+                        $arPila->setTarifaAportesICBF('0.00000');
+                        $arPila->setValorAporteICBF('000000000');
+                        $arPila->setTarifaAportesESAP('0.00000');
+                        $arPila->setValorAporteESAP('000000000');
+                        $arPila->setTarifaAportesMEN('0.00000');
+                        $arPila->setValorAporteMEN('000000000');
+                        $arPila->setTipoDocumentoResponsableUPC('  ');
+                        $arPila->setNumeroIdentificacionResponsableUPCAdicional('                ');
+                        $arPila->setCotizanteExoneradoPagoAporteParafiscalesSalud(' ');
+                        $arPila->setCodigoAdministradoraRiesgosLaborales('      ');
+                        $arPila->setClaseRiesgoAfiliado(' ');
+                        $em->persist($arPila);                        
+                    }              
+      
+                    //$em->flush();
+                }
+                }
+            }
         }
-        $arPeriodo->setNumeroEmpleados($i - 1);
-        $em->persist($arPeriodo);
-        $em->flush();        
+
+        $arPeriodoDetalle->setNumeroEmpleados($i - 1);
+        $em->persist($arPeriodoDetalle);
+        $em->flush();
+        set_time_limit(60);
         return true;
-    }   
-    
+    }
+
+    public function generarEmpleados($codigoPeriodoDetalle) {
+        set_time_limit(0);
+        $em = $this->getEntityManager();
+        $arPeriodoDetalle = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
+        $arPeriodoDetalle = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->find($codigoPeriodoDetalle);
+        $arContratos = new \Soga\NominaBundle\Entity\Contrato();
+        $arContratos = $em->getRepository('SogaNominaBundle:Contrato')->devDqlContratosPeriodo($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'));
+        foreach ($arContratos AS $arContrato) {
+            $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
+            $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arContrato->getCodemple());
+            $arPeriodoEmpleado = new \Soga\NominaBundle\Entity\SsoPeriodoEmpleado();
+            $arPeriodoEmpleado->setCodigoEmpleadoFk($arContrato->getCodemple());
+            $arPeriodoEmpleado->setCodigoSucursalFk($arEmpleado->getCodigoSucursalFk());
+            $arPeriodoEmpleado->setNumeroIdentificacion($arEmpleado->getCedemple());
+            $arPeriodoEmpleado->setAnio($arPeriodoDetalle->getAnio());
+            $arPeriodoDetalleEmpleado->setMes($arPeriodoDetalle->getMes());
+            $em->persist($arPeriodoEmpleado);
+        }
+
+        //$arPeriodoDetalle->setNumeroEmpleados($i);
+        //$em->persist($arPeriodoDetalle);
+        $em->flush();
+        set_time_limit(60);
+        return true;
+    }
+
     public static function RellenarNr($Nro, $Str, $NroCr, $strPosicion) {
         $Longitud = strlen($Nro);
         $Nc = $NroCr - $Longitud;
@@ -168,9 +448,173 @@ class SsoPilaRepository extends EntityRepository
             } else {
                 $Nro = $Nro . $Str;
             }
-            
-        }            
+
+        }
 
         return (string) $Nro;
-    }    
+    }
+
+    public function redondearAporte($floIbcTotal, $floIbc, $floTarifa, $intDias) {
+        $floIbcBruto = ($floIbcTotal / 30) * $intDias;
+        $floCotizacionRedondeada = round($floIbc * $floTarifa, -2, PHP_ROUND_HALF_DOWN);
+        $floCotizacionCalculada = $floIbcBruto * $floTarifa;
+        $floCotizacionIBC = $floIbc * $floTarifa;
+        $floResiduo = fmod($floCotizacionIBC, 100);
+        $floCotizacionMinimo = $this->redondearAporteMinimo($floTarifa, $intDias);
+        if($floCotizacionRedondeada < $floCotizacionMinimo) {
+            if($floResiduo > 50) {
+                $floCotizacionRedondeada = intval($floCotizacionIBC/100) * 100 + 100;
+            } else {
+                if($floCotizacionIBC - $floResiduo >= $floCotizacionCalculada) {
+                    $floCotizacionRedondeada = $floCotizacionIBC - $floResiduo;
+                } else {
+                    $floCotizacionRedondeada = $floCotizacionIBC;
+                }
+            }
+
+            if(round($floCotizacionRedondeada) >= $floCotizacionCalculada) {
+                $floCotizacion = round($floCotizacionRedondeada);
+            } else {
+                $floCotizacion = ceil($floCotizacionRedondeada);
+            }
+        } else {
+            $floCotizacion = $floCotizacionRedondeada;
+        }
+        return $floCotizacion;
+    }
+
+    public function redondearAporteMinimo($floTarifa, $intDias) {
+        $floSalario = 644350;
+        $douValorDia = $floSalario / 30;
+        $floIbcReal = $douValorDia * $intDias;
+        if($intDias != 30) {
+            $floIbcRedondeo = round($floIbcReal, -3, PHP_ROUND_HALF_DOWN);
+            if($floIbcRedondeo > $floIbcReal) {
+                $floIbc = ceil($floIbcRedondeo);
+            } else {
+                $floIbc = ceil($floIbcReal);
+            }
+
+        } else {
+            $floIbc = $floSalario;
+        }
+        $douCotizacion = 0;
+        $floCotizacionCalculada = $floIbcReal * $floTarifa;
+        $floCotizacionIBC = $floIbc * $floTarifa;
+        $floResiduo = fmod($floCotizacionIBC, 100);
+        if($floResiduo > 50) {
+            $floCotizacionRedondeada = intval($floCotizacionIBC/100) * 100 + 100;
+        } else {
+            if($floCotizacionIBC - $floResiduo >= $floCotizacionCalculada) {
+                $floCotizacionRedondeada = $floCotizacionIBC - $floResiduo;
+            } else {
+                $floCotizacionRedondeada = $floCotizacionIBC;
+            }
+        }
+
+        if(round($floCotizacionRedondeada) >= $floCotizacionCalculada) {
+            $douCotizacion = round($floCotizacionRedondeada);
+        } else {
+            $douCotizacion = ceil($floCotizacionRedondeada);
+        }
+        return $douCotizacion;
+    }
+
+    public function redondearIbc($intDias, $floIbcBruto, $floSalario) {
+        $floIbc = 0;       
+        $floIbcRedondedado = round($floIbcBruto, -3, PHP_ROUND_HALF_DOWN);
+        $floIbcMinimo = $this->redondearIbcMinimo($intDias);
+        $floResiduo = fmod($floIbcBruto, 1000);
+        if($floIbcRedondedado < $floIbcMinimo) {
+            if($floResiduo > 500) {
+                $floIbc = intval($floIbcBruto/1000)*1000+1000;
+            } else {
+                $floIbc = $floIbcBruto;
+            }
+            $floIbc = ceil($floIbc);
+        } else {
+            $floIbc = $floIbcRedondedado;
+        }
+
+        return $floIbc;
+    }
+
+    public function redondearIbcMinimo ($intDias) {
+        $floIbcMinimo = 0;
+        $floValorDia = 644350 / 30;
+        $floIbcBruto = intval($intDias * $floValorDia);
+        return $floIbcBruto;
+    }
+    
+    public function diasIncapacidadGeneral($arPeriodoDetalle, $strNumeroIdentificacion) {
+        $em = $this->getEntityManager();
+        $intDiasIncapacidad = 0;
+        $arIncapacidades = new \Soga\NominaBundle\Entity\Incapacidad();
+        $arIncapacidades = $em->getRepository('SogaNominaBundle:Incapacidad')->devDqlIncapacidadesGeneralesPeriodoEmpleado($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $strNumeroIdentificacion);        
+        foreach ($arIncapacidades as $arIncapacidad) {
+            $dateFechaDesde =  "";
+            $dateFechaHasta =  "";               
+            if($arIncapacidad->getFechater() > $arPeriodoDetalle->getFechaHasta() == true) {
+                $dateFechaHasta = $arPeriodoDetalle->getFechaHasta();
+            } else {
+                $dateFechaHasta = $arIncapacidad->getFechater();
+            }
+
+            if($arIncapacidad->getFechaini() <  $arPeriodoDetalle->getFechaDesde() == true) {
+                $dateFechaDesde = $arPeriodoDetalle->getFechaDesde();
+            } else {
+                $dateFechaDesde = $arIncapacidad->getFechaini();
+            }
+
+            if($dateFechaDesde != "" && $dateFechaHasta != "") {
+                $intDias = $dateFechaDesde->diff($dateFechaHasta);
+                $intDias = $intDias->format('%a');
+                $intDiasIncapacidad += $intDias + 1;
+            }  
+        }
+        
+        return $intDiasIncapacidad;
+    }        
+    
+    public function diasIncapacidadLaboral($arPeriodoDetalle, $strNumeroIdentificacion) {
+        $em = $this->getEntityManager();
+        $intDiasIncapacidad = 0;
+        $arIncapacidades = new \Soga\NominaBundle\Entity\Incapacidad();
+        $arIncapacidades = $em->getRepository('SogaNominaBundle:Incapacidad')->devDqlIncapacidadesLaboralesPeriodoEmpleado($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $strNumeroIdentificacion);        
+        foreach ($arIncapacidades as $arIncapacidad) {
+            $dateFechaDesde =  "";
+            $dateFechaHasta =  "";               
+            if($arIncapacidad->getFechater() > $arPeriodoDetalle->getFechaHasta() == true) {
+                $dateFechaHasta = $arPeriodoDetalle->getFechaHasta();
+            } else {
+                $dateFechaHasta = $arIncapacidad->getFechater();
+            }
+
+            if($arIncapacidad->getFechaini() <  $arPeriodoDetalle->getFechaDesde() == true) {
+                $dateFechaDesde = $arPeriodoDetalle->getFechaDesde();
+            } else {
+                $dateFechaDesde = $arIncapacidad->getFechaini();
+            }
+
+            if($dateFechaDesde != "" && $dateFechaHasta != "") {
+                $intDias = $dateFechaDesde->diff($dateFechaHasta);
+                $intDias = $intDias->format('%a');
+                $intDiasIncapacidad += $intDias + 1;
+            }  
+        }
+        
+        return $intDiasIncapacidad;
+    }            
+    
+    public function liquidarIncapacidadGeneral($floSalario, $intDias) {
+        $floValorDia = $floSalario / 30;
+        $floIbcIncapacidad = 0;
+        if($floSalario > (644350 * 1.5)) {
+            $floIbcIncapacidad = $intDias * $floValorDia;
+            $floIbcIncapacidad = ($floIbcIncapacidad * 66.67) / 100;
+        } else {
+            $floIbcIncapacidad = $intDias * $floValorDia;
+        }
+        return $floIbcIncapacidad;
+    }
 }

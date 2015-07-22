@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
     <div class="page-header">
-        <h1>Intercambio de datos: <small><label id="lblNombreDocumento">comprobantes</label></small></h1>
+        <h1>Procesar nomina: <small><label id="lblNombreDocumento">detalle auxiliar</label></small></h1>
     </div>
     {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
         {{ form_errors(form) }}       
@@ -52,7 +52,8 @@
         <!-- Botones Menu Items -->
         <div class="btn-toolbar" style="float: right">
             <div class="btn-group">
-                {{ form_widget(form.BtnGenerar, { 'attr': {'class': 'btn btn-danger btn-sm', 'style':'float:right'} }) }}
+                {{ form_widget(form.BtnGenerarPendientes, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
+                {{ form_widget(form.BtnGenerar, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}
             </div>
         </div>
         <br /><br />       

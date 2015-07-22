@@ -72,7 +72,7 @@ class Empleado
     private $comercial;     
     
     /**
-     * @ORM\Column(name="nivel", type="integer", nullable=false)
+     * @ORM\Column(name="nivel", type="float")
      */    
     private $nivel;     
 
@@ -145,10 +145,7 @@ class Empleado
      * @ORM\Column(name="exportado_contabilidad", type="integer", nullable=true)
      */    
     private $exportadoContabilidad;     
-    
-   
-
-
+       
 
     /**
      * Set codemple
@@ -429,7 +426,7 @@ class Empleado
     /**
      * Set nivel
      *
-     * @param integer $nivel
+     * @param float $nivel
      * @return Empleado
      */
     public function setNivel($nivel)
@@ -442,7 +439,7 @@ class Empleado
     /**
      * Get nivel
      *
-     * @return integer 
+     * @return float 
      */
     public function getNivel()
     {

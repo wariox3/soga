@@ -5,17 +5,17 @@ namespace Soga\NominaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="sso_periodo")
- * @ORM\Entity(repositoryClass="Soga\NominaBundle\Repository\SsoPeriodoRepository")
+ * @ORM\Table(name="sso_periodo_detalle")
+ * @ORM\Entity(repositoryClass="Soga\NominaBundle\Repository\SsoPeriodoDetalleRepository")
  */
-class SsoPeriodo {
+class SsoPeriodoDetalle {
 
     /**
      * @ORM\Id
-     * @ORM\Column(name="codigo_periodo_pk", type="integer")
+     * @ORM\Column(name="codigo_periodo_detalle_pk", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $codigoPeriodoPk;
+    private $codigoPeriodoDetallePk;
 
     /**
      * @ORM\Column(name="anio", type="integer")
@@ -68,20 +68,27 @@ class SsoPeriodo {
     private $vrNomina;    
     
     /**
+     * @ORM\Column(name="generar_empleados", type="boolean")
+     */    
+    private $generarEmpleados;       
+    
+    /**
      * @ORM\ManyToOne(targetEntity="SsoSucursal", inversedBy="periodosSucursalRel")
      * @ORM\JoinColumn(name="codigo_sucursal_fk", referencedColumnName="codigo_sucursal_pk")
      */
     protected $sucursalRel;    
 
 
+
+
     /**
-     * Get codigoPeriodoPk
+     * Get codigoPeriodoDetallePk
      *
      * @return integer 
      */
-    public function getCodigoPeriodoPk()
+    public function getCodigoPeriodoDetallePk()
     {
-        return $this->codigoPeriodoPk;
+        return $this->codigoPeriodoDetallePk;
     }
 
     /**
@@ -312,6 +319,29 @@ class SsoPeriodo {
     public function getVrNomina()
     {
         return $this->vrNomina;
+    }
+
+    /**
+     * Set generarEmpleados
+     *
+     * @param boolean $generarEmpleados
+     * @return SsoPeriodo
+     */
+    public function setGenerarEmpleados($generarEmpleados)
+    {
+        $this->generarEmpleados = $generarEmpleados;
+
+        return $this;
+    }
+
+    /**
+     * Get generarEmpleados
+     *
+     * @return boolean 
+     */
+    public function getGenerarEmpleados()
+    {
+        return $this->generarEmpleados;
     }
 
     /**

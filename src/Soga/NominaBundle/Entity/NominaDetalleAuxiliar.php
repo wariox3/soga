@@ -56,8 +56,33 @@ class NominaDetalleAuxiliar {
      * @ORM\Column(name="ingreso_base_cotizacion", type="float")
      */
     private $ingresoBaseCotizacion;     
-    
 
+    /**
+     * @ORM\Column(name="vr_salario", type="float")
+     */
+    private $vrSalario; 
+    
+    /**
+     * @ORM\Column(name="vr_suplementario", type="float")
+     */
+    private $vrSuplementario;    
+
+    /**
+     * @ORM\Column(name="vr_licencia", type="float")
+     */
+    private $vrLicencia; 
+    
+    /**
+     * @ORM\Column(name="vr_incapacidad", type="float")
+     */
+    private $vrIncapacidad;
+
+    /**
+     * @ORM\Column(name="vr_adicional", type="float")
+     */
+    private $vrAdicional;    
+    
+    
     /**
      * Get codigoNominaDetalleAuxiliarPk
      *
@@ -250,5 +275,143 @@ class NominaDetalleAuxiliar {
     public function getNumeroIdentificacion()
     {
         return $this->numeroIdentificacion;
+    }
+
+    /**
+     * Set ingresoBaseCotizacionAdicional
+     *
+     * @param float $ingresoBaseCotizacionAdicional
+     * @return NominaDetalleAuxiliar
+     */
+    public function setIngresoBaseCotizacionAdicional($ingresoBaseCotizacionAdicional)
+    {
+        $this->ingresoBaseCotizacionAdicional = $ingresoBaseCotizacionAdicional;
+
+        return $this;
+    }
+
+    /**
+     * Get ingresoBaseCotizacionAdicional
+     *
+     * @return float 
+     */
+    public function getIngresoBaseCotizacionAdicional()
+    {
+        return $this->ingresoBaseCotizacionAdicional;
+    }
+
+    /**
+     * Set vrSalario
+     *
+     * @param float $vrSalario
+     * @return NominaDetalleAuxiliar
+     */
+    public function setVrSalario($vrSalario)
+    {
+        $this->vrSalario = $vrSalario;
+
+        return $this;
+    }
+
+    /**
+     * Get vrSalario
+     *
+     * @return float 
+     */
+    public function getVrSalario()
+    {
+        return $this->vrSalario;
+    }
+
+    /**
+     * Set vrSuplementario
+     *
+     * @param float $vrSuplementario
+     * @return NominaDetalleAuxiliar
+     */
+    public function setVrSuplementario($vrSuplementario)
+    {
+        $this->vrSuplementario = $vrSuplementario;
+
+        return $this;
+    }
+
+    /**
+     * Get vrSuplementario
+     *
+     * @return float 
+     */
+    public function getVrSuplementario()
+    {
+        return $this->vrSuplementario;
+    }
+
+    /**
+     * Set vrLicencia
+     *
+     * @param float $vrLicencia
+     * @return NominaDetalleAuxiliar
+     */
+    public function setVrLicencia($vrLicencia)
+    {
+        $this->vrLicencia = $vrLicencia;
+
+        return $this;
+    }
+
+    /**
+     * Get vrLicencia
+     *
+     * @return float 
+     */
+    public function getVrLicencia()
+    {
+        return $this->vrLicencia;
+    }
+
+    /**
+     * Set vrIncapacidad
+     *
+     * @param float $vrIncapacidad
+     * @return NominaDetalleAuxiliar
+     */
+    public function setVrIncapacidad($vrIncapacidad)
+    {
+        $this->vrIncapacidad = $vrIncapacidad;
+
+        return $this;
+    }
+
+    /**
+     * Get vrIncapacidad
+     *
+     * @return float 
+     */
+    public function getVrIncapacidad()
+    {
+        return $this->vrIncapacidad;
+    }
+
+    /**
+     * Set vrAdicional
+     *
+     * @param float $vrAdicional
+     * @return NominaDetalleAuxiliar
+     */
+    public function setVrAdicional($vrAdicional)
+    {
+        $this->vrAdicional = $vrAdicional;
+
+        return $this;
+    }
+
+    /**
+     * Get vrAdicional
+     *
+     * @return float 
+     */
+    public function getVrAdicional()
+    {
+        return $this->vrAdicional;
     }
 }

@@ -12,6 +12,13 @@ use Doctrine\ORM\EntityRepository;
  */
 class SsoPilaRepository extends EntityRepository
 {
+    public function dqlDetalle($codigoPeriodoDetalle) {
+        $em = $this->getEntityManager();         
+        $dql = "SELECT pila FROM SogaNominaBundle:SsoPila pila WHERE pila.codigoPeriodoDetalleFk = " . $codigoPeriodoDetalle;
+        $objQuery = $em->createQuery($dql);       
+        return $objQuery;                
+    }  
+    
     public function crearRegistro($codigoPeriodoDetalle) {
         set_time_limit(0);
         $em = $this->getEntityManager();
@@ -25,7 +32,7 @@ class SsoPilaRepository extends EntityRepository
             $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arPeriodoEmpleado->getCodigoEmpleadoFk());
             //if(1 == 1 && $i <= 1000) {
             //if($arEmpleado->getCedemple() == '1214719340' || $arEmpleado->getCedemple() == '1045683705') {
-            if($arEmpleado->getCedemple() == '98525480') {
+            if($arEmpleado->getCedemple() == '1040748531') {
                 $arContratos = new \Soga\NominaBundle\Entity\Contrato();
                 $arContratos = $em->getRepository('SogaNominaBundle:Contrato')->devDqlContratosPeriodoEmpleado($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $arPeriodoEmpleado->getCodigoEmpleadoFk());
                 if(count($arContratos) <= 1) {
@@ -96,6 +103,14 @@ class SsoPilaRepository extends EntityRepository
                         $floIbcIncapacidadGeneral = $this->liquidarIncapacidadGeneral($douSalario+$floSuplementario, $intDiasIncapacidadGeneral);                        
                     }
 
+                    $intDiasLicenciaMaternidad = $this->diasLicenciaMaternidad($arPeriodoDetalle, $arEmpleado->getCedemple());
+                    $strLicenciaMaternidad = " ";
+                    $floIbcLicenciaMaternidad = 0;
+                    if($intDiasLicenciaMaternidad > 0) {
+                        $strLicenciaMaternidad = "X"; 
+                        $floIbcLicenciaMaternidad = $this->liquidarIncapacidadGeneral($douSalario+$floSuplementario, $intDiasLicenciaMaternidad);                        
+                    }                    
+                    
                     $intDiasIncapacidadLaboral = $this->diasIncapacidadLaboral($arPeriodoDetalle, $arEmpleado->getCedemple());
                     $strIncapacidadLaboral = " ";
                     if($intDiasIncapacidadLaboral > 0) {
@@ -107,8 +122,8 @@ class SsoPilaRepository extends EntityRepository
                     
                     $intDiasCotizarPension = $intDiasCotizar - $intDiasLicenciaNoRemunerada;
                     $intDiasCotizarSalud = $intDiasCotizar - $intDiasLicenciaNoRemunerada;
-                    $intDiasCotizarRiesgos = $intDiasCotizar - $intDiasIncapacidadGeneral - $intDiasLicenciaNoRemunerada - $intDiasIncapacidadLaboral;
-                    $intDiasCotizarCaja = $intDiasCotizar - $intDiasIncapacidadGeneral - $intDiasLicenciaNoRemunerada - $intDiasIncapacidadLaboral;
+                    $intDiasCotizarRiesgos = $intDiasCotizar - $intDiasIncapacidadGeneral - $intDiasLicenciaNoRemunerada - $intDiasIncapacidadLaboral - $intDiasLicenciaMaternidad;
+                    $intDiasCotizarCaja = $intDiasCotizar - $intDiasIncapacidadGeneral - $intDiasLicenciaNoRemunerada - $intDiasIncapacidadLaboral - $intDiasLicenciaMaternidad;
                     $floIbcBrutoSeguridadSocial = (($intDiasCotizarPension-$intDiasIncapacidadGeneral) * ($arContrato->getSalarioIbc() / 30) + $floIbcIncapacidadGeneral + $floSuplementario);
                     $floIbcBrutoRiesgos = ($intDiasCotizarRiesgos * ($arContrato->getSalarioIbc() / 30)) + $floSuplementario;
                     $floIbcBrutoCaja = ($intDiasCotizarCaja * ($arContrato->getSalarioIbc() / 30)) + $floSuplementario;
@@ -174,7 +189,9 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setVariacionTransitoriaSalario($strVariacionTransitoriaSalario);
                     $arPila->setSuspensionTemporalContratoLicenciaServicios(' ');
                     $arPila->setIncapacidadGeneral($strIncapacidadGeneral);
-                    $arPila->setLicenciaMaternidad(' ');
+                    $arPila->setDiasIncapacidad($intDiasIncapacidadGeneral);
+                    $arPila->setLicenciaMaternidad($strLicenciaMaternidad);
+                    $arPila->setDiasLicenciaMaternidad($intDiasLicenciaMaternidad);
                     $arPila->setVacaciones(' ');
                     $arPila->setAporteVoluntario(' ');
                     $arPila->setVariacionCentrosTrabajo(' ');
@@ -220,8 +237,8 @@ class SsoPilaRepository extends EntityRepository
                             $douCotizacionFSPSolidaridad = round($floIbcPension * 0.005, -2, PHP_ROUND_HALF_DOWN);
                             $douCotizacionFSPSubsistencia = round($floIbcPension * 0.005, -2, PHP_ROUND_HALF_DOWN);
                         }
-                        $arPila->setAportesFondoSolidaridadPensionalSolidaridad($this->RellenarNr($douCotizacionFSPSolidaridad, "0", 9, "I"));
-                        $arPila->setAportesFondoSolidaridadPensionalSubsistencia($this->RellenarNr($douCotizacionFSPSubsistencia, "0", 9, "I"));                        
+                        $arPila->setAportesFondoSolidaridadPensionalSolidaridad($douCotizacionFSPSolidaridad);
+                        $arPila->setAportesFondoSolidaridadPensionalSubsistencia($douCotizacionFSPSubsistencia);                        
                     }
                     $floAporteVoluntarioFondoPensionesObligatorias = 0;
                     $floCotizacionVoluntariaFondoPensionesObligatorias = 0;
@@ -268,7 +285,11 @@ class SsoPilaRepository extends EntityRepository
                     $em->persist($arPila);
                     
                     if($intHorasLicenciaNoRemunerada > 0) {                                                
-                        $i++;                                                
+                        $i++;        
+                        $floIbcBrutoSeguridadSocial = (($intDiasLicenciaNoRemunerada) * ($arContrato->getSalarioIbc() / 30));
+                        $floIbcBrutoRiesgos = ($intDiasLicenciaNoRemunerada * ($arContrato->getSalarioIbc() / 30));
+                        $floIbcBrutoCaja = ($intDiasLicenciaNoRemunerada * ($arContrato->getSalarioIbc() / 30));                        
+                        
                         $floIbcPension = $this->redondearIbc($intDiasLicenciaNoRemunerada, $floIbcBrutoSeguridadSocial, $floIbcTotal);
                         $floIbcSalud = $this->redondearIbc($intDiasLicenciaNoRemunerada, $floIbcBrutoSeguridadSocial, $floIbcTotal);
                         $floIbcRiesgos = $this->redondearIbc($intDiasLicenciaNoRemunerada, $floIbcBrutoRiesgos, $floIbcTotal);
@@ -356,8 +377,12 @@ class SsoPilaRepository extends EntityRepository
                             $arPila->setCotizacionObligatoria($douCotizacionPension);
                             $douCotizacionFSPSolidaridad = 0;
                             $douCotizacionFSPSubsistencia = 0;
-                            $arPila->setAportesFondoSolidaridadPensionalSolidaridad($this->RellenarNr($douCotizacionFSPSolidaridad, "0", 9, "I"));
-                            $arPila->setAportesFondoSolidaridadPensionalSubsistencia($this->RellenarNr($douCotizacionFSPSubsistencia, "0", 9, "I"));                            
+                            if($douSalario >= (644350 * 4)) {
+                                $douCotizacionFSPSolidaridad = round($floIbcPension * 0.005, -2, PHP_ROUND_HALF_DOWN);
+                                $douCotizacionFSPSubsistencia = round($floIbcPension * 0.005, -2, PHP_ROUND_HALF_DOWN);
+                            }                            
+                            $arPila->setAportesFondoSolidaridadPensionalSolidaridad($douCotizacionFSPSolidaridad);
+                            $arPila->setAportesFondoSolidaridadPensionalSubsistencia($douCotizacionFSPSubsistencia);                            
                         }
                         $floAporteVoluntarioFondoPensionesObligatorias = 0;
                         $floCotizacionVoluntariaFondoPensionesObligatorias = 0;
@@ -609,6 +634,9 @@ class SsoPilaRepository extends EntityRepository
     public function liquidarIncapacidadGeneral($floSalario, $intDias) {
         $floValorDia = $floSalario / 30;
         $floIbcIncapacidad = 0;
+        //Traer el ibc del mes anterior del registro 
+        //maestro no el de la SLN
+        $floIbcMesAnterior = 0;
         if($floSalario > (644350 * 1.5)) {
             $floIbcIncapacidad = $intDias * $floValorDia;
             $floIbcIncapacidad = ($floIbcIncapacidad * 66.67) / 100;
@@ -617,4 +645,34 @@ class SsoPilaRepository extends EntityRepository
         }
         return $floIbcIncapacidad;
     }
+    
+    public function diasLicenciaMaternidad($arPeriodoDetalle, $strNumeroIdentificacion) {
+        $em = $this->getEntityManager();
+        $intDiasIncapacidad = 0;
+        $arIncapacidades = new \Soga\NominaBundle\Entity\Incapacidad();
+        $arIncapacidades = $em->getRepository('SogaNominaBundle:Incapacidad')->devDqlLicenciasMaternidadPeriodoEmpleado($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $strNumeroIdentificacion);        
+        foreach ($arIncapacidades as $arIncapacidad) {
+            $dateFechaDesde =  "";
+            $dateFechaHasta =  "";               
+            if($arIncapacidad->getFechater() > $arPeriodoDetalle->getFechaHasta() == true) {
+                $dateFechaHasta = $arPeriodoDetalle->getFechaHasta();
+            } else {
+                $dateFechaHasta = $arIncapacidad->getFechater();
+            }
+
+            if($arIncapacidad->getFechaini() <  $arPeriodoDetalle->getFechaDesde() == true) {
+                $dateFechaDesde = $arPeriodoDetalle->getFechaDesde();
+            } else {
+                $dateFechaDesde = $arIncapacidad->getFechaini();
+            }
+
+            if($dateFechaDesde != "" && $dateFechaHasta != "") {
+                $intDias = $dateFechaDesde->diff($dateFechaHasta);
+                $intDias = $intDias->format('%a');
+                $intDiasIncapacidad += $intDias + 1;
+            }  
+        }
+        
+        return $intDiasIncapacidad;
+    }            
 }

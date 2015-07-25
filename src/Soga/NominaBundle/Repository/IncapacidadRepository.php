@@ -33,4 +33,15 @@ class IncapacidadRepository extends EntityRepository
         $arIncapacidades = $objQuery->getResult();
         return $arIncapacidades;                
     }             
+    
+    public function devDqlLicenciasMaternidadPeriodoEmpleado($fechaDesde = "", $fechaHasta = "", $strNumeroIdentificacion) {
+        $em = $this->getEntityManager();         
+        $dql = "SELECT incapacidad FROM SogaNominaBundle:Incapacidad incapacidad "
+                . "WHERE (incapacidad.fechater >= '" . $fechaDesde . "' OR incapacidad.fechater = '0000-00-00') AND incapacidad.fechaini <='" . $fechaHasta . "' "
+                . "AND incapacidad.cedemple = '" . $strNumeroIdentificacion . "' "
+                . "AND (incapacidad.tipoinca = 1040 OR incapacidad.tipoinca = 1050)";       
+        $objQuery = $em->createQuery($dql);  
+        $arIncapacidades = $objQuery->getResult();
+        return $arIncapacidades;                
+    }             
 }

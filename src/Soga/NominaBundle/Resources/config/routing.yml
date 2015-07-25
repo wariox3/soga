@@ -46,6 +46,10 @@ soga_nomina_utilidades_pila:
     pattern:  /nomina/utilidades/pila
     defaults: { _controller: SogaNominaBundle:UtiPila:lista }     
     
+soga_nomina_utilidades_pila_detalle:
+    pattern:  /nomina/utilidades/pila/detalle/{codigoPeriodoDetalle}
+    defaults: { _controller: SogaNominaBundle:UtiPila:detalle }    
+    
 soga_nomina_procesos_procesar_nomina:
     pattern:  /nomina/procesos/procesar/nomina
     defaults: { _controller: SogaNominaBundle:ProProcesarNomina:lista }     

@@ -18,7 +18,7 @@
                 <th>{{ knp_pagination_sortable(arMaestroRecibo, 'ID', 'marecibo.nroCaja') }}</th>
                 <th>{{ knp_pagination_sortable(arMaestroRecibo, 'Nit', 'marecibo.codmaestro') }}</th>
                 <th>{{ knp_pagination_sortable(arMaestroRecibo, 'Fecha', 'marecibo.fechaRa') }}</th>
-                <th>{{ knp_pagination_sortable(arMaestroRecibo, 'Tipo', 'marecibo.tipop') }}</th>
+                <th>{{ knp_pagination_sortable(arMaestroRecibo, 'Tipo', 'marecibo.idrecibo') }}</th>
                 <th>{{ knp_pagination_sortable(arMaestroRecibo, 'Estado', 'marecibo.estado') }}</th>                
                 <th style="text-align: right">{{ knp_pagination_sortable(arMaestroRecibo, 'Valor', 'marecibo.vlrpagado') }}</th>                                
                 <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodos(this);"/></th>
@@ -30,7 +30,7 @@
                 <td><input type="hidden" name="LblCodigoCopia[]" value="{{ arMaestroRecibo.nroCaja }}">{{ arMaestroRecibo.nroCaja }}</td>
                 <td>{{ arMaestroRecibo.codmaestro }}</td>
                 <td>{{ arMaestroRecibo.fechaRa |date("Y/m/d")  }}</td>               
-                <td>{{ arMaestroRecibo.tipop }}</td>                
+                <td>{{ arMaestroRecibo.idrecibo }}</td>                
                 <td>{{ arMaestroRecibo.estado }}</td>                
                 <td style="text-align: right">{{ arMaestroRecibo.vlrpagado | number_format(0, '.', ',') }}</td>                                
                 <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arMaestroRecibo.nroCaja }}" /></td>

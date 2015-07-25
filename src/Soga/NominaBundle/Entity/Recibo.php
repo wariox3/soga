@@ -81,7 +81,16 @@ class Recibo
      */    
     private $codZona;      
        
+    /**
+     * @ORM\Column(name="descuento", type="integer")
+     */    
+    private $descuento;    
 
+    /**
+     * @ORM\Column(name="reteica", type="integer")
+     */    
+    private $reteica;     
+    
     /**
      * Set Id
      *
@@ -402,5 +411,51 @@ class Recibo
     public function getCodZona()
     {
         return $this->codZona;
+    }
+
+    /**
+     * Set descuento
+     *
+     * @param integer $descuento
+     * @return Recibo
+     */
+    public function setDescuento($descuento)
+    {
+        $this->descuento = $descuento;
+
+        return $this;
+    }
+
+    /**
+     * Get descuento
+     *
+     * @return integer 
+     */
+    public function getDescuento()
+    {
+        return $this->descuento;
+    }
+
+    /**
+     * Set reteica
+     *
+     * @param integer $reteica
+     * @return Recibo
+     */
+    public function setReteica($reteica)
+    {
+        $this->reteica = $reteica;
+
+        return $this;
+    }
+
+    /**
+     * Get reteica
+     *
+     * @return integer 
+     */
+    public function getReteica()
+    {
+        return $this->reteica;
     }
 }

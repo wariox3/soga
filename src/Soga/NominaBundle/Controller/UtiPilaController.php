@@ -118,9 +118,9 @@ class UtiPilaController extends Controller {
                     fputs($ar, $this->RellenarNr($arSsoPila->getCotizacionObligatoria(), "0", 9, "I"));                                
                     fputs($ar, $arSsoPila->getAporteVoluntarioFondoPensionesObligatorias());
                     fputs($ar, $arSsoPila->getCotizacionVoluntarioFondoPensionesObligatorias());
-                    fputs($ar, $this->RellenarNr($arSsoPila->getTotalCotizacion(), "0", 9, "I"));                                
-                    fputs($ar, $arSsoPila->getAportesFondoSolidaridadPensionalSolidaridad());
-                    fputs($ar, $arSsoPila->getAportesFondoSolidaridadPensionalSubsistencia());
+                    fputs($ar, $this->RellenarNr($arSsoPila->getTotalCotizacion(), "0", 9, "I"));
+                    fputs($ar, $this->RellenarNr($arSsoPila->getAportesFondoSolidaridadPensionalSolidaridad(), "0", 9, "I"));
+                    fputs($ar, $this->RellenarNr($arSsoPila->getAportesFondoSolidaridadPensionalSubsistencia(), "0", 9, "I"));
                     fputs($ar, $arSsoPila->getValorNoRetenidoAportesVoluntarios());
                     fputs($ar, $arSsoPila->getTarifaAportesSalud());                                
                     fputs($ar, $this->RellenarNr($arSsoPila->getCotizacionObligatoriaSalud(), "0", 9, "I"));
@@ -268,6 +268,24 @@ class UtiPilaController extends Controller {
         
         return $this->render('SogaNominaBundle:Utilidades/Pila:lista.html.twig', array(
             'arPeriodoDetalles' => $arPeriodoDetalles
+                ));
+        set_time_limit(60);
+    }
+    
+    public function detalleAction($codigoPeriodoDetalle) {
+        set_time_limit(0);        
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $request = $this->getRequest();        
+        $arPeriodoDetalle = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
+        $arPeriodoDetalle = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->find($codigoPeriodoDetalle);                                                    
+        
+        $objQueryPila = $em->getRepository('SogaNominaBundle:SsoPila')->dqlDetalle($codigoPeriodoDetalle);
+        $arPila = $paginator->paginate($objQueryPila, $this->getRequest()->query->get('page', 1), 1000);        
+        
+        return $this->render('SogaNominaBundle:Utilidades/Pila:detalle.html.twig', array(
+            'arPila' => $arPila,
+            'arPeriodoDetalle' => $arPeriodoDetalle
                 ));
         set_time_limit(60);
     }

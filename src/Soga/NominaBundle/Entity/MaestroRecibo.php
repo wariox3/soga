@@ -43,9 +43,9 @@ class MaestroRecibo
     private $vlrpagado;    
 
     /**
-     * @ORM\Column(name="tipop", type="string", length=15, nullable=false)
+     * @ORM\Column(name="idrecibo", type="string", length=15, nullable=false)
      */    
-    private $tipop;    
+    private $idrecibo;    
 
     /**
      * @ORM\Column(name="estado", type="string", length=15, nullable=false)
@@ -56,6 +56,8 @@ class MaestroRecibo
      * @ORM\Column(name="exportado_contabilidad", type="integer", nullable=true)
      */    
     private $exportadoContabilidad;         
+
+
 
 
     /**
@@ -197,26 +199,26 @@ class MaestroRecibo
     }
 
     /**
-     * Set tipop
+     * Set idrecibo
      *
-     * @param string $tipop
+     * @param string $idrecibo
      * @return MaestroRecibo
      */
-    public function setTipop($tipop)
+    public function setIdrecibo($idrecibo)
     {
-        $this->tipop = $tipop;
+        $this->idrecibo = $idrecibo;
 
         return $this;
     }
 
     /**
-     * Get tipop
+     * Get idrecibo
      *
      * @return string 
      */
-    public function getTipop()
+    public function getIdrecibo()
     {
-        return $this->tipop;
+        return $this->idrecibo;
     }
 
     /**

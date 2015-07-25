@@ -41,16 +41,52 @@ class HerIntCtiRecibosController extends Controller {
                             $arNomRegistroExportacion->setComprobante($strComprobante);
                             $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaRa());
                             $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
-                            $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);                                                        
+                            $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
                             $arNomRegistroExportacion->setNit($arDetalleRecibo->getNit());
-
                             $arNomRegistroExportacion->setDetalle("CANCELA FRA" . $arDetalleRecibo->getNroFactura());
                             $arNomRegistroExportacion->setTipo(2);
                             $arNomRegistroExportacion->setBase(0);
-                            $arNomRegistroExportacion->setPlazo(0);                            
-                            $arNomRegistroExportacion->setCuenta("130505");                            
+                            $arNomRegistroExportacion->setPlazo(0);
+                            $arNomRegistroExportacion->setCuenta("130505");
                             $arNomRegistroExportacion->setValor($arDetalleRecibo->getAbono());
-                            $em->persist($arNomRegistroExportacion);                            
+                            $em->persist($arNomRegistroExportacion);
+
+                            if($arDetalleRecibo->getDescuento() > 0) {
+                                $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
+                                $arNomRegistroExportacion->setConsecutivo($consecutivo);
+                                $arNomRegistroExportacion->setComprobante($strComprobante);
+                                $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaRa());
+                                $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
+                                $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
+                                $arNomRegistroExportacion->setNit($arDetalleRecibo->getNit());
+
+                                $arNomRegistroExportacion->setDetalle("DCTO P. PAGO FRA" . $arDetalleRecibo->getNroFactura());
+                                $arNomRegistroExportacion->setTipo(1);
+                                $arNomRegistroExportacion->setBase(0);
+                                $arNomRegistroExportacion->setPlazo(0);
+                                $arNomRegistroExportacion->setCuenta("530535");
+                                $arNomRegistroExportacion->setValor($arDetalleRecibo->getDescuento());
+                                $em->persist($arNomRegistroExportacion);
+                            }
+                            
+                            /*if($arDetalleRecibo->getReteica() > 0) {
+                                $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
+                                $arNomRegistroExportacion->setConsecutivo($consecutivo);
+                                $arNomRegistroExportacion->setComprobante($strComprobante);
+                                $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaRa());
+                                $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
+                                $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
+                                $arNomRegistroExportacion->setNit($arDetalleRecibo->getNit());
+
+                                $arNomRegistroExportacion->setDetalle("DCTO P. PAGO FRA" . $arDetalleRecibo->getNroFactura());
+                                $arNomRegistroExportacion->setTipo(1);
+                                $arNomRegistroExportacion->setBase(0);
+                                $arNomRegistroExportacion->setPlazo(0);
+                                $arNomRegistroExportacion->setCuenta("530535");
+                                $arNomRegistroExportacion->setValor($arDetalleRecibo->getDescuento());
+                                $em->persist($arNomRegistroExportacion);
+                            }*/                            
+                            
                         }
 
                         $this->CuentasPrincipales($arMaestroRecibo, $strComprobante);
@@ -96,11 +132,11 @@ class HerIntCtiRecibosController extends Controller {
                     header ("Content-Length: ".filesize($strRutaArchivo.$strNombreArchivo));
                     readfile($strRutaArchivo.$strNombreArchivo);
                     break;
-                    
-                case "OpCargarPrestacion";       
+
+                case "OpCargarPrestacion";
                     if($arrControles['TxtNumeroPrestacion']){
                         $arPrestacion = new \Soga\NominaBundle\Entity\Prestacion();
-                        $arPrestacion = $em->getRepository('SogaNominaBundle:Prestacion')->find($arrControles['TxtNumeroPrestacion']);                        
+                        $arPrestacion = $em->getRepository('SogaNominaBundle:Prestacion')->find($arrControles['TxtNumeroPrestacion']);
                         if(count($arPrestacion) > 0) {
                             $arPrestacion->setExportadoContabilidad(0);
                             $em->persist($arPrestacion);
@@ -145,7 +181,7 @@ class HerIntCtiRecibosController extends Controller {
         $arNomRegistroExportacion->setPlazo(0);
         $arNomRegistroExportacion->setCuenta("11100501");
         $arNomRegistroExportacion->setValor($arRecibo->getVlrPagado());
-        $em->persist($arNomRegistroExportacion);                            
+        $em->persist($arNomRegistroExportacion);
     }
 
     /**

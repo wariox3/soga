@@ -17,8 +17,8 @@ class MaestroReciboRepository extends EntityRepository
      * @return type Objeto de tipo query de la clase nomina
      */
     public function DevDqlMaestrosRecibosSinExportar($strDesde = "", $strHasta = "") {
-        $em = $this->getEntityManager();         
-        $dql = "SELECT marecibo FROM SogaNominaBundle:MaestroRecibo marecibo WHERE marecibo.exportadoContabilidad = 0";
+        $em = $this->getEntityManager();           
+        $dql = "SELECT marecibo FROM SogaNominaBundle:MaestroRecibo marecibo WHERE marecibo.exportadoContabilidad = 0 AND (marecibo.idrecibo = 1 OR marecibo.idrecibo = 2) ";
         if($strDesde != "") {
            $dql = $dql . " AND marecibo.fechaRa >='". $strDesde ."'" ;
         }

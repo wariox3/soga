@@ -163,10 +163,20 @@ class SsoPila {
     private $incapacidadGeneral;    
     
     /**
+     * @ORM\Column(name="dias_incapacidad", type="integer")
+     */
+    private $diasIncapacidad;    
+    
+    /**
      * @ORM\Column(name="licencia_maternidad", type="string", length=1)
      */
     private $licenciaMaternidad;        
 
+    /**
+     * @ORM\Column(name="dias_licencia_maternidad", type="integer")
+     */
+    private $diasLicenciaMaternidad;    
+    
     /**
      * @ORM\Column(name="vacaciones", type="string", length=1)
      */
@@ -293,12 +303,12 @@ class SsoPila {
     private $totalCotizacion;    
 
     /**
-     * @ORM\Column(name="aportes_fondo_solidaridad_pensional_solidaridad", type="string", length=9)
+     * @ORM\Column(name="aportes_fondo_solidaridad_pensional_solidaridad", type="float")
      */
     private $aportesFondoSolidaridadPensionalSolidaridad;    
     
     /**
-     * @ORM\Column(name="aportes_fondo_solidaridad_pensional_subsistencia", type="string", length=9)
+     * @ORM\Column(name="aportes_fondo_solidaridad_pensional_subsistencia", type="float")
      */
     private $aportesFondoSolidaridadPensionalSubsistencia;     
 
@@ -431,9 +441,7 @@ class SsoPila {
      * @ORM\Column(name="clase_riesgo_afiliado", type="string", length=1)
      */
     private $claseRiesgoAfiliado;     
-    
-    
-
+      
 
     /**
      * Get codigoPilaPk
@@ -1713,7 +1721,7 @@ class SsoPila {
     /**
      * Set aportesFondoSolidaridadPensionalSolidaridad
      *
-     * @param string $aportesFondoSolidaridadPensionalSolidaridad
+     * @param float $aportesFondoSolidaridadPensionalSolidaridad
      * @return SsoPila
      */
     public function setAportesFondoSolidaridadPensionalSolidaridad($aportesFondoSolidaridadPensionalSolidaridad)
@@ -1726,7 +1734,7 @@ class SsoPila {
     /**
      * Get aportesFondoSolidaridadPensionalSolidaridad
      *
-     * @return string 
+     * @return float 
      */
     public function getAportesFondoSolidaridadPensionalSolidaridad()
     {
@@ -1736,7 +1744,7 @@ class SsoPila {
     /**
      * Set aportesFondoSolidaridadPensionalSubsistencia
      *
-     * @param string $aportesFondoSolidaridadPensionalSubsistencia
+     * @param float $aportesFondoSolidaridadPensionalSubsistencia
      * @return SsoPila
      */
     public function setAportesFondoSolidaridadPensionalSubsistencia($aportesFondoSolidaridadPensionalSubsistencia)
@@ -1749,7 +1757,7 @@ class SsoPila {
     /**
      * Get aportesFondoSolidaridadPensionalSubsistencia
      *
-     * @return string 
+     * @return float 
      */
     public function getAportesFondoSolidaridadPensionalSubsistencia()
     {
@@ -2352,5 +2360,51 @@ class SsoPila {
     public function getClaseRiesgoAfiliado()
     {
         return $this->claseRiesgoAfiliado;
+    }
+
+    /**
+     * Set diasIncapacidad
+     *
+     * @param integer $diasIncapacidad
+     * @return SsoPila
+     */
+    public function setDiasIncapacidad($diasIncapacidad)
+    {
+        $this->diasIncapacidad = $diasIncapacidad;
+
+        return $this;
+    }
+
+    /**
+     * Get diasIncapacidad
+     *
+     * @return integer 
+     */
+    public function getDiasIncapacidad()
+    {
+        return $this->diasIncapacidad;
+    }
+
+    /**
+     * Set diasLicenciaMaternidad
+     *
+     * @param integer $diasLicenciaMaternidad
+     * @return SsoPila
+     */
+    public function setDiasLicenciaMaternidad($diasLicenciaMaternidad)
+    {
+        $this->diasLicenciaMaternidad = $diasLicenciaMaternidad;
+
+        return $this;
+    }
+
+    /**
+     * Get diasLicenciaMaternidad
+     *
+     * @return integer 
+     */
+    public function getDiasLicenciaMaternidad()
+    {
+        return $this->diasLicenciaMaternidad;
     }
 }

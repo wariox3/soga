@@ -24,6 +24,7 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <th></th>
             </tr>
 
             {% for arPeriodoDetalles in arPeriodoDetalles %}
@@ -42,8 +43,9 @@
                 <td>{% if arPeriodoDetalles.estadoGenerado == 1 %} SI {% else %} NO {% endif %}</td>   
                 <td>{% if arPeriodoDetalles.estadoGenerado == 1 %}<button class="btn btn-default btn-xs" type="submit" name="OpExportar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Pila</button>{% endif %}</td>
                 <td>{% if arPeriodoDetalles.estadoGenerado == 1 %}<button class="btn btn-default btn-xs" type="submit" name="OpExportarExcel" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Excel</button>{% endif %}</td>
-                <td>{% if arPeriodoDetalles.estadoGenerado == 1 %}<button class="btn btn-default btn-xs" type="submit" name="OpDesgenerar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Desgenerar</button>{% endif %}</td>                
+                <td>{% if arPeriodoDetalles.estadoGenerado == 1 %}<button class="btn btn-danger btn-xs" type="submit" name="OpDesgenerar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Desgenerar</button>{% endif %}</td>                
                 <td>{% if arPeriodoDetalles.estadoGenerado == 0 %}<button class="btn btn-default btn-xs" type="submit" name="OpGenerar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Generar</button>{% endif %}</td>                                                
+                <td style="text-align: center">{% if arPeriodoDetalles.estadoGenerado == 1 %}<a href="{{ path('soga_nomina_utilidades_pila_detalle', { 'codigoPeriodoDetalle': arPeriodoDetalles.codigoPeriodoDetallePk }) }}"><img src="{{ asset('imagenes/bootstrap/glyphicons_152_new_window.png') }}" width=22 height=22></a>{% endif %}</td>                
             </tr>
             {% endfor %}
         </table>

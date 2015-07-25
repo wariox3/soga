@@ -33,10 +33,12 @@ class HerIntCtiRecibosController extends Controller {
                         $arMaestroRecibo = $em->getRepository('SogaNominaBundle:MaestroRecibo')->find($consecutivo);
                         $arTipoRecibo = new \Soga\NominaBundle\Entity\TipoRecibo();
                         $arTipoRecibo = $em->getRepository('SogaNominaBundle:TipoRecibo')->find($arMaestroRecibo->getIdrecibo());                        
+                        $strCliente = "";
                         $arDetalleRecibo = new \Soga\NominaBundle\Entity\Recibo();
                         $objQuery = $em->getRepository('SogaNominaBundle:Recibo')->DevDqlDetalleRecibo($consecutivo);
                         $arDetalleRecibo = $objQuery->getResult();
                         foreach ($arDetalleRecibo as $arDetalleRecibo) {
+                            $strCliente = $arDetalleRecibo->getZona();
                             $strNumeroDocumento = $this->RellenarNr((int)$consecutivo, "0", 9);
                             $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
                             $arNomRegistroExportacion->setConsecutivo($consecutivo);
@@ -91,7 +93,7 @@ class HerIntCtiRecibosController extends Controller {
                             
                         }
 
-                        $this->CuentasPrincipales($arMaestroRecibo, $strComprobante);
+                        $this->CuentasPrincipales($arMaestroRecibo, $strComprobante, $strCliente);
                         $arMaestroRecibo->setExportadoContabilidad(1);
                         $em->persist($arMaestroRecibo);
                     }
@@ -181,7 +183,7 @@ class HerIntCtiRecibosController extends Controller {
      * @param double $douDebitos
      * @param double $douCreditos
      */
-    private function CuentasPrincipales ($arRecibo, $strComprobante) {
+    private function CuentasPrincipales ($arRecibo, $strComprobante, $strCliente) {
         $em = $this->get('doctrine.orm.entity_manager');
         $strNumeroDocumento = $this->RellenarNr((int)$arRecibo->getNroCaja(), "0", 9);
         
@@ -192,7 +194,7 @@ class HerIntCtiRecibosController extends Controller {
         $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
         $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
         //$arNomRegistroExportacion->setNit($arRecibo->getCodmaestro());
-        $arNomRegistroExportacion->setDetalle($arRecibo->getZona());
+        $arNomRegistroExportacion->setDetalle($strCliente);
         $arNomRegistroExportacion->setTipo(1);
         $arNomRegistroExportacion->setBase(0);
         $arNomRegistroExportacion->setPlazo(0);

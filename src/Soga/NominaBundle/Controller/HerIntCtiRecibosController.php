@@ -31,6 +31,8 @@ class HerIntCtiRecibosController extends Controller {
                     foreach ($arrSeleccionados AS $consecutivo) {
                         $arMaestroRecibo = new \Soga\NominaBundle\Entity\MaestroRecibo();
                         $arMaestroRecibo = $em->getRepository('SogaNominaBundle:MaestroRecibo')->find($consecutivo);
+                        $arTipoRecibo = new \Soga\NominaBundle\Entity\TipoRecibo();
+                        $arTipoRecibo = $em->getRepository('SogaNominaBundle:TipoRecibo')->find($arMaestroRecibo->getIdrecibo());                        
                         $arDetalleRecibo = new \Soga\NominaBundle\Entity\Recibo();
                         $objQuery = $em->getRepository('SogaNominaBundle:Recibo')->DevDqlDetalleRecibo($consecutivo);
                         $arDetalleRecibo = $objQuery->getResult();
@@ -41,9 +43,9 @@ class HerIntCtiRecibosController extends Controller {
                             $arNomRegistroExportacion->setComprobante($strComprobante);
                             $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaRa());
                             $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
-                            $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
+                            $arNomRegistroExportacion->setDocumentoReferencia($arDetalleRecibo->getNroFactura());
                             $arNomRegistroExportacion->setNit($arDetalleRecibo->getNit());
-                            $arNomRegistroExportacion->setDetalle("CANCELA FRA" . $arDetalleRecibo->getNroFactura());
+                            $arNomRegistroExportacion->setDetalle($arTipoRecibo->getDescripcion());
                             $arNomRegistroExportacion->setTipo(2);
                             $arNomRegistroExportacion->setBase(0);
                             $arNomRegistroExportacion->setPlazo(0);
@@ -57,7 +59,7 @@ class HerIntCtiRecibosController extends Controller {
                                 $arNomRegistroExportacion->setComprobante($strComprobante);
                                 $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaRa());
                                 $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
-                                $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
+                                $arNomRegistroExportacion->setDocumentoReferencia($arDetalleRecibo->getNroFactura());
                                 $arNomRegistroExportacion->setNit($arDetalleRecibo->getNit());
 
                                 $arNomRegistroExportacion->setDetalle("DCTO P. PAGO FRA" . $arDetalleRecibo->getNroFactura());
@@ -138,17 +140,27 @@ class HerIntCtiRecibosController extends Controller {
                     exit;
                     break;
 
-                case "OpCargarPrestacion";
-                    if($arrControles['TxtNumeroPrestacion']){
-                        $arPrestacion = new \Soga\NominaBundle\Entity\Prestacion();
-                        $arPrestacion = $em->getRepository('SogaNominaBundle:Prestacion')->find($arrControles['TxtNumeroPrestacion']);
-                        if(count($arPrestacion) > 0) {
-                            $arPrestacion->setExportadoContabilidad(0);
-                            $em->persist($arPrestacion);
-                            $em->flush();
+                case "OpCargarRecibo";
+                    if($arrControles['TxtNumeroConsecutivoDesde'] && $arrControles['TxtNumeroConsecutivoHasta']){
+                        $intNumeroDesde = $arrControles['TxtNumeroConsecutivoDesde'];
+                        $intNumeroHasta = $arrControles['TxtNumeroConsecutivoHasta'];
+                        if($intNumeroDesde <= $intNumeroHasta) {
+                            if(($intNumeroHasta - $intNumeroDesde) < 1000) {                                
+                                for ($i = $intNumeroDesde; $i <= $intNumeroHasta; $i++) {
+                                    $strNumero = $this->RellenarNr($i, "0", 6);
+                                    $arMaestroRecibo = new \Soga\NominaBundle\Entity\MaestroRecibo();                        
+                                    $arMaestroRecibo = $em->getRepository('SogaNominaBundle:MaestroRecibo')->find($strNumero);                        
+                                    if(count($arMaestroRecibo) > 0) {
+                                        $arMaestroRecibo->setExportadoContabilidad(0);
+                                        $em->persist($arMaestroRecibo);
+                                        $em->flush();
+                                    }
+                                } 
+                            }
                         }
+
                     }
-                    break;
+                    break; 
             }
         }
 
@@ -179,7 +191,7 @@ class HerIntCtiRecibosController extends Controller {
         $arNomRegistroExportacion->setFecha($arRecibo->getFechaRa());
         $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
         $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
-        $arNomRegistroExportacion->setNit($arRecibo->getCodmaestro());
+        //$arNomRegistroExportacion->setNit($arRecibo->getCodmaestro());
         $arNomRegistroExportacion->setDetalle("INGRESO");
         $arNomRegistroExportacion->setTipo(1);
         $arNomRegistroExportacion->setBase(0);

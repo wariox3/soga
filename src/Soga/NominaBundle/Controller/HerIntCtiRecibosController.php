@@ -184,7 +184,7 @@ class HerIntCtiRecibosController extends Controller {
     private function CuentasPrincipales ($arRecibo, $strComprobante) {
         $em = $this->get('doctrine.orm.entity_manager');
         $strNumeroDocumento = $this->RellenarNr((int)$arRecibo->getNroCaja(), "0", 9);
-        //Cuenta cesantias
+        
         $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
         $arNomRegistroExportacion->setConsecutivo($arRecibo->getNroCaja());
         $arNomRegistroExportacion->setComprobante($strComprobante);
@@ -192,40 +192,13 @@ class HerIntCtiRecibosController extends Controller {
         $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
         $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
         //$arNomRegistroExportacion->setNit($arRecibo->getCodmaestro());
-        $arNomRegistroExportacion->setDetalle("INGRESO");
+        $arNomRegistroExportacion->setDetalle($arRecibo->getZona());
         $arNomRegistroExportacion->setTipo(1);
         $arNomRegistroExportacion->setBase(0);
         $arNomRegistroExportacion->setPlazo(0);
         $arNomRegistroExportacion->setCuenta("11100501");
         $arNomRegistroExportacion->setValor($arRecibo->getVlrPagado());
         $em->persist($arNomRegistroExportacion);
-    }
-
-    /**
-     * Devuelve el nit para el caso de pension y salud que son especificos
-     *
-     * @param clase $arEmpleado
-     * @param string $strCodSala
-     * @return string Nit de la empresa prestadora del servicio salud o pension
-     */
-    private function DevNit($arEmpleado, $strCodSala) {
-        $em = $this->get('doctrine.orm.entity_manager');
-        //$arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
-        $strNit = "";
-        switch ($strCodSala) {
-            case "50";
-                $arPension = new \Soga\NominaBundle\Entity\Pension();
-                $arPension = $em->getRepository('SogaNominaBundle:Pension')->find($arEmpleado->getCodpension());
-                $strNit = $arPension->getNit();
-                break;
-
-            case "51";
-                $arEps = new \Soga\NominaBundle\Entity\Eps();
-                $arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arEmpleado->getCodeps());
-                $strNit = $arEps->getNit();
-                break;
-        }
-        return $strNit;
     }
 
     /**

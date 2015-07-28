@@ -45,7 +45,7 @@ class HerIntCtiVacacionesController extends Controller {
                             $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
                             $arNomRegistroExportacion->setConsecutivo($consecutivo);
                             $arNomRegistroExportacion->setComprobante($strComprobante);
-                            $arNomRegistroExportacion->setFecha($arVacacion->getFechaPro());
+                            $arNomRegistroExportacion->setFecha($arVacacion->getFechap());
                             $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
                             $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);                                                        
                             if($arSalario->getNitFijo() == 1) {
@@ -54,7 +54,7 @@ class HerIntCtiVacacionesController extends Controller {
                                 $arNomRegistroExportacion->setNit($this->DevNit($arEmpleado, $arDetalleVacacion->getCodsala()));
                             }
                             if($arSalario->getNitEmpleado() == 1) {
-                                $arNomRegistroExportacion->setNit($arVacacion->getCedulaEmpleado());
+                                $arNomRegistroExportacion->setNit($arVacacion->getCedemple());
                             }                                
                             if($arSalario->getNitEmpresaUsuaria() == 1) {
                                 $arNomRegistroExportacion->setNit($arZona->getNitzona());
@@ -69,7 +69,7 @@ class HerIntCtiVacacionesController extends Controller {
                             $em->flush();
                         }
 
-                        $this->CuentasPrincipales($arVacacion, $strComprobante);
+                        $this->CuentasPrincipales($arZona, $arVacacion, $strComprobante);
 
                         $arVacacion->setExportadoContabilidad(1);
                         $em->persist($arVacacion);
@@ -121,7 +121,7 @@ class HerIntCtiVacacionesController extends Controller {
                         if($intNumeroDesde <= $intNumeroHasta) {
                             if(($intNumeroHasta - $intNumeroDesde) < 1000) {                                
                                 for ($i = $intNumeroDesde; $i <= $intNumeroHasta; $i++) {
-                                    $strNumero = $this->RellenarNr($i, "0", 6);
+                                    $strNumero = $this->RellenarNr($i, "0", 5);
                                     $arVacacion = new \Soga\NominaBundle\Entity\Vacacion();                        
                                     $arVacacion = $em->getRepository('SogaNominaBundle:Vacacion')->find($strNumero);                        
                                     if(count($arVacacion) > 0) {
@@ -156,91 +156,45 @@ class HerIntCtiVacacionesController extends Controller {
      * @param double $douDebitos
      * @param double $douCreditos
      */
-    private function CuentasPrincipales ($arVacacion, $strComprobante) {
+    private function CuentasPrincipales ($arZona, $arVacacion, $strComprobante) {
         $em = $this->get('doctrine.orm.entity_manager');
-        $strNumeroDocumento = $this->RellenarNr((int)$arVacacion->getNroPresta(), "0", 9);
-        //Cuenta cesantias
-        $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
-        $arNomRegistroExportacion->setConsecutivo($arVacacion->getNroPresta());
-        $arNomRegistroExportacion->setComprobante($strComprobante);
-        $arNomRegistroExportacion->setFecha($arVacacion->getFechaPro());
-        $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
-        $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
-        $arNomRegistroExportacion->setNit($arVacacion->getCedulaEmpleado());
-        $arNomRegistroExportacion->setDetalle("CESANTIAS PRESTACIONES SOCIALES");
-        $arNomRegistroExportacion->setTipo(1);
-        $arNomRegistroExportacion->setBase(0);
-        $arNomRegistroExportacion->setPlazo(0);
-        $arNomRegistroExportacion->setCuenta("261005");
-        $arNomRegistroExportacion->setValor($arVacacion->getCesantia());
-        $em->persist($arNomRegistroExportacion);
-        $em->flush();
-
-        //Cuenta intereses cesantias
-        $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
-        $arNomRegistroExportacion->setConsecutivo($arVacacion->getNroPresta());
-        $arNomRegistroExportacion->setComprobante($strComprobante);
-        $arNomRegistroExportacion->setFecha($arVacacion->getFechaPro());
-        $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
-        $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
-        $arNomRegistroExportacion->setNit($arVacacion->getCedulaEmpleado());
-        $arNomRegistroExportacion->setDetalle("INTERESES CESANTIAS PRESTACIONES");
-        $arNomRegistroExportacion->setTipo(1);
-        $arNomRegistroExportacion->setBase(0);
-        $arNomRegistroExportacion->setPlazo(0);
-        $arNomRegistroExportacion->setCuenta("261010");
-        $arNomRegistroExportacion->setValor($arVacacion->getInteres());
-        $em->persist($arNomRegistroExportacion);
-        $em->flush();
-
-        //Cuenta prima
-        $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
-        $arNomRegistroExportacion->setConsecutivo($arVacacion->getNroPresta());
-        $arNomRegistroExportacion->setComprobante($strComprobante);
-        $arNomRegistroExportacion->setFecha($arVacacion->getFechaPro());
-        $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
-        $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
-        $arNomRegistroExportacion->setNit($arVacacion->getCedulaEmpleado());
-        $arNomRegistroExportacion->setDetalle("PRIMA SEMESTRAL PRESTACIONES");
-        $arNomRegistroExportacion->setTipo(1);
-        $arNomRegistroExportacion->setBase(0);
-        $arNomRegistroExportacion->setPlazo(0);
-        $arNomRegistroExportacion->setCuenta("261020");
-        $arNomRegistroExportacion->setValor($arVacacion->getPrima());
-        $em->persist($arNomRegistroExportacion);
-        $em->flush();        
+        $strNumeroDocumento = $this->RellenarNr((int)$arVacacion->getCodvaca(), "0", 9);
 
         //Cuenta vacaciones
         $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
-        $arNomRegistroExportacion->setConsecutivo($arVacacion->getNroPresta());
+        $arNomRegistroExportacion->setConsecutivo($arVacacion->getCodvaca());
         $arNomRegistroExportacion->setComprobante($strComprobante);
-        $arNomRegistroExportacion->setFecha($arVacacion->getFechaPro());
+        $arNomRegistroExportacion->setFecha($arVacacion->getFechap());
         $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
         $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
-        $arNomRegistroExportacion->setNit($arVacacion->getCedulaEmpleado());
-        $arNomRegistroExportacion->setDetalle("VACACIONES PRESTACIONES SOCIALES");
+        $arNomRegistroExportacion->setNit($arVacacion->getCedemple());
+        $arNomRegistroExportacion->setDetalle("VACACIONES");
         $arNomRegistroExportacion->setTipo(1);
         $arNomRegistroExportacion->setBase(0);
         $arNomRegistroExportacion->setPlazo(0);
         $arNomRegistroExportacion->setCuenta("261015");
-        $arNomRegistroExportacion->setValor($arVacacion->getVacacion());
+        $arNomRegistroExportacion->setValor($arVacacion->getValor());
         $em->persist($arNomRegistroExportacion);
         $em->flush();        
 
         //Cuenta vacaciones
         $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
-        $arNomRegistroExportacion->setConsecutivo($arVacacion->getNroPresta());
+        $arNomRegistroExportacion->setConsecutivo($arVacacion->getCodvaca());
         $arNomRegistroExportacion->setComprobante($strComprobante);
-        $arNomRegistroExportacion->setFecha($arVacacion->getFechaPro());
+        $arNomRegistroExportacion->setFecha($arVacacion->getFechap());
         $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
         $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
-        $arNomRegistroExportacion->setNit($arVacacion->getCedulaEmpleado());        
-        $arNomRegistroExportacion->setDetalle("PRESTACIONES POR PAGAR");
+        $arNomRegistroExportacion->setNit($arVacacion->getCedemple());        
+        $arNomRegistroExportacion->setDetalle("VACACIONES POR PAGAR");
         $arNomRegistroExportacion->setTipo(2);
         $arNomRegistroExportacion->setBase(0);
         $arNomRegistroExportacion->setPlazo(0);
-        $arNomRegistroExportacion->setCuenta("281505");
-        $arNomRegistroExportacion->setValor($arVacacion->getTotalp());
+        if($arZona->getTipoempresa() == "NO") {
+            $arNomRegistroExportacion->setCuenta("281515"); //Mision
+        } else {
+            $arNomRegistroExportacion->setCuenta("250510"); //Planta
+        }        
+        $arNomRegistroExportacion->setValor($arVacacion->getValor());
         $em->persist($arNomRegistroExportacion);
         $em->flush();        
         

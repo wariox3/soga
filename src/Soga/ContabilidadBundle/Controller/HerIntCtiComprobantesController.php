@@ -41,6 +41,8 @@ class HerIntCtiComprobantesController extends Controller {
                             $arZona = $em->getRepository('SogaNominaBundle:Zona')->findOneByNitzona($arComprobante->getNitzona());
                             $arBanco = new \Soga\ContabilidadBundle\Entity\Bancos();
                             $arBanco = $em->getRepository('SogaContabilidadBundle:Bancos')->find($arComprobante->getCodbanco());
+                            $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
+                            $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->findOneBy(array('cedemple' => $arComprobante->getNitprove()));                                                      
                             $strNumeroDocumento = $this->RellenarNr((int)$strNumero, "0", 9);
                             if(count($arZona) == 1) {
                                 //Registro pago de la nomina
@@ -84,25 +86,29 @@ class HerIntCtiComprobantesController extends Controller {
                                 $arNomRegistroExportacion->setPlazo(0);
                                 if($arComprobante->getCuenta() == 'AHORRO') {
                                     $arNomRegistroExportacion->setCuenta($arBanco->getCuentaAhorro());
-                                    $arNomRegistroExportacion->setDetalle('AHORROS ' . $arBanco->getBancos());
+                                    //$arNomRegistroExportacion->setDetalle('AHORROS ' . $arBanco->getBancos());
                                 }
                                 if($arComprobante->getCuenta() == 'CORRIENTE') {
                                     $arNomRegistroExportacion->setCuenta($arBanco->getCuentaCorriente());
-                                    $arNomRegistroExportacion->setDetalle('CORRIENTE ' . $arBanco->getBancos());
+                                    //$arNomRegistroExportacion->setDetalle('CORRIENTE ' . $arBanco->getBancos());
                                 }
                                 if($arComprobante->getCuenta() == 'OFICINA') {
                                     $arNomRegistroExportacion->setCuenta($arBanco->getCuentaOficina());
-                                    $arNomRegistroExportacion->setDetalle('OFICINA ' . $arBanco->getBancos());
+                                    //$arNomRegistroExportacion->setDetalle('OFICINA ' . $arBanco->getBancos());
                                 }
+                                $strNombre = $arEmpleado->getNomemple() . " " . $arEmpleado->getNomemple1() . " " . $arEmpleado->getApemple() . " " . $arEmpleado->getApemple1();
+                                $arNomRegistroExportacion->setDetalle($strNombre);                                                                
                                 $arNomRegistroExportacion->setValor($arComprobante->getValor());
                                 $em->persist($arNomRegistroExportacion);
                             }
                         }
-                        if($arMaestroComprobante->getId() == 3) {
+                        if($arMaestroComprobante->getId() == 3 || $arMaestroComprobante->getId() == 5) {
                             $arZona = new \Soga\NominaBundle\Entity\Zona();
                             $arZona = $em->getRepository('SogaNominaBundle:Zona')->findOneByNitzona($arComprobante->getNitzona());
                             $arBanco = new \Soga\ContabilidadBundle\Entity\Bancos();
                             $arBanco = $em->getRepository('SogaContabilidadBundle:Bancos')->find($arComprobante->getCodbanco());
+                            $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
+                            $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->findOneBy(array('cedemple' => $arComprobante->getNitprove()));                            
                             $strNumeroDocumento = $this->RellenarNr((int)$strNumero, "0", 9);
                             if(count($arZona) == 1) {
                                 //Registro pago de la nomina
@@ -113,15 +119,28 @@ class HerIntCtiComprobantesController extends Controller {
                                 $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
                                 $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
                                 $arNomRegistroExportacion->setNit($arComprobante->getNitprove());
-                                $arNomRegistroExportacion->setDetalle('PAGO DE PRESTACION');
+                                $arNomRegistroExportacion->setDetalle($arTipoComprobante->getDescripcion());
                                 $arNomRegistroExportacion->setTipo(1);
                                 $arNomRegistroExportacion->setBase(0);
                                 $arNomRegistroExportacion->setPlazo(0);
-                                if($arZona->getTipoempresa() == "NO") {
-                                    $arNomRegistroExportacion->setCuenta($arConConfiguracion->getCuentaPrestacionTrabajadoresMision());
-                                } else {
-                                    $arNomRegistroExportacion->setCuenta($arConConfiguracion->getCuentaPrestacionTrabajadoresPlanta());
+                                // Prestacion
+                                if($arMaestroComprobante->getId() == 3 ) {
+                                    if($arZona->getTipoempresa() == "NO") {
+                                        $arNomRegistroExportacion->setCuenta('281510'); //Mision
+                                    } else {
+                                        $arNomRegistroExportacion->setCuenta('250505'); //Planta
+                                    }                                    
+                                }                                
+                                
+                                // Vacacion
+                                if($arMaestroComprobante->getId() == 5 ) {
+                                    if($arZona->getTipoempresa() == "NO") {
+                                        $arNomRegistroExportacion->setCuenta('281515'); //Mision
+                                    } else {
+                                        $arNomRegistroExportacion->setCuenta('250510'); //Planta
+                                    }                                    
                                 }
+                                
                                 $arNomRegistroExportacion->setValor($arComprobante->getValor());
                                 $em->persist($arNomRegistroExportacion);
 
@@ -137,16 +156,18 @@ class HerIntCtiComprobantesController extends Controller {
                                 $arNomRegistroExportacion->setPlazo(0);
                                 if($arComprobante->getCuenta() == 'AHORRO') {
                                     $arNomRegistroExportacion->setCuenta($arBanco->getCuentaAhorro());
-                                    $arNomRegistroExportacion->setDetalle('AHORROS ' . $arBanco->getBancos());
+                                    //$arNomRegistroExportacion->setDetalle('AHORROS ' . $arBanco->getBancos());
                                 }
                                 if($arComprobante->getCuenta() == 'CORRIENTE') {
                                     $arNomRegistroExportacion->setCuenta($arBanco->getCuentaCorriente());
-                                    $arNomRegistroExportacion->setDetalle('CORRIENTE ' . $arBanco->getBancos());
+                                    //$arNomRegistroExportacion->setDetalle('CORRIENTE ' . $arBanco->getBancos());
                                 }
                                 if($arComprobante->getCuenta() == 'OFICINA') {
                                     $arNomRegistroExportacion->setCuenta($arBanco->getCuentaOficina());
-                                    $arNomRegistroExportacion->setDetalle('OFICINA ' . $arBanco->getBancos());
+                                    //$arNomRegistroExportacion->setDetalle('OFICINA ' . $arBanco->getBancos());
                                 }
+                                $strNombre = $arEmpleado->getNomemple() . " " . $arEmpleado->getNomemple1() . " " . $arEmpleado->getApemple() . " " . $arEmpleado->getApemple1();
+                                $arNomRegistroExportacion->setDetalle($strNombre);                                
                                 $arNomRegistroExportacion->setValor($arComprobante->getValor());
                                 $em->persist($arNomRegistroExportacion);
                             }
@@ -351,11 +372,11 @@ class HerIntCtiComprobantesController extends Controller {
         $form = $this->createFormBuilder()
             ->add('tipoComprobante', 'choice', array('choices' => array(
                 '' => 'SELECCIONE',
-                '1' => '1 PAGO NOMINA',
-                '2' => '2 PAGO COMPRAS',
-                '3' => '3 PAGO PRESTACIONES',
-                '4' => '4 PAGO PRIMAS',
-                '5' => '5 PAGO VACACIONES',
+                '1' => '1* PAGO NOMINA',
+                '2' => '2* PAGO COMPRAS',
+                '3' => '3* PAGO PRESTACIONES',
+                '4' => '4* PAGO PRIMAS',
+                '5' => '5* PAGO VACACIONES',
                 '6' => '6 PAGO CREDITO EMPLEADO',
                 '7' => '7 PAGO CREDITO BANCO',
                 '8' => '8 PAGO CUOTA LEASING',
@@ -363,8 +384,7 @@ class HerIntCtiComprobantesController extends Controller {
                 '10' => '10 DEVOLUCION CREDITO EMPLEADO ALIANZA',
                 '11' => '11 TRASLADO DE FONDOS',
                 '12' => '12 DEVOLUCION CHEQUE',
-                '13' => '13 DEVOLUCION CREDITO EMPLEADO (USUARIA)',
-                '14' => '14 PAGOS NO CAUSADOS',
+                '13' => '13* DEVOLUCION CREDITO EMPLEADO (USUARIA)',
                 '15' => '15 PAGO DE INDEMNIZACION',
                 '16' => '16 DESEMBOLSO DE VIATICOS',
                 '17' => '17 BONO REGALO NAVIDEÑO',
@@ -375,6 +395,19 @@ class HerIntCtiComprobantesController extends Controller {
                 '22' => '22 PAGO ALIANZA TERCERO',
                 '23' => '23 PAGO DE UTILIDAD NO GRABABLE',
                 '24' => '24 PAGO DE IMPUESTOS DIAN',
+                '25' => '25 GASTOS POR HOSPEDAJE HOTELERO ',
+                '26' => '26 DEVOLUCION POLIZA VIDA TERCERO',
+                '27' => '27 GASTOS POR SERVICIO MENSAJERIA',
+                '28' => '28 PAGO EMBARGO JUZGADOS',
+                '29' => '29 PAGO SEGURIDAD SOCIAL',
+                '30' => '30 PAGO SERVICIOS PUBLICOS',
+                '31' => '31 GASTOS REPRESENTACION LEGAL',
+                '32' => '32 PRESTAMO JG EMPLEADO EN MISION',
+                '33' => '33 DEDUCCION EMPRESA USUARIA',
+                '34' => '34 PAGO CREDITO BANCO ROTATIVO',
+                '35' => '35 ABONO A PRESTAMO TERCERO',
+                '36' => '36 PAGO PRESTAMO TERCERO',
+                '37' => '37 PAGO LINEA CELULAR',
                     ), 'data' => $session->get('filtroTipoComprobante')))
             ->add('TxtFechaDesde', 'text', array('label'  => 'Desde','data' => $session->get('filtroFechaDesde')))
             ->add('TxtFechaHasta', 'text', array('label'  => 'Hasta','data' => $session->get('filtroFechaHasta')))

@@ -69,7 +69,7 @@ class HerIntCtiPrestacionesController extends Controller {
                             $em->flush();
                         }
 
-                        $this->CuentasPrincipales($arPrestacion, $strComprobante);
+                        $this->CuentasPrincipales($arZona, $arPrestacion, $strComprobante);
 
                         $arPrestacion->setExportadoContabilidad(1);
                         $em->persist($arPrestacion);
@@ -156,7 +156,7 @@ class HerIntCtiPrestacionesController extends Controller {
      * @param double $douDebitos
      * @param double $douCreditos
      */
-    private function CuentasPrincipales ($arPrestacion, $strComprobante) {
+    private function CuentasPrincipales ($arZona, $arPrestacion, $strComprobante) {
         $em = $this->get('doctrine.orm.entity_manager');
         $strNumeroDocumento = $this->RellenarNr((int)$arPrestacion->getNroPresta(), "0", 9);
         //Cuenta cesantias
@@ -227,7 +227,7 @@ class HerIntCtiPrestacionesController extends Controller {
         $em->persist($arNomRegistroExportacion);
         $em->flush();        
 
-        //Cuenta vacaciones
+       
         $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
         $arNomRegistroExportacion->setConsecutivo($arPrestacion->getNroPresta());
         $arNomRegistroExportacion->setComprobante($strComprobante);
@@ -239,7 +239,11 @@ class HerIntCtiPrestacionesController extends Controller {
         $arNomRegistroExportacion->setTipo(2);
         $arNomRegistroExportacion->setBase(0);
         $arNomRegistroExportacion->setPlazo(0);
-        $arNomRegistroExportacion->setCuenta("281505");
+        if($arZona->getTipoempresa() == "NO") {
+            $arNomRegistroExportacion->setCuenta("281510"); //Mision
+        } else {
+            $arNomRegistroExportacion->setCuenta("250505"); //Planta
+        }        
         $arNomRegistroExportacion->setValor($arPrestacion->getTotalp());
         $em->persist($arNomRegistroExportacion);
         $em->flush();        

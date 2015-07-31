@@ -18,7 +18,7 @@ class MaestroReciboRepository extends EntityRepository
      */
     public function DevDqlMaestrosRecibosSinExportar($strDesde = "", $strHasta = "") {
         $em = $this->getEntityManager();           
-        $dql = "SELECT marecibo FROM SogaNominaBundle:MaestroRecibo marecibo WHERE marecibo.exportadoContabilidad = 0 AND (marecibo.idrecibo = 1 OR marecibo.idrecibo = 2) ";
+        $dql = "SELECT marecibo FROM SogaNominaBundle:MaestroRecibo marecibo WHERE marecibo.exportadoContabilidad = 0 AND (marecibo.idrecibo = 1 OR marecibo.idrecibo = 2 OR marecibo.idrecibo = 6) ";
         if($strDesde != "") {
            $dql = $dql . " AND marecibo.fechaRa >='". $strDesde ."'" ;
         }

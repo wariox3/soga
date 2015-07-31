@@ -90,6 +90,11 @@ class Recibo
      * @ORM\Column(name="reteica", type="integer")
      */    
     private $reteica;     
+
+    /**
+     * @ORM\Column(name="cree", type="integer")
+     */    
+    private $cree;     
     
     /**
      * Set Id
@@ -457,5 +462,28 @@ class Recibo
     public function getReteica()
     {
         return $this->reteica;
+    }
+
+    /**
+     * Set cree
+     *
+     * @param integer $cree
+     * @return Recibo
+     */
+    public function setCree($cree)
+    {
+        $this->cree = $cree;
+
+        return $this;
+    }
+
+    /**
+     * Get cree
+     *
+     * @return integer 
+     */
+    public function getCree()
+    {
+        return $this->cree;
     }
 }

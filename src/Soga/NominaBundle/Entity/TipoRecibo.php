@@ -22,6 +22,10 @@ class TipoRecibo
      */    
     private $descripcion;    
 
+    /**
+     * @ORM\Column(name="cuenta", type="string", length=15, nullable=false)
+     */    
+    private $cuenta;    
 
     /**
      * Set idrecibo
@@ -67,5 +71,28 @@ class TipoRecibo
     public function getDescripcion()
     {
         return $this->descripcion;
+    }
+
+    /**
+     * Set cuenta
+     *
+     * @param string $cuenta
+     * @return TipoRecibo
+     */
+    public function setCuenta($cuenta)
+    {
+        $this->cuenta = $cuenta;
+
+        return $this;
+    }
+
+    /**
+     * Get cuenta
+     *
+     * @return string 
+     */
+    public function getCuenta()
+    {
+        return $this->cuenta;
     }
 }

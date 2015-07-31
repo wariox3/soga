@@ -18,7 +18,7 @@ class NominaRepository extends EntityRepository
      */
     public function DevDqlNominaSinExportar($strDesde = "", $strHasta = "") {
         $em = $this->getEntityManager();
-        $dql = "SELECT nomina FROM SogaNominaBundle:Nomina nomina WHERE nomina.exportadoContabilidad = 0";
+        $dql = "SELECT nomina FROM SogaNominaBundle:Nomina nomina WHERE nomina.exportadoContabilidad = 0 AND nomina.cedulaEmpleado <> ''";
         if($strDesde != "") {
            $dql = $dql . " AND nomina.fechaDesde >='". $strDesde ."'" ;
         }

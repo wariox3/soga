@@ -183,27 +183,23 @@ class HerIntCtiComprobantesController extends Controller {
                                 $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
                                 $arNomRegistroExportacion->setConsecutivo($strNumero);
                                 $arNomRegistroExportacion->setComprobante($arConConfiguracion->getComprobanteComprobantes());
-                                $arNomRegistroExportacion->setFecha($arComprobante->getFecha());
+                                $arNomRegistroExportacion->setFecha($arMaestroComprobante->getFechaRa());
                                 $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
                                 $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
                                 $arNomRegistroExportacion->setNit($arComprobante->getNitprove());
-                                $arNomRegistroExportacion->setDetalle('PAGO DE PRESTACION');
+                                $arNomRegistroExportacion->setDetalle('DESCUENTO EMPRESA USUARIA');
                                 $arNomRegistroExportacion->setTipo(1);
                                 $arNomRegistroExportacion->setBase(0);
-                                $arNomRegistroExportacion->setPlazo(0);
-                                if($arZona->getTipoempresa() == "NO") {
-                                    $arNomRegistroExportacion->setCuenta($arConConfiguracion->getCuentaPrestacionTrabajadoresMision());
-                                } else {
-                                    $arNomRegistroExportacion->setCuenta($arConConfiguracion->getCuentaPrestacionTrabajadoresPlanta());
-                                }
+                                $arNomRegistroExportacion->setPlazo(0);                                
+                                $arNomRegistroExportacion->setCuenta('23709513');                               
                                 $arNomRegistroExportacion->setValor($arComprobante->getValor());
                                 $em->persist($arNomRegistroExportacion);
-                                /*
+                                
                                 //Registro cuenta del banco
                                 $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
                                 $arNomRegistroExportacion->setConsecutivo($strNumero);
                                 $arNomRegistroExportacion->setComprobante($arConConfiguracion->getComprobanteComprobantes());
-                                $arNomRegistroExportacion->setFecha($arComprobante->getFecha());
+                                $arNomRegistroExportacion->setFecha($arMaestroComprobante->getFechaRa());
                                 $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
                                 $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
                                 $arNomRegistroExportacion->setTipo(2);
@@ -223,9 +219,8 @@ class HerIntCtiComprobantesController extends Controller {
                                 }
                                 $arNomRegistroExportacion->setValor($arComprobante->getValor());
                                 $em->persist($arNomRegistroExportacion);
-                                 * 
-                                 */
                             }
+                            
                         }
                         if($arMaestroComprobante->getId() == 2) {
                             $arBanco = new \Soga\ContabilidadBundle\Entity\Bancos();

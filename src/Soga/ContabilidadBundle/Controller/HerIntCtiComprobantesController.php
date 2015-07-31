@@ -183,7 +183,7 @@ class HerIntCtiComprobantesController extends Controller {
                                 $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
                                 $arNomRegistroExportacion->setConsecutivo($strNumero);
                                 $arNomRegistroExportacion->setComprobante($arConConfiguracion->getComprobanteComprobantes());
-                                $arNomRegistroExportacion->setFecha($arMaestroComprobante->getFechaRa());
+                                $arNomRegistroExportacion->setFecha($arMaestroComprobante->getFechapago());
                                 $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
                                 $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
                                 $arNomRegistroExportacion->setNit($arComprobante->getNitprove());
@@ -199,7 +199,7 @@ class HerIntCtiComprobantesController extends Controller {
                                 $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
                                 $arNomRegistroExportacion->setConsecutivo($strNumero);
                                 $arNomRegistroExportacion->setComprobante($arConConfiguracion->getComprobanteComprobantes());
-                                $arNomRegistroExportacion->setFecha($arMaestroComprobante->getFechaRa());
+                                $arNomRegistroExportacion->setFecha($arMaestroComprobante->getFechapago());
                                 $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
                                 $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumento);
                                 $arNomRegistroExportacion->setTipo(2);

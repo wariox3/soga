@@ -18,6 +18,16 @@ class SsoPeriodoEmpleado {
     private $codigoPeriodoEmpleadoPk; 
 
     /**
+     * @ORM\Column(name="codigo_periodo_fk", type="integer")
+     */    
+    private $codigoPeriodoFk; 
+    
+    /**
+     * @ORM\Column(name="codigo_sucursal_fk", type="integer")
+     */    
+    private $codigoSucursalFk;     
+    
+    /**
      * @ORM\Column(name="codigo_empleado_fk", type="string", length=5)
      */    
     private $codigoEmpleadoFk;      
@@ -25,12 +35,7 @@ class SsoPeriodoEmpleado {
     /**
      * @ORM\Column(name="numero_identificacion", type="string", length=11)
      */    
-    private $numeroIdentificacion;    
-    
-    /**
-     * @ORM\Column(name="codigo_sucursal_fk", type="integer")
-     */    
-    private $codigoSucursalFk;    
+    private $numeroIdentificacion;           
     
     /**
      * @ORM\Column(name="anio", type="integer")
@@ -52,6 +57,52 @@ class SsoPeriodoEmpleado {
     public function getCodigoPeriodoEmpleadoPk()
     {
         return $this->codigoPeriodoEmpleadoPk;
+    }
+
+    /**
+     * Set codigoPeriodoFk
+     *
+     * @param integer $codigoPeriodoFk
+     * @return SsoPeriodoEmpleado
+     */
+    public function setCodigoPeriodoFk($codigoPeriodoFk)
+    {
+        $this->codigoPeriodoFk = $codigoPeriodoFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoPeriodoFk
+     *
+     * @return integer 
+     */
+    public function getCodigoPeriodoFk()
+    {
+        return $this->codigoPeriodoFk;
+    }
+
+    /**
+     * Set codigoSucursalFk
+     *
+     * @param integer $codigoSucursalFk
+     * @return SsoPeriodoEmpleado
+     */
+    public function setCodigoSucursalFk($codigoSucursalFk)
+    {
+        $this->codigoSucursalFk = $codigoSucursalFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoSucursalFk
+     *
+     * @return integer 
+     */
+    public function getCodigoSucursalFk()
+    {
+        return $this->codigoSucursalFk;
     }
 
     /**
@@ -98,29 +149,6 @@ class SsoPeriodoEmpleado {
     public function getNumeroIdentificacion()
     {
         return $this->numeroIdentificacion;
-    }
-
-    /**
-     * Set codigoSucursalFk
-     *
-     * @param integer $codigoSucursalFk
-     * @return SsoPeriodoEmpleado
-     */
-    public function setCodigoSucursalFk($codigoSucursalFk)
-    {
-        $this->codigoSucursalFk = $codigoSucursalFk;
-
-        return $this;
-    }
-
-    /**
-     * Get codigoSucursalFk
-     *
-     * @return integer 
-     */
-    public function getCodigoSucursalFk()
-    {
-        return $this->codigoSucursalFk;
     }
 
     /**

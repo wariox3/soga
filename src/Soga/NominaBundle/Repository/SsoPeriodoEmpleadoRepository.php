@@ -11,5 +11,28 @@ use Doctrine\ORM\EntityRepository;
  * repository methods below.
  */
 class SsoPeriodoEmpleadoRepository extends EntityRepository
-{       
+{
+    public function generarEmpleados($codigoPeriodo) {
+        set_time_limit(0);
+        $em = $this->getEntityManager();
+        $arPeriodo = new \Soga\NominaBundle\Entity\SsoPeriodo();
+        $arPeriodo = $em->getRepository('SogaNominaBundle:SsoPeriodo')->find($codigoPeriodo);
+        $arContratos = new \Soga\NominaBundle\Entity\Contrato();
+        $arContratos = $em->getRepository('SogaNominaBundle:Contrato')->devDqlContratosPeriodo($arPeriodo->getFechaDesde()->format('Y-m-d'), $arPeriodo->getFechaHasta()->format('Y-m-d'));
+        foreach ($arContratos AS $arContrato) {
+            $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
+            $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arContrato->getCodemple());
+            $arPeriodoEmpleado = new \Soga\NominaBundle\Entity\SsoPeriodoEmpleado();
+            $arPeriodoEmpleado->setCodigoPeriodoFk($codigoPeriodo);
+            $arPeriodoEmpleado->setCodigoEmpleadoFk($arContrato->getCodemple());
+            $arPeriodoEmpleado->setCodigoSucursalFk($arEmpleado->getCodigoSucursalFk());
+            $arPeriodoEmpleado->setNumeroIdentificacion($arEmpleado->getCedemple());
+            $arPeriodoEmpleado->setAnio($arPeriodo->getAnio());
+            $arPeriodoEmpleado->setMes($arPeriodo->getMes());
+            $em->persist($arPeriodoEmpleado);
+        }
+        $em->flush();
+        set_time_limit(60);
+        return true;
+    }    
 }

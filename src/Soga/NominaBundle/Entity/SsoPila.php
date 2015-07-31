@@ -23,6 +23,11 @@ class SsoPila {
     private $codigoContratoFk;     
     
     /**
+     * @ORM\Column(name="codigo_periodo_fk", type="integer")
+     */
+    private $codigoPeriodoFk;    
+    
+    /**
      * @ORM\Column(name="codigo_periodo_detalle_fk", type="integer")
      */
     private $codigoPeriodoDetalleFk;
@@ -2406,5 +2411,28 @@ class SsoPila {
     public function getDiasLicenciaMaternidad()
     {
         return $this->diasLicenciaMaternidad;
+    }
+
+    /**
+     * Set codigoPeriodoFk
+     *
+     * @param integer $codigoPeriodoFk
+     * @return SsoPila
+     */
+    public function setCodigoPeriodoFk($codigoPeriodoFk)
+    {
+        $this->codigoPeriodoFk = $codigoPeriodoFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoPeriodoFk
+     *
+     * @return integer 
+     */
+    public function getCodigoPeriodoFk()
+    {
+        return $this->codigoPeriodoFk;
     }
 }

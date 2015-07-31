@@ -172,9 +172,8 @@ class HerIntCtiComprobantesController extends Controller {
                                 $em->persist($arNomRegistroExportacion);
                             }
                         }
-                        if($arMaestroComprobante->getId() == 13) {
-                            echo "hola mundo";
-                            /*$arZona = new \Soga\NominaBundle\Entity\Zona();
+                        if($arMaestroComprobante->getId() == 13) {                            
+                            $arZona = new \Soga\NominaBundle\Entity\Zona();
                             $arZona = $em->getRepository('SogaNominaBundle:Zona')->findOneByNitzona($arComprobante->getNitzona());
                             $arBanco = new \Soga\ContabilidadBundle\Entity\Bancos();
                             $arBanco = $em->getRepository('SogaContabilidadBundle:Bancos')->find($arComprobante->getCodbanco());
@@ -199,7 +198,7 @@ class HerIntCtiComprobantesController extends Controller {
                                 }
                                 $arNomRegistroExportacion->setValor($arComprobante->getValor());
                                 $em->persist($arNomRegistroExportacion);
-
+                                /*
                                 //Registro cuenta del banco
                                 $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
                                 $arNomRegistroExportacion->setConsecutivo($strNumero);
@@ -224,9 +223,9 @@ class HerIntCtiComprobantesController extends Controller {
                                 }
                                 $arNomRegistroExportacion->setValor($arComprobante->getValor());
                                 $em->persist($arNomRegistroExportacion);
+                                 * 
+                                 */
                             }
-                             *
-                             */
                         }
                         if($arMaestroComprobante->getId() == 2) {
                             $arBanco = new \Soga\ContabilidadBundle\Entity\Bancos();

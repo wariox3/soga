@@ -18,6 +18,11 @@ class SsoPeriodoDetalle {
     private $codigoPeriodoDetallePk;
 
     /**
+     * @ORM\Column(name="codigo_periodo_fk", type="integer", nullable=true)
+     */    
+    private $codigoPeriodoFk;    
+    
+    /**
      * @ORM\Column(name="anio", type="integer")
      */
     private $anio;
@@ -47,6 +52,11 @@ class SsoPeriodoDetalle {
      */    
     private $estadoGenerado = 0;     
 
+    /**     
+     * @ORM\Column(name="estado_cerrado", type="boolean")
+     */    
+    private $estadoCerrado = 0;    
+    
     /**
      * @ORM\Column(name="codigo_sucursal_fk", type="integer", nullable=true)
      */    
@@ -58,19 +68,19 @@ class SsoPeriodoDetalle {
     private $fechaPago;    
 
     /**
-     * @ORM\Column(name="numero_empleados", type="integer", nullable=true)
+     * @ORM\Column(name="numero_empleados", type="integer")
      */    
-    private $numeroEmpleados;
+    private $numeroEmpleados = 0;
     
     /**
      * @ORM\Column(name="vr_nomina", type="float")
      */    
-    private $vrNomina;    
+    private $vrNomina = 0;    
     
     /**
      * @ORM\Column(name="generar_empleados", type="boolean")
      */    
-    private $generarEmpleados;       
+    private $generarEmpleados = 0;       
     
     /**
      * @ORM\ManyToOne(targetEntity="SsoSucursal", inversedBy="periodosSucursalRel")
@@ -95,7 +105,7 @@ class SsoPeriodoDetalle {
      * Set anio
      *
      * @param integer $anio
-     * @return SsoPeriodo
+     * @return SsoPeriodoDetalle
      */
     public function setAnio($anio)
     {
@@ -118,7 +128,7 @@ class SsoPeriodoDetalle {
      * Set mes
      *
      * @param integer $mes
-     * @return SsoPeriodo
+     * @return SsoPeriodoDetalle
      */
     public function setMes($mes)
     {
@@ -141,7 +151,7 @@ class SsoPeriodoDetalle {
      * Set mesSalud
      *
      * @param integer $mesSalud
-     * @return SsoPeriodo
+     * @return SsoPeriodoDetalle
      */
     public function setMesSalud($mesSalud)
     {
@@ -164,7 +174,7 @@ class SsoPeriodoDetalle {
      * Set fechaDesde
      *
      * @param \DateTime $fechaDesde
-     * @return SsoPeriodo
+     * @return SsoPeriodoDetalle
      */
     public function setFechaDesde($fechaDesde)
     {
@@ -187,7 +197,7 @@ class SsoPeriodoDetalle {
      * Set fechaHasta
      *
      * @param \DateTime $fechaHasta
-     * @return SsoPeriodo
+     * @return SsoPeriodoDetalle
      */
     public function setFechaHasta($fechaHasta)
     {
@@ -210,7 +220,7 @@ class SsoPeriodoDetalle {
      * Set estadoGenerado
      *
      * @param boolean $estadoGenerado
-     * @return SsoPeriodo
+     * @return SsoPeriodoDetalle
      */
     public function setEstadoGenerado($estadoGenerado)
     {
@@ -230,10 +240,33 @@ class SsoPeriodoDetalle {
     }
 
     /**
+     * Set estadoCerrado
+     *
+     * @param boolean $estadoCerrado
+     * @return SsoPeriodoDetalle
+     */
+    public function setEstadoCerrado($estadoCerrado)
+    {
+        $this->estadoCerrado = $estadoCerrado;
+
+        return $this;
+    }
+
+    /**
+     * Get estadoCerrado
+     *
+     * @return boolean 
+     */
+    public function getEstadoCerrado()
+    {
+        return $this->estadoCerrado;
+    }
+
+    /**
      * Set codigoSucursalFk
      *
      * @param integer $codigoSucursalFk
-     * @return SsoPeriodo
+     * @return SsoPeriodoDetalle
      */
     public function setCodigoSucursalFk($codigoSucursalFk)
     {
@@ -256,7 +289,7 @@ class SsoPeriodoDetalle {
      * Set fechaPago
      *
      * @param \DateTime $fechaPago
-     * @return SsoPeriodo
+     * @return SsoPeriodoDetalle
      */
     public function setFechaPago($fechaPago)
     {
@@ -279,7 +312,7 @@ class SsoPeriodoDetalle {
      * Set numeroEmpleados
      *
      * @param integer $numeroEmpleados
-     * @return SsoPeriodo
+     * @return SsoPeriodoDetalle
      */
     public function setNumeroEmpleados($numeroEmpleados)
     {
@@ -302,7 +335,7 @@ class SsoPeriodoDetalle {
      * Set vrNomina
      *
      * @param float $vrNomina
-     * @return SsoPeriodo
+     * @return SsoPeriodoDetalle
      */
     public function setVrNomina($vrNomina)
     {
@@ -325,7 +358,7 @@ class SsoPeriodoDetalle {
      * Set generarEmpleados
      *
      * @param boolean $generarEmpleados
-     * @return SsoPeriodo
+     * @return SsoPeriodoDetalle
      */
     public function setGenerarEmpleados($generarEmpleados)
     {
@@ -348,7 +381,7 @@ class SsoPeriodoDetalle {
      * Set sucursalRel
      *
      * @param \Soga\NominaBundle\Entity\SsoSucursal $sucursalRel
-     * @return SsoPeriodo
+     * @return SsoPeriodoDetalle
      */
     public function setSucursalRel(\Soga\NominaBundle\Entity\SsoSucursal $sucursalRel = null)
     {
@@ -365,5 +398,28 @@ class SsoPeriodoDetalle {
     public function getSucursalRel()
     {
         return $this->sucursalRel;
+    }
+
+    /**
+     * Set codigoPeriodoFk
+     *
+     * @param integer $codigoPeriodoFk
+     * @return SsoPeriodoDetalle
+     */
+    public function setCodigoPeriodoFk($codigoPeriodoFk)
+    {
+        $this->codigoPeriodoFk = $codigoPeriodoFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoPeriodoFk
+     *
+     * @return integer 
+     */
+    public function getCodigoPeriodoFk()
+    {
+        return $this->codigoPeriodoFk;
     }
 }

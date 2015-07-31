@@ -30,9 +30,9 @@ class SsoPilaRepository extends EntityRepository
         foreach ($arPeriodoEmpleados AS $arPeriodoEmpleado) {
             $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
             $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arPeriodoEmpleado->getCodigoEmpleadoFk());
-            //if(1 == 1 && $i <= 1000) {
+            if(1 == 1 && $i <= 5000) {
             //if($arEmpleado->getCedemple() == '1214719340' || $arEmpleado->getCedemple() == '1045683705') {
-            if($arEmpleado->getCedemple() == '1040748531') {
+            //if($arEmpleado->getCedemple() == '1040748531') {
                 $arContratos = new \Soga\NominaBundle\Entity\Contrato();
                 $arContratos = $em->getRepository('SogaNominaBundle:Contrato')->devDqlContratosPeriodoEmpleado($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $arPeriodoEmpleado->getCodigoEmpleadoFk());
                 if(count($arContratos) <= 1) {
@@ -150,6 +150,7 @@ class SsoPilaRepository extends EntityRepository
                     //Se crea el registro
                     $arPila = new \Soga\NominaBundle\Entity\SsoPila();
                     $arPila->setCodigoContratoFk($arContrato->getContrato());
+                    $arPila->setCodigoPeriodoFk($arPeriodoDetalle->getCodigoPeriodoFk());
                     $arPila->setCodigoPeriodoDetalleFk($codigoPeriodoDetalle);
                     $arPila->setCodigoSucursalFk($arEmpleado->getCodigoSucursalFk());
                     $arPila->setCodigoEmpleadoFk($arEmpleado->getCodemple());
@@ -296,6 +297,7 @@ class SsoPilaRepository extends EntityRepository
                         $floIbcCaja = $this->redondearIbc($intDiasLicenciaNoRemunerada, $floIbcBrutoCaja, $floIbcTotal);
                         //Se crea el registro
                         $arPila = new \Soga\NominaBundle\Entity\SsoPila();
+                        $arPila->setCodigoPeriodoFk($arPeriodoDetalle->getCodigoPeriodoFk());
                         $arPila->setCodigoContratoFk($arContrato->getContrato());
                         $arPila->setCodigoPeriodoDetalleFk($codigoPeriodoDetalle);
                         $arPila->setCodigoSucursalFk($arEmpleado->getCodigoSucursalFk());
@@ -433,32 +435,6 @@ class SsoPilaRepository extends EntityRepository
 
         $arPeriodoDetalle->setNumeroEmpleados($i - 1);
         $em->persist($arPeriodoDetalle);
-        $em->flush();
-        set_time_limit(60);
-        return true;
-    }
-
-    public function generarEmpleados($codigoPeriodoDetalle) {
-        set_time_limit(0);
-        $em = $this->getEntityManager();
-        $arPeriodoDetalle = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
-        $arPeriodoDetalle = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->find($codigoPeriodoDetalle);
-        $arContratos = new \Soga\NominaBundle\Entity\Contrato();
-        $arContratos = $em->getRepository('SogaNominaBundle:Contrato')->devDqlContratosPeriodo($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'));
-        foreach ($arContratos AS $arContrato) {
-            $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
-            $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arContrato->getCodemple());
-            $arPeriodoEmpleado = new \Soga\NominaBundle\Entity\SsoPeriodoEmpleado();
-            $arPeriodoEmpleado->setCodigoEmpleadoFk($arContrato->getCodemple());
-            $arPeriodoEmpleado->setCodigoSucursalFk($arEmpleado->getCodigoSucursalFk());
-            $arPeriodoEmpleado->setNumeroIdentificacion($arEmpleado->getCedemple());
-            $arPeriodoEmpleado->setAnio($arPeriodoDetalle->getAnio());
-            $arPeriodoDetalleEmpleado->setMes($arPeriodoDetalle->getMes());
-            $em->persist($arPeriodoEmpleado);
-        }
-
-        //$arPeriodoDetalle->setNumeroEmpleados($i);
-        //$em->persist($arPeriodoDetalle);
         $em->flush();
         set_time_limit(60);
         return true;

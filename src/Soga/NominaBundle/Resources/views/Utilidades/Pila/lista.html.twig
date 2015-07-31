@@ -25,6 +25,7 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <th></th>
             </tr>
 
             {% for arPeriodoDetalles in arPeriodoDetalles %}
@@ -45,15 +46,40 @@
                 <td>{% if arPeriodoDetalles.estadoGenerado == 1 %}<button class="btn btn-default btn-xs" type="submit" name="OpExportarExcel" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Excel</button>{% endif %}</td>
                 <td>{% if arPeriodoDetalles.estadoGenerado == 1 %}<button class="btn btn-danger btn-xs" type="submit" name="OpDesgenerar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Desgenerar</button>{% endif %}</td>                
                 <td>{% if arPeriodoDetalles.estadoGenerado == 0 %}<button class="btn btn-default btn-xs" type="submit" name="OpGenerar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Generar</button>{% endif %}</td>                                                
+                <td>{% if arPeriodoDetalles.estadoGenerado == 1 %}<button class="btn btn-default btn-xs" type="submit" name="OpCerrar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Cerrar</button>{% endif %}</td>                                
                 <td style="text-align: center">{% if arPeriodoDetalles.estadoGenerado == 1 %}<a href="{{ path('soga_nomina_utilidades_pila_detalle', { 'codigoPeriodoDetalle': arPeriodoDetalles.codigoPeriodoDetallePk }) }}"><img src="{{ asset('imagenes/bootstrap/glyphicons_152_new_window.png') }}" width=22 height=22></a>{% endif %}</td>                
             </tr>
             {% endfor %}
         </table>
-
         <div class="navigation">
             {{ knp_pagination_render(arPeriodoDetalles) }}
-        </div>
-        <br /><br />
+        </div>        
+        <hr>
+        <table class="table table-striped table-bordered table-condensed table-hover" style="font-size:12px">
+            <tr>
+                <th>CODIGO</th>
+                <th>AÑO</th>
+                <th>MES</th>
+                <th>MES SALUD</th>
+                <th>DESDE</th>
+                <th>HASTA</th>
+                <th>GENERADO</th>
+                <th></th>
+            </tr>
+
+            {% for arPeriodos in arPeriodos %}
+            <tr>
+                <td><input type="hidden" name="LblCodigo[]" value="{{ arPeriodos.codigoPeriodoPk }}">{{ arPeriodos.codigoPeriodoPk }}</td>
+                <td>{{ arPeriodos.anio }}</td>
+                <td>{{ arPeriodos.mes }}</td>
+                <td>{{ arPeriodos.mesSalud }}</td>
+                <td>{{ arPeriodos.fechaDesde |date("Y/m/d")  }}</td>
+                <td>{{ arPeriodos.fechaHasta |date("Y/m/d")  }}</td>  
+                <td>{% if arPeriodos.estadoGenerado == 1 %} SI {% else %} NO {% endif %}</td>   
+                <td>{% if arPeriodos.estadoGenerado == 0 %}<button class="btn btn-default btn-xs" type="submit" name="OpGenerarPeriodo" value="{{ arPeriodos.codigoPeriodoPk }}" >Generar</button>{% endif %}</td>                                                                                
+            </tr>
+            {% endfor %}
+        </table>        
         <hr/>
     </form>    
     

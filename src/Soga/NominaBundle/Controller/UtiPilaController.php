@@ -12,19 +12,6 @@ class UtiPilaController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $request = $this->getRequest();
-                    /*foreach ($arrSeleccionados as $codigoPeriodoDetalle) {
-                        $arPeriodoDetalle = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
-                        $arPeriodoDetalle = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->find($codigoPeriodoDetalle);   
-                        if($arPeriodoDetalle->getGenerarEmpleados() == 0) {
-                            $em->getRepository('SogaNominaBundle:SsoPila')->generarEmpleados($codigoPeriodoDetalle);                                                    
-                            $strSql = "UPDATE sso_periodo SET generar_empleados = 1 WHERE mes = " . $arPeriodoDetalle->getMes() . " AND anio = " . $arPeriodoDetalle->getAnio();           
-                            $objCon = $em->getConnection()->executeQuery($strSql); 
-                        }                        
-                    }
-                    return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila'));
-                    
-                     * 
-                     */
         if ($request->getMethod() == 'POST') {
             $arrControles = $request->request->All();            
             if($request->request->get('OpExportar')) {
@@ -168,14 +155,12 @@ class UtiPilaController extends Controller {
                 $codigoPeriodoDetalle = $request->request->get('OpGenerar');
                 $arPeriodoDetalle = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
                 $arPeriodoDetalle = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->find($codigoPeriodoDetalle);   
-                if($arPeriodoDetalle->getGenerarEmpleados() == 1) {
-                    if($arPeriodoDetalle->getEstadoGenerado() == 0) {
-                        $em->getRepository('SogaNominaBundle:SsoPila')->crearRegistro($codigoPeriodoDetalle);                                                    
-                        $arPeriodoDetalle->setEstadoGenerado(1);
-                        $em->persist($arPeriodoDetalle);
-                        $em->flush();
-                    }                                                     
-                }
+                if($arPeriodoDetalle->getEstadoGenerado() == 0) {
+                    $em->getRepository('SogaNominaBundle:SsoPila')->crearRegistro($codigoPeriodoDetalle);                                                    
+                    $arPeriodoDetalle->setEstadoGenerado(1);
+                    $em->persist($arPeriodoDetalle);
+                    $em->flush();
+                }                                                     
                 return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila'));
             }   
             
@@ -193,6 +178,42 @@ class UtiPilaController extends Controller {
                 }                                         
                 return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila'));
             }  
+
+            if($request->request->get('OpCerrar')) {
+                $codigoPeriodoDetalle = $request->request->get('OpCerrar');
+                $arPeriodoDetalle = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
+                $arPeriodoDetalle = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->find($codigoPeriodoDetalle);                           
+                if($arPeriodoDetalle->getEstadoGenerado() == 1) {
+                    $arPeriodoDetalle->setEstadoCerrado(1);
+                    $em->persist($arPeriodoDetalle);
+                    $em->flush();
+                }                                         
+                return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila'));
+            }            
+            
+            if($request->request->get('OpGenerarPeriodo')) {
+                $codigoPeriodo = $request->request->get('OpGenerarPeriodo');
+                $arPeriodo = new \Soga\NominaBundle\Entity\SsoPeriodo();
+                $arPeriodo = $em->getRepository('SogaNominaBundle:SsoPeriodo')->find($codigoPeriodo);                           
+                $arSucursales = new \Soga\NominaBundle\Entity\SsoSucursal();
+                $arSucursales = $em->getRepository('SogaNominaBundle:SsoSucursal')->findAll();                                           
+                foreach ($arSucursales as $arSucursal) {
+                    $arPeriodoDetalle = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
+                    $arPeriodoDetalle->setCodigoPeriodoFk($codigoPeriodo);
+                    $arPeriodoDetalle->setAnio($arPeriodo->getAnio());
+                    $arPeriodoDetalle->setMes($arPeriodo->getMes());
+                    $arPeriodoDetalle->setMesSalud($arPeriodo->getMesSalud());
+                    $arPeriodoDetalle->setFechaDesde($arPeriodo->getFechaDesde());
+                    $arPeriodoDetalle->setFechaHasta($arPeriodo->getFechaHasta());
+                    $arPeriodoDetalle->setSucursalRel($arSucursal);
+                    $em->persist($arPeriodoDetalle);
+                }
+                $em->getRepository('SogaNominaBundle:SsoPeriodoEmpleado')->generarEmpleados($codigoPeriodo);                                           
+                $arPeriodo->setEstadoGenerado(1);
+                $em->persist($arPeriodo);
+                $em->flush();
+                return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila'));
+            }                        
             
             if($request->request->get('OpExportarExcel')) {
                 $codigoPeriodoDetalle = $request->request->get('OpExportarExcel');
@@ -263,11 +284,14 @@ class UtiPilaController extends Controller {
             
         }
         
-        $objQueryPeriodos = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->DevDqlPeriodos();
-        $arPeriodoDetalles = $paginator->paginate($objQueryPeriodos, $this->getRequest()->query->get('page', 1), 200);        
+        $objQueryPeriodosDetalles = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->DevDqlPeriodos();
+        $arPeriodoDetalles = $paginator->paginate($objQueryPeriodosDetalles, $this->getRequest()->query->get('page', 1), 200);        
+        $objQueryPeriodos = $em->getRepository('SogaNominaBundle:SsoPeriodo')->DevDqlPeriodos();
+        $arPeriodos = $paginator->paginate($objQueryPeriodos, $this->getRequest()->query->get('page', 1), 200);                
         
         return $this->render('SogaNominaBundle:Utilidades/Pila:lista.html.twig', array(
-            'arPeriodoDetalles' => $arPeriodoDetalles
+            'arPeriodoDetalles' => $arPeriodoDetalles,
+            'arPeriodos' => $arPeriodos
                 ));
         set_time_limit(60);
     }

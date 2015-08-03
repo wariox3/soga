@@ -64,6 +64,9 @@ class SsoPilaRepository extends EntityRepository
                         $intDias = $dateFechaDesde->diff($dateFechaHasta);
                         $intDias = $intDias->format('%a');                        
                         $intDiasCotizar = $intDias + 1;
+                        if($intDiasCotizar == 31) {
+                            $intDiasCotizar -= $intDiasCotizar;
+                        }
                     }
 
                     if($arContrato->getFechainic() >= $arPeriodoDetalle->getFechaDesde()) {

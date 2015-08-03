@@ -209,18 +209,20 @@ class UtiPilaDetalleController extends Controller {
 
                 $objPHPExcel->setActiveSheetIndex(0)
                             ->setCellValue('A1', 'CODIGO')
-                            ->setCellValue('B1', 'D. PENSION')
-                            ->setCellValue('C1', 'D. SALUD')
-                            ->setCellValue('D1', 'D. RIESGOS')
-                            ->setCellValue('E1', 'D. CAJA')
-                            ->setCellValue('F1', 'IBC PENSION')
-                            ->setCellValue('G1', 'IBC SALUD')
-                            ->setCellValue('H1', 'IBC RIESGOS')
-                            ->setCellValue('I1', 'IBC CAJA')
-                            ->setCellValue('J1', 'C. PENSION')
-                            ->setCellValue('K1', 'C. SALUD')
-                            ->setCellValue('L1', 'C. RIESGOS')
-                            ->setCellValue('M1', 'C. CAJA');
+                            ->setCellValue('B1', 'CEDULA')
+                            ->setCellValue('C1', 'NOMBRE')
+                            ->setCellValue('D1', 'D. PENSION')
+                            ->setCellValue('E1', 'D. SALUD')
+                            ->setCellValue('F1', 'D. RIESGOS')
+                            ->setCellValue('G1', 'D. CAJA')
+                            ->setCellValue('H1', 'IBC PENSION')
+                            ->setCellValue('I1', 'IBC SALUD')
+                            ->setCellValue('J1', 'IBC RIESGOS')
+                            ->setCellValue('K1', 'IBC CAJA')
+                            ->setCellValue('L1', 'C. PENSION')
+                            ->setCellValue('M1', 'C. SALUD')
+                            ->setCellValue('N1', 'C. RIESGOS')
+                            ->setCellValue('O1', 'C. CAJA');
 
                 $i = 2;
                 $arPilaRegistros = new \Soga\NominaBundle\Entity\SsoPila();
@@ -229,17 +231,19 @@ class UtiPilaDetalleController extends Controller {
                     $objPHPExcel->setActiveSheetIndex(0)
                             ->setCellValue('A' . $i, $arPila->getCodigoPilaPk())
                             ->setCellValue('B' . $i, $arPila->getDiasCotizadosPension())
-                            ->setCellValue('C' . $i, $arPila->getDiasCotizadosSalud())
-                            ->setCellValue('D' . $i, $arPila->getDiasCotizadosRiesgosProfesionales())
-                            ->setCellValue('E' . $i, $arPila->getDiasCotizadosCajaCompensacion())
-                            ->setCellValue('F' . $i, $arPila->getIbcPension())
-                            ->setCellValue('G' . $i, $arPila->getIbcSalud())
-                            ->setCellValue('H' . $i, $arPila->getIbcRiesgosProfesionales())
-                            ->setCellValue('I' . $i, $arPila->getIbcCaja())
-                            ->setCellValue('J' . $i, $arPila->getCotizacionObligatoria())
-                            ->setCellValue('K' . $i, $arPila->getCotizacionObligatoriaSalud())
-                            ->setCellValue('L' . $i, $arPila->getCotizacionObligatoriaRiesgos())
-                            ->setCellValue('M' . $i, $arPila->getValorAporteCCF());
+                            ->setCellValue('C' . $i, $arPila->getNumeroIdentificacion())
+                            ->setCellValue('D' . $i, $arPila->getNumeroIdentificacion())
+                            ->setCellValue('E' . $i, $arPila->getDiasCotizadosSalud())
+                            ->setCellValue('F' . $i, $arPila->getDiasCotizadosRiesgosProfesionales())
+                            ->setCellValue('G' . $i, $arPila->getDiasCotizadosCajaCompensacion())
+                            ->setCellValue('H' . $i, $arPila->getIbcPension())
+                            ->setCellValue('I' . $i, $arPila->getIbcSalud())
+                            ->setCellValue('J' . $i, $arPila->getIbcRiesgosProfesionales())
+                            ->setCellValue('K' . $i, $arPila->getIbcCaja())
+                            ->setCellValue('L' . $i, $arPila->getCotizacionObligatoria())
+                            ->setCellValue('M' . $i, $arPila->getCotizacionObligatoriaSalud())
+                            ->setCellValue('N' . $i, $arPila->getCotizacionObligatoriaRiesgos())
+                            ->setCellValue('O' . $i, $arPila->getValorAporteCCF());
                     $i++;
                 }
 

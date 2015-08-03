@@ -44,11 +44,23 @@ soga_nomina_configuracion:
     
 soga_nomina_utilidades_pila:
     pattern:  /nomina/utilidades/pila
-    defaults: { _controller: SogaNominaBundle:UtiPila:lista }     
+    defaults: { _controller: SogaNominaBundle:UtiPilaPeriodo:lista }     
+    
+soga_nomina_utilidades_pila_detalle_lista:
+    pattern:  /nomina/utilidades/pila/detalle/lista/{codigoPeriodo}
+    defaults: { _controller: SogaNominaBundle:UtiPilaDetalle:lista }         
     
 soga_nomina_utilidades_pila_detalle:
     pattern:  /nomina/utilidades/pila/detalle/{codigoPeriodoDetalle}
-    defaults: { _controller: SogaNominaBundle:UtiPila:detalle }    
+    defaults: { _controller: SogaNominaBundle:UtiPilaDetalle:detalle }    
+
+soga_nomina_utilidades_pila_detalle_nuevo:
+    pattern:  /nomina/utilidades/pila/detalle/nuevo/{codigoPeriodo}/{codigoPeriodoDetalle}
+    defaults: { _controller: SogaNominaBundle:UtiPilaDetalle:nuevo }    
+
+soga_nomina_utilidades_pila_empleados:
+    pattern:  /nomina/utilidades/pila/empleados/{codigoPeriodoDetalle}
+    defaults: { _controller: SogaNominaBundle:UtiPilaDetalle:empleados }     
     
 soga_nomina_procesos_procesar_nomina:
     pattern:  /nomina/procesos/procesar/nomina

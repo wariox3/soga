@@ -37,6 +37,12 @@ class Zona
     private $vrPagoTemporal;    
     
     /**
+     * @ORM\Column(name="codigo_sso_sucursal_fk", type="integer")
+     */    
+    private $codigoSsoSucursalFk;    
+    
+
+    /**
      * Set codzona
      *
      * @param string $codzona
@@ -57,6 +63,29 @@ class Zona
     public function getCodzona()
     {
         return $this->codzona;
+    }
+
+    /**
+     * Set zona
+     *
+     * @param string $zona
+     * @return Zona
+     */
+    public function setZona($zona)
+    {
+        $this->zona = $zona;
+
+        return $this;
+    }
+
+    /**
+     * Get zona
+     *
+     * @return string 
+     */
+    public function getZona()
+    {
+        return $this->zona;
     }
 
     /**
@@ -106,33 +135,9 @@ class Zona
     }
 
     /**
-     * Set zona
-     *
-     * @param string $zona
-     *
-     * @return Zona
-     */
-    public function setZona($zona)
-    {
-        $this->zona = $zona;
-
-        return $this;
-    }
-
-    /**
-     * Get zona
-     *
-     * @return string
-     */
-    public function getZona()
-    {
-        return $this->zona;
-    }
-
-    /**
      * Set vrPagoTemporal
      *
-     * @param integer $vrPagoTemporal
+     * @param float $vrPagoTemporal
      * @return Zona
      */
     public function setVrPagoTemporal($vrPagoTemporal)
@@ -145,10 +150,33 @@ class Zona
     /**
      * Get vrPagoTemporal
      *
-     * @return integer 
+     * @return float 
      */
     public function getVrPagoTemporal()
     {
         return $this->vrPagoTemporal;
+    }
+
+    /**
+     * Set codigoSsoSucursalFk
+     *
+     * @param integer $codigoSsoSucursalFk
+     * @return Zona
+     */
+    public function setCodigoSsoSucursalFk($codigoSsoSucursalFk)
+    {
+        $this->codigoSsoSucursalFk = $codigoSsoSucursalFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoSsoSucursalFk
+     *
+     * @return integer 
+     */
+    public function getCodigoSsoSucursalFk()
+    {
+        return $this->codigoSsoSucursalFk;
     }
 }

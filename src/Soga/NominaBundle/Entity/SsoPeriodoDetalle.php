@@ -18,6 +18,11 @@ class SsoPeriodoDetalle {
     private $codigoPeriodoDetallePk;
 
     /**
+     * @ORM\Column(name="nombre", type="string", length=150)
+     */    
+    private $nombre;    
+    
+    /**
      * @ORM\Column(name="codigo_periodo_fk", type="integer", nullable=true)
      */    
     private $codigoPeriodoFk;    
@@ -421,5 +426,28 @@ class SsoPeriodoDetalle {
     public function getCodigoPeriodoFk()
     {
         return $this->codigoPeriodoFk;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     * @return SsoPeriodoDetalle
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string 
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
     }
 }

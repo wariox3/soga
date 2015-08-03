@@ -17,7 +17,7 @@ class SsoPilaRepository extends EntityRepository
         $dql = "SELECT pila FROM SogaNominaBundle:SsoPila pila WHERE pila.codigoPeriodoDetalleFk = " . $codigoPeriodoDetalle;
         $objQuery = $em->createQuery($dql);       
         return $objQuery;                
-    }  
+    }           
     
     public function crearRegistro($codigoPeriodoDetalle) {
         set_time_limit(0);
@@ -26,7 +26,7 @@ class SsoPilaRepository extends EntityRepository
         $arPeriodoDetalle = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->find($codigoPeriodoDetalle);
         $i = 1;
         $arPeriodoEmpleados = new \Soga\NominaBundle\Entity\SsoPeriodoEmpleado();
-        $arPeriodoEmpleados = $em->getRepository('SogaNominaBundle:SsoPeriodoEmpleado')->findBy(array('anio' => $arPeriodoDetalle->getAnio(), 'mes' => $arPeriodoDetalle->getMes(), 'codigoSucursalFk' => $arPeriodoDetalle->getCodigoSucursalFk()));
+        $arPeriodoEmpleados = $em->getRepository('SogaNominaBundle:SsoPeriodoEmpleado')->findBy(array('codigoPeriodoDetalleFk' => $codigoPeriodoDetalle));
         foreach ($arPeriodoEmpleados AS $arPeriodoEmpleado) {
             $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
             $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arPeriodoEmpleado->getCodigoEmpleadoFk());
@@ -62,7 +62,7 @@ class SsoPilaRepository extends EntityRepository
 
                     if($dateFechaDesde != "" && $dateFechaHasta != "") {
                         $intDias = $dateFechaDesde->diff($dateFechaHasta);
-                        $intDias = $intDias->format('%a');
+                        $intDias = $intDias->format('%a');                        
                         $intDiasCotizar = $intDias + 1;
                     }
 

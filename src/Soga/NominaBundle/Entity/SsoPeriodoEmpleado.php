@@ -23,6 +23,11 @@ class SsoPeriodoEmpleado {
     private $codigoPeriodoFk; 
     
     /**
+     * @ORM\Column(name="codigo_periodo_detalle_fk", type="integer")
+     */    
+    private $codigoPeriodoDetalleFk;     
+    
+    /**
      * @ORM\Column(name="codigo_sucursal_fk", type="integer")
      */    
     private $codigoSucursalFk;     
@@ -38,6 +43,11 @@ class SsoPeriodoEmpleado {
     private $numeroIdentificacion;           
     
     /**
+     * @ORM\Column(name="nombre", type="string", length=200)
+     */    
+    private $nombre;    
+    
+    /**
      * @ORM\Column(name="anio", type="integer")
      */
     private $anio;
@@ -46,6 +56,17 @@ class SsoPeriodoEmpleado {
      * @ORM\Column(name="mes", type="integer")
      */
     private $mes;    
+
+    /**
+     * @ORM\Column(name="codigo_zona_fk", type="string", length=3)
+     */    
+    private $codigoZonaFk;
+    
+    /**
+     * @ORM\Column(name="nombre_zona", type="string", length=60)
+     */    
+    private $nombreZona;     
+
 
 
 
@@ -80,6 +101,29 @@ class SsoPeriodoEmpleado {
     public function getCodigoPeriodoFk()
     {
         return $this->codigoPeriodoFk;
+    }
+
+    /**
+     * Set codigoPeriodoDetalleFk
+     *
+     * @param integer $codigoPeriodoDetalleFk
+     * @return SsoPeriodoEmpleado
+     */
+    public function setCodigoPeriodoDetalleFk($codigoPeriodoDetalleFk)
+    {
+        $this->codigoPeriodoDetalleFk = $codigoPeriodoDetalleFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoPeriodoDetalleFk
+     *
+     * @return integer 
+     */
+    public function getCodigoPeriodoDetalleFk()
+    {
+        return $this->codigoPeriodoDetalleFk;
     }
 
     /**
@@ -195,5 +239,74 @@ class SsoPeriodoEmpleado {
     public function getMes()
     {
         return $this->mes;
+    }
+
+    /**
+     * Set codigoZonaFk
+     *
+     * @param string $codigoZonaFk
+     * @return SsoPeriodoEmpleado
+     */
+    public function setCodigoZonaFk($codigoZonaFk)
+    {
+        $this->codigoZonaFk = $codigoZonaFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoZonaFk
+     *
+     * @return string 
+     */
+    public function getCodigoZonaFk()
+    {
+        return $this->codigoZonaFk;
+    }
+
+    /**
+     * Set nombreZona
+     *
+     * @param string $nombreZona
+     * @return SsoPeriodoEmpleado
+     */
+    public function setNombreZona($nombreZona)
+    {
+        $this->nombreZona = $nombreZona;
+
+        return $this;
+    }
+
+    /**
+     * Get nombreZona
+     *
+     * @return string 
+     */
+    public function getNombreZona()
+    {
+        return $this->nombreZona;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     * @return SsoPeriodoEmpleado
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string 
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
     }
 }

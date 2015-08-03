@@ -4,14 +4,18 @@ namespace Soga\NominaBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\EntityRepository;
+use Soga\NominaBundle\Form\Type\SsoPeriodoDetalleType;
 
-class UtiPilaController extends Controller {
-
-    public function listaAction() {
+class UtiPilaDetalleController extends Controller {
+    var $strDetalleEmpleadosDql = "";
+    public function listaAction($codigoPeriodo) {
         set_time_limit(0);        
         $em = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
         $request = $this->getRequest();
+        $arPeriodo = new \Soga\NominaBundle\Entity\SsoPeriodo();
+        $arPeriodo = $em->getRepository('SogaNominaBundle:SsoPeriodo')->find($codigoPeriodo);                                                            
         if ($request->getMethod() == 'POST') {
             $arrControles = $request->request->All();            
             if($request->request->get('OpExportar')) {
@@ -161,7 +165,7 @@ class UtiPilaController extends Controller {
                     $em->persist($arPeriodoDetalle);
                     $em->flush();
                 }                                                     
-                return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila'));
+                return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila_detalle_lista', array('codigoPeriodo' => $codigoPeriodo)));
             }   
             
             if($request->request->get('OpDesgenerar')) {
@@ -176,7 +180,7 @@ class UtiPilaController extends Controller {
                     $em->persist($arPeriodoDetalle);
                     $em->flush();
                 }                                         
-                return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila'));
+                return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila_detalle_lista', array('codigoPeriodo' => $codigoPeriodo)));
             }  
 
             if($request->request->get('OpCerrar')) {
@@ -188,32 +192,8 @@ class UtiPilaController extends Controller {
                     $em->persist($arPeriodoDetalle);
                     $em->flush();
                 }                                         
-                return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila'));
-            }            
-            
-            if($request->request->get('OpGenerarPeriodo')) {
-                $codigoPeriodo = $request->request->get('OpGenerarPeriodo');
-                $arPeriodo = new \Soga\NominaBundle\Entity\SsoPeriodo();
-                $arPeriodo = $em->getRepository('SogaNominaBundle:SsoPeriodo')->find($codigoPeriodo);                           
-                $arSucursales = new \Soga\NominaBundle\Entity\SsoSucursal();
-                $arSucursales = $em->getRepository('SogaNominaBundle:SsoSucursal')->findAll();                                           
-                foreach ($arSucursales as $arSucursal) {
-                    $arPeriodoDetalle = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
-                    $arPeriodoDetalle->setCodigoPeriodoFk($codigoPeriodo);
-                    $arPeriodoDetalle->setAnio($arPeriodo->getAnio());
-                    $arPeriodoDetalle->setMes($arPeriodo->getMes());
-                    $arPeriodoDetalle->setMesSalud($arPeriodo->getMesSalud());
-                    $arPeriodoDetalle->setFechaDesde($arPeriodo->getFechaDesde());
-                    $arPeriodoDetalle->setFechaHasta($arPeriodo->getFechaHasta());
-                    $arPeriodoDetalle->setSucursalRel($arSucursal);
-                    $em->persist($arPeriodoDetalle);
-                }
-                $em->getRepository('SogaNominaBundle:SsoPeriodoEmpleado')->generarEmpleados($codigoPeriodo);                                           
-                $arPeriodo->setEstadoGenerado(1);
-                $em->persist($arPeriodo);
-                $em->flush();
-                return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila'));
-            }                        
+                return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila_detalle_lista', array('codigoPeriodo' => $codigoPeriodo)));
+            }                                    
             
             if($request->request->get('OpExportarExcel')) {
                 $codigoPeriodoDetalle = $request->request->get('OpExportarExcel');
@@ -286,15 +266,43 @@ class UtiPilaController extends Controller {
         
         $objQueryPeriodosDetalles = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->DevDqlPeriodos();
         $arPeriodoDetalles = $paginator->paginate($objQueryPeriodosDetalles, $this->getRequest()->query->get('page', 1), 200);        
-        $objQueryPeriodos = $em->getRepository('SogaNominaBundle:SsoPeriodo')->DevDqlPeriodos();
-        $arPeriodos = $paginator->paginate($objQueryPeriodos, $this->getRequest()->query->get('page', 1), 200);                
         
-        return $this->render('SogaNominaBundle:Utilidades/Pila:lista.html.twig', array(
+        return $this->render('SogaNominaBundle:Utilidades/Pila:listaDetalle.html.twig', array(
             'arPeriodoDetalles' => $arPeriodoDetalles,
-            'arPeriodos' => $arPeriodos
+            'arPeriodo' => $arPeriodo            
                 ));
         set_time_limit(60);
     }
+    
+    public function nuevoAction($codigoPeriodo, $codigoPeriodoDetalle) {
+        $request = $this->getRequest();
+        $em = $this->getDoctrine()->getManager();
+        $arPeriodo = new \Soga\NominaBundle\Entity\SsoPeriodo();
+        $arPeriodo = $em->getRepository('SogaNominaBundle:SsoPeriodo')->find($codigoPeriodo);                                                                    
+        $arPeriodoDetalle = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
+        if($codigoPeriodoDetalle != 0) {
+            $arPeriodoDetalle = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->find($codigoPeriodoDetalle);                                                                    
+        }
+        $form = $this->createForm(new SsoPeriodoDetalleType, $arPeriodoDetalle);
+        $form->handleRequest($request);
+        if ($form->isValid()) {            
+            $arPeriodoDetalle = $form->getData(); 
+            $arPeriodoDetalle->setCodigoPeriodoFk($codigoPeriodo);
+            $arPeriodoDetalle->setFechaDesde($arPeriodo->getFechaDesde());
+            $arPeriodoDetalle->setFechaHasta($arPeriodo->getFechaHasta());
+            $arPeriodoDetalle->setAnio($arPeriodo->getAnio());
+            $arPeriodoDetalle->setMes($arPeriodo->getMes());
+            $arPeriodoDetalle->setMesSalud($arPeriodo->getMesSalud());
+            //$arPeriodoDetalle->setFechaPago();
+            $em->persist($arPeriodoDetalle);
+            $em->flush();
+            return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila_detalle_lista', array('codigoPeriodo' => $codigoPeriodo)));
+        }
+
+        return $this->render('SogaNominaBundle:Utilidades/Pila:nuevo.html.twig', array(
+            'arPeriodo' => $arPeriodo,
+            'form' => $form->createView()));
+    }    
     
     public function detalleAction($codigoPeriodoDetalle) {
         set_time_limit(0);        
@@ -303,40 +311,148 @@ class UtiPilaController extends Controller {
         $request = $this->getRequest();        
         $arPeriodoDetalle = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
         $arPeriodoDetalle = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->find($codigoPeriodoDetalle);                                                    
+        $arPeriodo = new \Soga\NominaBundle\Entity\SsoPeriodo();
+        $arPeriodo = $em->getRepository('SogaNominaBundle:SsoPeriodo')->find($arPeriodoDetalle->getCodigoPeriodoFk());                                                            
         
         $objQueryPila = $em->getRepository('SogaNominaBundle:SsoPila')->dqlDetalle($codigoPeriodoDetalle);
         $arPila = $paginator->paginate($objQueryPila, $this->getRequest()->query->get('page', 1), 1000);        
         
         return $this->render('SogaNominaBundle:Utilidades/Pila:detalle.html.twig', array(
             'arPila' => $arPila,
-            'arPeriodoDetalle' => $arPeriodoDetalle
+            'arPeriodoDetalle' => $arPeriodoDetalle,
+            'arPeriodo' => $arPeriodo
                 ));
         set_time_limit(60);
     }
 
-
-    /**
-     * Adiciona ceros a la izquierda del numero tantos como haga falta para que la cadena a retornar
-     * tenga 11 caracteres.
-     * @param $NroCr => Numero de caracteres que debe tener la cadena a retornar.
-     * @param $Str => El caracter que se utilizara para rellenar la cadena.
-     * @param <Int> $Nro => Numero del documento o nit del tercero.
-     * @return <String> $Nro => Numero del documento completado con ceros a su izquierda para
-     * el formato de i limitada.
-     * */
-        public static function RellenarNr($Nro, $Str, $NroCr, $strPosicion) {
-        $Longitud = strlen($Nro);
-        $Nc = $NroCr - $Longitud;
-        for ($i = 0; $i < $Nc; $i++) {
-            if($strPosicion == "I") {
-                $Nro = $Str . $Nro;
-            } else {
-                $Nro = $Nro . $Str;
+    public function empleadosAction($codigoPeriodoDetalle) {
+        set_time_limit(0);        
+        $em = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+        $request = $this->getRequest();        
+        $arPeriodoDetalle = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
+        $arPeriodoDetalle = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->find($codigoPeriodoDetalle);                                                    
+        $form = $this->formularioEmpleados($arPeriodoDetalle->getCodigoPeriodoFk());
+        $form->handleRequest($request);
+        $this->listarEmpleados($codigoPeriodoDetalle);
+        if($form->isValid()) {
+            $arrSelecionados = $request->request->get('ChkSeleccionar');
+            if($form->get('BtnFiltrar')->isClicked()) {
+                $this->filtrarEmpleados($form);
+                $this->listarEmpleados($codigoPeriodoDetalle);
             }
-            
-        }            
-
-        return (string) $Nro;
+            if($form->get('BtnTrasladar')->isClicked()) {
+                $controles = $request->request->get('form');
+                $codigoPeriodoDetalleTrasladar = $controles['detalleRel'];
+                $arPeriodoDetalleTrasladar = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
+                $arPeriodoDetalleTrasladar = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->find($codigoPeriodoDetalleTrasladar);                
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                foreach ($arrSeleccionados AS $codigoPeriodoEmpleado) {                    
+                    $arPeriodoEmpleado = new \Soga\NominaBundle\Entity\SsoPeriodoEmpleado();
+                    $arPeriodoEmpleado = $em->getRepository('SogaNominaBundle:SsoPeriodoEmpleado')->find($codigoPeriodoEmpleado);                    
+                    $arPeriodoEmpleado->setCodigoPeriodoDetalleFk($codigoPeriodoDetalleTrasladar);
+                    $arPeriodoEmpleado->setCodigoSucursalFk($arPeriodoDetalleTrasladar->getCodigoSucursalFk());                    
+                    $em->persist($arPeriodoEmpleado);                    
+                }
+                $em->flush();
+                return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila_empleados', array('codigoPeriodoDetalle' => $codigoPeriodoDetalle)));                                    
+            }            
+            if($form->get('BtnCopiar')->isClicked()) {
+                $controles = $request->request->get('form');
+                $codigoPeriodoDetalleTrasladar = $controles['detalleRel'];
+                $arPeriodoDetalleTrasladar = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
+                $arPeriodoDetalleTrasladar = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->find($codigoPeriodoDetalleTrasladar);                
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                foreach ($arrSeleccionados AS $codigoPeriodoEmpleado) {                    
+                    $arPeriodoEmpleado = new \Soga\NominaBundle\Entity\SsoPeriodoEmpleado();
+                    $arPeriodoEmpleado = $em->getRepository('SogaNominaBundle:SsoPeriodoEmpleado')->find($codigoPeriodoEmpleado);                    
+                    $arPeriodoEmpleadoNuevo = new \Soga\NominaBundle\Entity\SsoPeriodoEmpleado();
+                    $arPeriodoEmpleadoNuevo->setCodigoPeriodoFk($arPeriodoEmpleado->getCodigoPeriodoFk());
+                    $arPeriodoEmpleadoNuevo->setCodigoEmpleadoFk($arPeriodoEmpleado->getCodigoEmpleadoFk());
+                    $arPeriodoEmpleadoNuevo->setNumeroIdentificacion($arPeriodoEmpleado->getNumeroIdentificacion());
+                    $arPeriodoEmpleadoNuevo->setNombre($arPeriodoEmpleado->getNombre());
+                    $arPeriodoEmpleadoNuevo->setAnio($arPeriodoEmpleado->getAnio());
+                    $arPeriodoEmpleadoNuevo->setMes($arPeriodoEmpleado->getMes());
+                    $arPeriodoEmpleadoNuevo->setCodigoZonaFk($arPeriodoEmpleado->getCodigoZonaFk());
+                    $arPeriodoEmpleadoNuevo->setNombreZona($arPeriodoEmpleado->getNombreZona());
+                    $arPeriodoEmpleadoNuevo->setCodigoPeriodoDetalleFk($codigoPeriodoDetalleTrasladar);
+                    $arPeriodoEmpleadoNuevo->setCodigoSucursalFk($arPeriodoDetalleTrasladar->getCodigoSucursalFk());                    
+                    $em->persist($arPeriodoEmpleadoNuevo);                    
+                }
+                $em->flush();
+                return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila_empleados', array('codigoPeriodoDetalle' => $codigoPeriodoDetalle)));                                    
+            }                        
+            if($form->get('BtnEliminar')->isClicked()) {
+                $arrSeleccionados = $request->request->get('ChkSeleccionar');
+                foreach ($arrSeleccionados AS $codigoPeriodoEmpleado) {                    
+                    $arPeriodoEmpleado = new \Soga\NominaBundle\Entity\SsoPeriodoEmpleado();
+                    $arPeriodoEmpleado = $em->getRepository('SogaNominaBundle:SsoPeriodoEmpleado')->find($codigoPeriodoEmpleado);                                        
+                    $em->remove($arPeriodoEmpleado);
+                }
+                $em->flush();
+                return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila_empleados', array('codigoPeriodoDetalle' => $codigoPeriodoDetalle)));                                    
+            }                        
+        }
+                
+        $arPeriodoEmpleados = $paginator->paginate($em->createQuery($this->strDetalleEmpleadosDql), $this->getRequest()->query->get('page', 1), 1000);
+        return $this->render('SogaNominaBundle:Utilidades/Pila:empleados.html.twig', array(
+            'arPeriodoEmpleados' => $arPeriodoEmpleados,
+            'arPeriodoDetalle' => $arPeriodoDetalle,
+            'form' => $form->createView()
+                ));
+        set_time_limit(60);
     }    
 
+    private function formularioEmpleados($codigoPeriodo) {
+        $em = $this->getDoctrine()->getManager();
+        $session = $this->getRequest()->getSession();
+        $arrayPropiedadesZona = array(
+                'class' => 'SogaNominaBundle:Zona',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('zona')                                        
+                    ->orderBy('zona.zona', 'ASC');},
+                'property' => 'zona',
+                'required' => false,  
+                'empty_data' => "",
+                'empty_value' => "TODOS",    
+                'data' => ""
+            );  
+        if($session->get('filtroCodigoZona')) {
+            $arrayPropiedadesZona['data'] = $em->getReference("SogaNominaBundle:Zona", $session->get('filtroCodigoZona'));                                    
+        }        
+        $form = $this->createFormBuilder()  
+            ->add('zonaRel', 'entity', $arrayPropiedadesZona)
+            ->add('detalleRel', 'entity', array(
+                'class' => 'SogaNominaBundle:SsoPeriodoDetalle',
+                'query_builder' => function (EntityRepository $er) use ($codigoPeriodo) {
+                    return $er->createQueryBuilder('pe')
+                    ->where('pe.codigoPeriodoFk = :codigoPeriodo')
+                    ->setParameter('codigoPeriodo', $codigoPeriodo)
+                    ->orderBy('pe.nombre', 'ASC');},
+                'property' => 'nombre',
+                'required' => true))                  
+            ->add('numeroIdentificacion', 'text', array('label'  => 'Identificacion','data' => $session->get('filtroIdentificacion')))                            
+            ->add('BtnFiltrar', 'submit', array('label'  => 'Filtrar',))
+            ->add('BtnEliminar', 'submit', array('label'  => 'Eliminar',))                            
+            ->add('BtnTrasladar', 'submit', array('label'  => 'Trasladar',))                            
+            ->add('BtnCopiar', 'submit', array('label'  => 'Copiar',))
+            ->getForm();
+        return $form;
+    }
+    private function listarEmpleados($codigoPeriodoDetalle) {
+        $em = $this->getDoctrine()->getManager();
+        $session = $this->getRequest()->getSession();
+        $this->strDetalleEmpleadosDql = $em->getRepository('SogaNominaBundle:SsoPeriodoEmpleado')->dqlEmpleados(
+                $codigoPeriodoDetalle,
+                $session->get('filtroIdentificacion'),
+                $session->get('filtroCodigoZona')
+                );
+    }
+    private function filtrarEmpleados($form) {
+        $session = $this->getRequest()->getSession();
+        $request = $this->getRequest();
+        $controles = $request->request->get('form');
+        $session->set('filtroCodigoZona', $controles['zonaRel']);                
+        $session->set('filtroIdentificacion', $form->get('numeroIdentificacion')->getData());
+    }        
 }

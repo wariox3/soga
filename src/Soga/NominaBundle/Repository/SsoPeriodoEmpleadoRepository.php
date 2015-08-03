@@ -22,17 +22,41 @@ class SsoPeriodoEmpleadoRepository extends EntityRepository
         foreach ($arContratos AS $arContrato) {
             $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
             $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arContrato->getCodemple());
+            $arZona = new \Soga\NominaBundle\Entity\Zona();            
+            $arZona = $em->getRepository('SogaNominaBundle:Zona')->find($arEmpleado->getCodzona());            
+            $arPeriodoDetalle = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
+            $arPeriodoDetalle = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->findOneBy(array('codigoPeriodoFk' => $codigoPeriodo, 'codigoSucursalFk' => $arZona->getCodigoSsoSucursalFk()));                        
             $arPeriodoEmpleado = new \Soga\NominaBundle\Entity\SsoPeriodoEmpleado();
             $arPeriodoEmpleado->setCodigoPeriodoFk($codigoPeriodo);
             $arPeriodoEmpleado->setCodigoEmpleadoFk($arContrato->getCodemple());
+            if(count($arPeriodoDetalle) > 0) {
+                $arPeriodoEmpleado->setCodigoPeriodoDetalleFk($arPeriodoDetalle->getCodigoPeriodoDetallePk());
+            }            
             $arPeriodoEmpleado->setCodigoSucursalFk($arEmpleado->getCodigoSucursalFk());
             $arPeriodoEmpleado->setNumeroIdentificacion($arEmpleado->getCedemple());
+            $arPeriodoEmpleado->setNombre($arEmpleado->getNomemple() . " " . $arEmpleado->getNomemple1() . " " . $arEmpleado->getApemple() . " " . $arEmpleado->getApemple1());
             $arPeriodoEmpleado->setAnio($arPeriodo->getAnio());
             $arPeriodoEmpleado->setMes($arPeriodo->getMes());
+            $arPeriodoEmpleado->setCodigoZonaFk($arZona->getCodzona());
+            $arPeriodoEmpleado->setNombreZona($arZona->getZona());
             $em->persist($arPeriodoEmpleado);
         }
         $em->flush();
         set_time_limit(60);
         return true;
-    }    
+    }                
+    
+    public function dqlEmpleados($codigoPeriodoDetalle, $numeroIdentificacion, $codigoZona) {
+        $em = $this->getEntityManager();         
+        $dql = "SELECT pe FROM SogaNominaBundle:SsoPeriodoEmpleado pe WHERE pe.codigoPeriodoDetalleFk = " . $codigoPeriodoDetalle . " ";
+        if($numeroIdentificacion != "") {
+           $dql = $dql . " AND pe.numeroIdentificacion ='". $numeroIdentificacion ."'" ;
+        }
+        if($codigoZona != "") {
+           $dql = $dql . " AND pe.codigoZonaFk ='". $codigoZona ."'" ;
+        }        
+        
+        $dql .= " ORDER BY pe.codigoZonaFk";
+        return $dql;                
+    }        
 }

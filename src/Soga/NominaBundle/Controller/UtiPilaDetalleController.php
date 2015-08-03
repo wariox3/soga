@@ -230,9 +230,9 @@ class UtiPilaDetalleController extends Controller {
                 foreach ($arPilaRegistros as $arPila) {            
                     $objPHPExcel->setActiveSheetIndex(0)
                             ->setCellValue('A' . $i, $arPila->getCodigoPilaPk())
-                            ->setCellValue('B' . $i, $arPila->getDiasCotizadosPension())
+                            ->setCellValue('B' . $i, $arPila->getNumeroIdentificacion())
                             ->setCellValue('C' . $i, $arPila->getNumeroIdentificacion())
-                            ->setCellValue('D' . $i, $arPila->getNumeroIdentificacion())
+                            ->setCellValue('D' . $i, $arPila->getDiasCotizadosPension())                            
                             ->setCellValue('E' . $i, $arPila->getDiasCotizadosSalud())
                             ->setCellValue('F' . $i, $arPila->getDiasCotizadosRiesgosProfesionales())
                             ->setCellValue('G' . $i, $arPila->getDiasCotizadosCajaCompensacion())

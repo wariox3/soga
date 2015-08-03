@@ -67,7 +67,10 @@ class SsoPeriodoEmpleado {
      */    
     private $nombreZona;     
 
-
+    /**
+     * @ORM\Column(name="numero_contratos", type="integer")
+     */    
+    private $numeroContratos;
 
 
     /**
@@ -196,6 +199,29 @@ class SsoPeriodoEmpleado {
     }
 
     /**
+     * Set nombre
+     *
+     * @param string $nombre
+     * @return SsoPeriodoEmpleado
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string 
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
      * Set anio
      *
      * @param integer $anio
@@ -288,25 +314,25 @@ class SsoPeriodoEmpleado {
     }
 
     /**
-     * Set nombre
+     * Set numeroContratos
      *
-     * @param string $nombre
+     * @param integer $numeroContratos
      * @return SsoPeriodoEmpleado
      */
-    public function setNombre($nombre)
+    public function setNumeroContratos($numeroContratos)
     {
-        $this->nombre = $nombre;
+        $this->numeroContratos = $numeroContratos;
 
         return $this;
     }
 
     /**
-     * Get nombre
+     * Get numeroContratos
      *
-     * @return string 
+     * @return integer 
      */
-    public function getNombre()
+    public function getNumeroContratos()
     {
-        return $this->nombre;
+        return $this->numeroContratos;
     }
 }

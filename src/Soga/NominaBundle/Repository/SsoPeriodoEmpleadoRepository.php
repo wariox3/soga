@@ -21,14 +21,14 @@ class SsoPeriodoEmpleadoRepository extends EntityRepository
         $arContratos = $em->getRepository('SogaNominaBundle:Contrato')->devDqlContratosPeriodo($arPeriodo->getFechaDesde()->format('Y-m-d'), $arPeriodo->getFechaHasta()->format('Y-m-d'));
         foreach ($arContratos AS $arContrato) {
             $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
-            $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arContrato->getCodemple());
+            $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arContrato[0]->getCodemple());
             $arZona = new \Soga\NominaBundle\Entity\Zona();            
             $arZona = $em->getRepository('SogaNominaBundle:Zona')->find($arEmpleado->getCodzona());            
             $arPeriodoDetalle = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
             $arPeriodoDetalle = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->findOneBy(array('codigoPeriodoFk' => $codigoPeriodo, 'codigoSucursalFk' => $arZona->getCodigoSsoSucursalFk()));                        
             $arPeriodoEmpleado = new \Soga\NominaBundle\Entity\SsoPeriodoEmpleado();
             $arPeriodoEmpleado->setCodigoPeriodoFk($codigoPeriodo);
-            $arPeriodoEmpleado->setCodigoEmpleadoFk($arContrato->getCodemple());
+            $arPeriodoEmpleado->setCodigoEmpleadoFk($arContrato[0]->getCodemple());
             if(count($arPeriodoDetalle) > 0) {
                 $arPeriodoEmpleado->setCodigoPeriodoDetalleFk($arPeriodoDetalle->getCodigoPeriodoDetallePk());
             }            
@@ -39,6 +39,7 @@ class SsoPeriodoEmpleadoRepository extends EntityRepository
             $arPeriodoEmpleado->setMes($arPeriodo->getMes());
             $arPeriodoEmpleado->setCodigoZonaFk($arZona->getCodzona());
             $arPeriodoEmpleado->setNombreZona($arZona->getZona());
+            $arPeriodoEmpleado->setNumeroContratos($arContrato['1']);
             $em->persist($arPeriodoEmpleado);
         }
         $em->flush();

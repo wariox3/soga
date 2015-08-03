@@ -507,4 +507,19 @@ class UtiPilaDetalleController extends Controller {
                 $objWriter->save('php://output');
                 exit;
             }    
+            
+    public static function RellenarNr($Nro, $Str, $NroCr, $strPosicion) {
+        $Longitud = strlen($Nro);
+        $Nc = $NroCr - $Longitud;
+        for ($i = 0; $i < $Nc; $i++) {
+            if($strPosicion == "I") {
+                $Nro = $Str . $Nro;
+            } else {
+                $Nro = $Nro . $Str;
+            }
+
+        }
+
+        return (string) $Nro;
+    }            
 }

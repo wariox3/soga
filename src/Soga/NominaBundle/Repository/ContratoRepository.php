@@ -14,7 +14,7 @@ class ContratoRepository extends EntityRepository
 {             
     public function devDqlContratosPeriodo($fechaDesde = "", $fechaHasta = "") {
         $em = $this->getEntityManager();         
-        $dql = "SELECT contrato FROM SogaNominaBundle:Contrato contrato "
+        $dql = "SELECT contrato, COUNT(contrato.contrato) FROM SogaNominaBundle:Contrato contrato "
                 . "WHERE (contrato.fechater >= '" . $fechaDesde . "' "
                 . "OR contrato.fechater = '0000-00-00') "
                 . "AND contrato.fechainic <='" . $fechaHasta . "' "

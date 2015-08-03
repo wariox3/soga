@@ -35,20 +35,23 @@
                 <th>CEDULA</th>
                 <th>NOMBRE</th>
                 <th>ZONA</th>
+                <th></th>
                 <th><input type="checkbox" name="ChkSeleccionarTodos" OnClick="ChequearTodos(this);"/></th>
             </tr>
 
             {% for arPeriodoEmpleados in arPeriodoEmpleados %}
-            <tr>
+                <tr {% if arPeriodoEmpleados.numeroContratos > 1 %} class="danger" {% endif %} >
                 <td><input type="hidden" name="LblCodigo[]" value="{{ arPeriodoEmpleados.codigoPeriodoEmpleadoPk }}">{{ arPeriodoEmpleados.codigoPeriodoEmpleadoPk }}</td>
                 <td>{{ arPeriodoEmpleados.numeroIdentificacion }}</td>
                 <td>{{ arPeriodoEmpleados.nombre }}</td>
                 <td>{{ arPeriodoEmpleados.nombreZona }}</td>
+                <td>{{ arPeriodoEmpleados.numeroContratos }}</td>
                 <td><input type="checkbox" name="ChkSeleccionar[]" value="{{ arPeriodoEmpleados.codigoPeriodoEmpleadoPk }}" /></td>            
             </tr>
             {% endfor %}
         </table>
         <div class="navigation">
+            {{ arPeriodoEmpleados.getTotalItemCount }}
             {{ knp_pagination_render(arPeriodoEmpleados) }}
         </div> 
         <div class="btn-toolbar" style="float: right">                            

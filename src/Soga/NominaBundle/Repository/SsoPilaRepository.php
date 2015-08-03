@@ -65,7 +65,7 @@ class SsoPilaRepository extends EntityRepository
                         $intDias = $intDias->format('%a');                        
                         $intDiasCotizar = $intDias + 1;
                         if($intDiasCotizar == 31) {
-                            $intDiasCotizar -= $intDiasCotizar;
+                            $intDiasCotizar = $intDiasCotizar - 1;
                         }
                     }
 

@@ -222,12 +222,14 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('L1', 'C. PENSION')
                             ->setCellValue('M1', 'C. SALUD')
                             ->setCellValue('N1', 'C. RIESGOS')
-                            ->setCellValue('O1', 'C. CAJA');
+                            ->setCellValue('O1', 'C. CAJA')
+                            ->setCellValue('P1', 'TOTAL');
 
                 $i = 2;
                 $arPilaRegistros = new \Soga\NominaBundle\Entity\SsoPila();
                 $arPilaRegistros = $em->getRepository('SogaNominaBundle:SsoPila')->findBy(array('codigoPeriodoDetalleFk' => $codigoPeriodoDetalle));
-                foreach ($arPilaRegistros as $arPila) {            
+                foreach ($arPilaRegistros as $arPila) { 
+                    $floTotal = $arPila->getCotizacionObligatoria() + $arPila->getCotizacionObligatoriaSalud() + $arPila->getCotizacionObligatoriaRiesgos() + $arPila->getValorAporteCCF();
                     $objPHPExcel->setActiveSheetIndex(0)
                             ->setCellValue('A' . $i, $arPila->getCodigoPilaPk())
                             ->setCellValue('B' . $i, $arPila->getNumeroIdentificacion())
@@ -244,6 +246,7 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('M' . $i, $arPila->getCotizacionObligatoriaSalud())
                             ->setCellValue('N' . $i, $arPila->getCotizacionObligatoriaRiesgos())
                             ->setCellValue('O' . $i, $arPila->getValorAporteCCF());
+                            ->setCellValue('P' . $i, $floTotal);
                     $i++;
                 }
 

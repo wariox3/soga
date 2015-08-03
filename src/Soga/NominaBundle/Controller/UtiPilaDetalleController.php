@@ -392,6 +392,9 @@ class UtiPilaDetalleController extends Controller {
                 $em->flush();
                 return $this->redirect($this->generateUrl('soga_nomina_utilidades_pila_empleados', array('codigoPeriodoDetalle' => $codigoPeriodoDetalle)));                                    
             }                        
+            if($form->get('BtnExcel')->isClicked()) {
+                $this->exportarEmpleadosExcel($codigoPeriodoDetalle);                
+            }            
         }
                 
         $arPeriodoEmpleados = $paginator->paginate($em->createQuery($this->strDetalleEmpleadosDql), $this->getRequest()->query->get('page', 1), 1000);
@@ -434,6 +437,7 @@ class UtiPilaDetalleController extends Controller {
             ->add('numeroIdentificacion', 'text', array('label'  => 'Identificacion','data' => $session->get('filtroIdentificacion')))                            
             ->add('BtnFiltrar', 'submit', array('label'  => 'Filtrar',))
             ->add('BtnEliminar', 'submit', array('label'  => 'Eliminar',))                            
+            ->add('BtnExcel', 'submit', array('label'  => 'Excel',))                            
             ->add('BtnTrasladar', 'submit', array('label'  => 'Trasladar',))                            
             ->add('BtnCopiar', 'submit', array('label'  => 'Copiar',))
             ->getForm();
@@ -454,5 +458,53 @@ class UtiPilaDetalleController extends Controller {
         $controles = $request->request->get('form');
         $session->set('filtroCodigoZona', $controles['zonaRel']);                
         $session->set('filtroIdentificacion', $form->get('numeroIdentificacion')->getData());
-    }        
+    }            
+    private function exportarEmpleadosExcel($codigoPeriodoDetalle) {
+         $em = $this->getDoctrine()->getManager();
+         $objPHPExcel = new \PHPExcel();
+                // Set document properties
+                $objPHPExcel->getProperties()->setCreator("EMPRESA")
+                    ->setLastModifiedBy("EMPRESA")
+                    ->setTitle("Office 2007 XLSX Test Document")
+                    ->setSubject("Office 2007 XLSX Test Document")
+                    ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+                    ->setKeywords("office 2007 openxml php")
+                    ->setCategory("Test result file");
+
+                $objPHPExcel->setActiveSheetIndex(0)
+                            ->setCellValue('A1', 'Codigo')
+                            ->setCellValue('B1', 'Cedula')
+                            ->setCellValue('C1', 'Nombre')
+                            ->setCellValue('D1', 'Zona');
+                $i = 2;
+                $dql = $em->getRepository('SogaNominaBundle:SsoPeriodoEmpleado')->dqlEmpleados($codigoPeriodoDetalle, "", "");
+                $objQuery = $em->createQuery($dql);  
+                $arPeriodoEmpleados = $objQuery->getResult();                                
+                foreach ($arPeriodoEmpleados as $arPeriodoEmpleado) {
+                $objPHPExcel->setActiveSheetIndex(0)
+                            ->setCellValue('A' . $i, $arPeriodoEmpleado->getCodigoPeriodoEmpleadoPk())
+                            ->setCellValue('B' . $i, $arPeriodoEmpleado->getNumeroIdentificacion())
+                            ->setCellValue('C' . $i, $arPeriodoEmpleado->getNombre())
+                            ->setCellValue('D' . $i, $arPeriodoEmpleado->getNombreZona());
+                    $i++;
+                }
+
+                $objPHPExcel->getActiveSheet()->setTitle('emple_periodo');
+                $objPHPExcel->setActiveSheetIndex(0);
+
+                // Redirect output to a client’s web browser (Excel2007)
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment;filename="EmpleadosPeriodo.xlsx"');
+                header('Cache-Control: max-age=0');
+                // If you're serving to IE 9, then the following may be needed
+                header('Cache-Control: max-age=1');
+                // If you're serving to IE over SSL, then the following may be needed
+                header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+                header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+                header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+                header ('Pragma: public'); // HTTP/1.0
+                $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+                $objWriter->save('php://output');
+                exit;
+            }    
 }

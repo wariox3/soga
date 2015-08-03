@@ -27,6 +27,7 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <th></th>
                 <th></th>                
             </tr>
 
@@ -43,15 +44,15 @@
                 <td>{{ arPeriodoDetalles.fechaPago |date("Y/m/d")  }}</td>
                 <td style="text-align: right">{{ arPeriodoDetalles.numeroEmpleados | number_format(0, '.', ',') }}</td>
                 <td style="text-align: right">{{ arPeriodoDetalles.vrNomina | number_format(0, '.', ',') }}</td>
-                <td>{{ arPeriodoDetalles.generarEmpleados  }}</td>                                
+                <td>{{ arPeriodoDetalles.generarEmpleados  }}</td>                 
                 <td>{% if arPeriodoDetalles.estadoGenerado == 1 %} SI {% else %} NO {% endif %}</td>   
                 <td>{% if arPeriodoDetalles.estadoGenerado == 1 %}<button class="btn btn-default btn-xs" type="submit" name="OpExportar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Pila</button>{% endif %}</td>
                 <td>{% if arPeriodoDetalles.estadoGenerado == 1 %}<button class="btn btn-default btn-xs" type="submit" name="OpExportarExcel" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Excel</button>{% endif %}</td>
-                <td>{% if arPeriodoDetalles.estadoGenerado == 1 %}<button class="btn btn-danger btn-xs" type="submit" name="OpDesgenerar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Desgenerar</button>{% endif %}</td>                
-                <td>{% if arPeriodoDetalles.estadoGenerado == 0 %}<button class="btn btn-default btn-xs" type="submit" name="OpGenerar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Generar</button>{% endif %}</td>                                                
+                <td>{% if arPeriodoDetalles.estadoGenerado == 1 %}<button class="btn btn-danger btn-xs" type="submit" name="OpDesgenerar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Desgenerar</button>{% endif %}</td>                                
                 <td>{% if arPeriodoDetalles.estadoGenerado == 1 %}<button class="btn btn-default btn-xs" type="submit" name="OpCerrar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Cerrar</button>{% endif %}</td>                                
                 <td style="text-align: center">{% if arPeriodoDetalles.estadoGenerado == 1 %}<a href="{{ path('soga_nomina_utilidades_pila_detalle', { 'codigoPeriodoDetalle': arPeriodoDetalles.codigoPeriodoDetallePk }) }}"><img src="{{ asset('imagenes/bootstrap/glyphicons_152_new_window.png') }}" width=22 height=22></a>{% endif %}</td>                
-                <td style="text-align: center">{% if arPeriodoDetalles.estadoGenerado == 0 %}<a href="{{ path('soga_nomina_utilidades_pila_empleados', { 'codigoPeriodoDetalle': arPeriodoDetalles.codigoPeriodoDetallePk }) }}"><img src="{{ asset('imagenes/bootstrap/glyphicons_043_group.png') }}" width=22 height=22></a>{% endif %}</td>                                
+                <td>{% if arPeriodoDetalles.estadoGenerado == 0 %}<button class="btn btn-default btn-xs" type="submit" name="OpGenerar" value="{{ arPeriodoDetalles.codigoPeriodoDetallePk }}" >Generar</button>{% endif %}</td>                                                                
+                <td style="text-align: center"><a href="{{ path('soga_nomina_utilidades_pila_empleados', { 'codigoPeriodoDetalle': arPeriodoDetalles.codigoPeriodoDetallePk }) }}"><img src="{{ asset('imagenes/bootstrap/glyphicons_043_group.png') }}" width=22 height=22></a></td>                                                
                 <td style="text-align: center">{% if arPeriodoDetalles.estadoGenerado == 0 %}<a href="{{ path('soga_nomina_utilidades_pila_detalle_nuevo', { 'codigoPeriodo':  arPeriodoDetalles.codigoPeriodoFk, 'codigoPeriodoDetalle':  arPeriodoDetalles.codigoPeriodoDetallePk }) }}" ><img src="{{ asset('imagenes/bootstrap/glyphicons_151_edit.png') }}" title="Editar registro" width=20 height=20 title="Editar el registro"></a>{% endif %}</td>                                
             </tr>
             {% endfor %}

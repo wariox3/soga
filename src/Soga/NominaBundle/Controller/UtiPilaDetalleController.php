@@ -245,7 +245,7 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('L' . $i, $arPila->getCotizacionObligatoria())
                             ->setCellValue('M' . $i, $arPila->getCotizacionObligatoriaSalud())
                             ->setCellValue('N' . $i, $arPila->getCotizacionObligatoriaRiesgos())
-                            ->setCellValue('O' . $i, $arPila->getValorAporteCCF());
+                            ->setCellValue('O' . $i, $arPila->getValorAporteCCF())
                             ->setCellValue('P' . $i, $floTotal);
                     $i++;
                 }

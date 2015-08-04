@@ -173,7 +173,7 @@ class UtiPilaDetalleController extends Controller {
                 $arPeriodoDetalle = new \Soga\NominaBundle\Entity\SsoPeriodoDetalle();
                 $arPeriodoDetalle = $em->getRepository('SogaNominaBundle:SsoPeriodoDetalle')->find($codigoPeriodoDetalle);                           
                 if($arPeriodoDetalle->getEstadoGenerado() == 1) {
-                    $strSql = "DELETE FROM sso_pila WHERE codigo_periodo_detalle_fk = " . $arPeriodoDetalle->getCodigoPeriodoDetallePk() . " AND codigo_sucursal_fk = " . $arPeriodoDetalle->getCodigoSucursalFk();           
+                    $strSql = "DELETE FROM sso_pila WHERE codigo_periodo_detalle_fk = " . $arPeriodoDetalle->getCodigoPeriodoDetallePk();           
                     $objCon = $em->getConnection()->executeQuery($strSql);                                                                                                
                     $arPeriodoDetalle->setEstadoGenerado(0);
                     $arPeriodoDetalle->setNumeroEmpleados(0);
@@ -226,7 +226,13 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('P1', 'FSP')
                             ->setCellValue('Q1', 'FSS')                        
                             ->setCellValue('R1', 'TOTAL')
-                            ->setCellValue('S1', 'SLN');
+                            ->setCellValue('S1', 'ING')
+                            ->setCellValue('T1', 'RET')
+                            ->setCellValue('U1', 'SLN')
+                            ->setCellValue('V1', 'LMA')
+                            ->setCellValue('W1', 'VAC')
+                            ->setCellValue('X1', 'IGE')
+                            ->setCellValue('Y1', 'IRP');
 
                 $i = 2;
                 $arPilaRegistros = new \Soga\NominaBundle\Entity\SsoPila();
@@ -252,7 +258,13 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('P' . $i, $arPila->getAportesFondoSolidaridadPensionalSolidaridad())
                             ->setCellValue('Q' . $i, $arPila->getAportesFondoSolidaridadPensionalSubsistencia())                            
                             ->setCellValue('R' . $i, $floTotal)
-                            ->setCellValue('S' . $i, $arPila->getSuspensionTemporalContratoLicenciaServicios());
+                            ->setCellValue('S' . $i, $arPila->getIngreso())
+                            ->setCellValue('T' . $i, $arPila->getRetiro())
+                            ->setCellValue('U' . $i, $arPila->getSuspensionTemporalContratoLicenciaServicios())
+                            ->setCellValue('V' . $i, $arPila->getLicenciaMaternidad())
+                            ->setCellValue('W' . $i, $arPila->getVacaciones())
+                            ->setCellValue('X' . $i, $arPila->getIncapacidadGeneral())
+                            ->setCellValue('Y' . $i, $arPila->getIncapacidadAccidenteTrabajoEnfermedadProfesional());
                     $i++;
                 }                
                 $objPHPExcel->getActiveSheet()->setTitle('pagopila');

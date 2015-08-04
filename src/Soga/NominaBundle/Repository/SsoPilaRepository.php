@@ -30,9 +30,9 @@ class SsoPilaRepository extends EntityRepository
         foreach ($arPeriodoEmpleados AS $arPeriodoEmpleado) {
             $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
             $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arPeriodoEmpleado->getCodigoEmpleadoFk());
-            if(1 == 1 && $i <= 5000) {
+            //if(1 == 1 && $i <= 5000) {
             //if($arEmpleado->getCedemple() == '1214719340' || $arEmpleado->getCedemple() == '1045683705') {
-            //if($arEmpleado->getCedemple() == '1040748531') {
+            if($arEmpleado->getCedemple() == '1128452813') {
                 $arContratos = new \Soga\NominaBundle\Entity\Contrato();
                 $arContratos = $em->getRepository('SogaNominaBundle:Contrato')->devDqlContratosPeriodoEmpleado($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $arPeriodoEmpleado->getCodigoEmpleadoFk());
                 if(count($arContratos) <= 1) {
@@ -66,9 +66,26 @@ class SsoPilaRepository extends EntityRepository
                         $intDiasCotizar = $intDias + 1;
                         if($intDiasCotizar == 31) {
                             $intDiasCotizar = $intDiasCotizar - 1;
+                        } else {
+                            if($arPeriodoDetalle->getFechaHasta()->format('d') == 28) {
+                                if($arContrato->getFechater() >= $arPeriodoDetalle->getFechaHasta() || $fechaTerminaCotrato == '-0001-11-30') {
+                                    $intDiasCotizar = $intDiasCotizar + 2;
+                                }
+                            }
+                            if($arPeriodoDetalle->getFechaHasta()->format('d') == 29) {
+                                if($arContrato->getFechater() >= $arPeriodoDetalle->getFechaHasta() || $fechaTerminaCotrato == '-0001-11-30') {
+                                    $intDiasCotizar = $intDiasCotizar + 1;
+                                }
+                            }                    
+                            if($arPeriodoDetalle->getFechaHasta()->format('d') == 31) {
+                                if($arContrato->getFechater() >= $arPeriodoDetalle->getFechaHasta() || $fechaTerminaCotrato == '-0001-11-30') {
+                                    $intDiasCotizar = $intDiasCotizar - 1;
+                                }
+                            }                            
                         }
                     }
 
+                    
                     if($arContrato->getFechainic() >= $arPeriodoDetalle->getFechaDesde()) {
                         $strNovedadIngreso = "X";
                     }
@@ -119,13 +136,20 @@ class SsoPilaRepository extends EntityRepository
                     if($intDiasIncapacidadLaboral > 0) {
                         $strIncapacidadLaboral = "X";    
                     }                    
-                    
+
+                    $intDiasVacaciones = $this->diasVacaciones($arPeriodoDetalle, $arEmpleado->getCedemple());
+                    $strVacaciones = " ";
+                    $floIbcVacaciones = 0;
+                    if($intDiasVacaciones > 0) {
+                        $strVacaciones = "X"; 
+                        //$floIbcVacaciones = $this->liquidarIncapacidadGeneral($douSalario+$floSuplementario, $intDiasIncapacidadGeneral);                        
+                    }                    
 
                     $floIbcTotal = $arContrato->getSalarioIbc() + $floSuplementario;
                     
                     $intDiasCotizarPension = $intDiasCotizar - $intDiasLicenciaNoRemunerada;
                     $intDiasCotizarSalud = $intDiasCotizar - $intDiasLicenciaNoRemunerada;
-                    $intDiasCotizarRiesgos = $intDiasCotizar - $intDiasIncapacidadGeneral - $intDiasLicenciaNoRemunerada - $intDiasIncapacidadLaboral - $intDiasLicenciaMaternidad;
+                    $intDiasCotizarRiesgos = $intDiasCotizar - $intDiasIncapacidadGeneral - $intDiasLicenciaNoRemunerada - $intDiasIncapacidadLaboral - $intDiasLicenciaMaternidad - $intDiasVacaciones;
                     $intDiasCotizarCaja = $intDiasCotizar - $intDiasIncapacidadGeneral - $intDiasLicenciaNoRemunerada - $intDiasIncapacidadLaboral - $intDiasLicenciaMaternidad;
                     $floIbcBrutoSeguridadSocial = (($intDiasCotizarPension-$intDiasIncapacidadGeneral) * ($arContrato->getSalarioIbc() / 30) + $floIbcIncapacidadGeneral + $floSuplementario);
                     $floIbcBrutoRiesgos = ($intDiasCotizarRiesgos * ($arContrato->getSalarioIbc() / 30)) + $floSuplementario;
@@ -196,7 +220,7 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setDiasIncapacidad($intDiasIncapacidadGeneral);
                     $arPila->setLicenciaMaternidad($strLicenciaMaternidad);
                     $arPila->setDiasLicenciaMaternidad($intDiasLicenciaMaternidad);
-                    $arPila->setVacaciones(' ');
+                    $arPila->setVacaciones($strVacaciones);
                     $arPila->setAporteVoluntario(' ');
                     $arPila->setVariacionCentrosTrabajo(' ');
                     $arPila->setIncapacidadAccidenteTrabajoEnfermedadProfesional($intDiasIncapacidadLaboral);
@@ -653,5 +677,35 @@ class SsoPilaRepository extends EntityRepository
         }
         
         return $intDiasIncapacidad;
+    }            
+    
+    public function diasVacaciones($arPeriodoDetalle, $strNumeroIdentificacion) {
+        $em = $this->getEntityManager();
+        $intDiasVacaciones = 0;
+        $arVacacionesProgramadas = new \Soga\NominaBundle\Entity\VacacionProgramada();
+        $arVacacionesProgramadas = $em->getRepository('SogaNominaBundle:VacacionProgramada')->devDqlVacaciones($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $strNumeroIdentificacion);        
+        foreach ($arVacacionesProgramadas as $arVacacionProgramada) {
+            $dateFechaDesde =  "";
+            $dateFechaHasta =  "";               
+            if($arVacacionProgramada->getDesde() > $arPeriodoDetalle->getFechaHasta() == true) {
+                $dateFechaHasta = $arPeriodoDetalle->getFechaHasta();
+            } else {
+                $dateFechaHasta = $arVacacionProgramada->getHasta();
+            }
+
+            if($arVacacionProgramada->getDesde() <  $arPeriodoDetalle->getFechaDesde() == true) {
+                $dateFechaDesde = $arPeriodoDetalle->getFechaDesde();
+            } else {
+                $dateFechaDesde = $arVacacionProgramada->getDesde();
+            }
+
+            if($dateFechaDesde != "" && $dateFechaHasta != "") {
+                $intDias = $dateFechaDesde->diff($dateFechaHasta);
+                $intDias = $intDias->format('%a');
+                $intDiasVacaciones += $intDias + 1;
+            }  
+        }
+        
+        return $intDiasVacaciones;
     }            
 }

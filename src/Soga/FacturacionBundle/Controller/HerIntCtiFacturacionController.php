@@ -185,8 +185,7 @@ class HerIntCtiFacturacionController extends Controller {
                     }
                     break;
 
-                case "OpExportarTodos";
-                    
+                case "OpExportarTodos";                    
                     break;                    
                     
                 case "OpGenerarPlano";
@@ -224,6 +223,28 @@ class HerIntCtiFacturacionController extends Controller {
                     header ("Content-Disposition: attachment; filename=" . $strNombreArchivo); 
                     header ("Content-Length: ".filesize($strRutaArchivo.$strNombreArchivo));
                     readfile($strRutaArchivo.$strNombreArchivo);
+                    break;                    
+                    
+                case "OpCargarFactura";
+                    if($arrControles['TxtNumeroConsecutivoDesde'] && $arrControles['TxtNumeroConsecutivoHasta']){
+                        $intNumeroDesde = $arrControles['TxtNumeroConsecutivoDesde'];
+                        $intNumeroHasta = $arrControles['TxtNumeroConsecutivoHasta'];
+                        if($intNumeroDesde <= $intNumeroHasta) {
+                            if(($intNumeroHasta - $intNumeroDesde) < 1000) {
+                                for ($i = $intNumeroDesde; $i <= $intNumeroHasta; $i++) {
+                                    $strNumero = $this->RellenarNr($i, "0", 4);
+                                    $arFactura = new \Soga\FacturacionBundle\Entity\Facturas();
+                                    $arFactura = $em->getRepository('SogaFacturacionBundle:Facturas')->find($strNumero);
+                                    if(count($arFactura) > 0) {
+                                        $arFactura->setExportadoContabilidad(0);
+                                        $em->persist($arFactura);
+                                        $em->flush();
+                                    }
+                                }
+                            }
+                        }
+
+                    }
                     break;                    
             }
         }

@@ -225,7 +225,8 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('O1', 'C. CAJA')
                             ->setCellValue('P1', 'FSP')
                             ->setCellValue('Q1', 'FSS')                        
-                            ->setCellValue('R1', 'TOTAL');
+                            ->setCellValue('R1', 'TOTAL')
+                            ->setCellValue('S1', 'SLN');
 
                 $i = 2;
                 $arPilaRegistros = new \Soga\NominaBundle\Entity\SsoPila();
@@ -250,7 +251,8 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('O' . $i, $arPila->getValorAporteCCF())
                             ->setCellValue('P' . $i, $arPila->getAportesFondoSolidaridadPensionalSolidaridad())
                             ->setCellValue('Q' . $i, $arPila->getAportesFondoSolidaridadPensionalSubsistencia())                            
-                            ->setCellValue('R' . $i, $floTotal);
+                            ->setCellValue('R' . $i, $floTotal)
+                            ->setCellValue('S' . $i, $arPila->getSuspensionTemporalContratoLicenciaServicios());
                     $i++;
                 }                
                 $objPHPExcel->getActiveSheet()->setTitle('pagopila');

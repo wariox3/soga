@@ -163,6 +163,11 @@ class SsoPila {
     private $suspensionTemporalContratoLicenciaServicios;
     
     /**
+     * @ORM\Column(name="dias_licencia_no_remunerada", type="integer")
+     */
+    private $diasLicenciaNoRemunerada = 0;    
+    
+    /**
      * @ORM\Column(name="incapacidad_general", type="string", length=1)
      */
     private $incapacidadGeneral;    
@@ -2434,5 +2439,28 @@ class SsoPila {
     public function getCodigoPeriodoFk()
     {
         return $this->codigoPeriodoFk;
+    }
+
+    /**
+     * Set diasLicenciaNoRemunerada
+     *
+     * @param integer $diasLicenciaNoRemunerada
+     * @return SsoPila
+     */
+    public function setDiasLicenciaNoRemunerada($diasLicenciaNoRemunerada)
+    {
+        $this->diasLicenciaNoRemunerada = $diasLicenciaNoRemunerada;
+
+        return $this;
+    }
+
+    /**
+     * Get diasLicenciaNoRemunerada
+     *
+     * @return integer 
+     */
+    public function getDiasLicenciaNoRemunerada()
+    {
+        return $this->diasLicenciaNoRemunerada;
     }
 }

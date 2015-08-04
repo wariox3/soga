@@ -40,8 +40,16 @@ class Contrato
      * @ORM\Column(name="salario_ibc", type="integer")
      */
     private $salarioIbc;    
-    
 
+    /**
+     * @ORM\Column(name="salario_anterior", type="integer")
+     */
+    private $salarioAnterior;    
+
+    /**
+     * @ORM\Column(name="salario_fecha_desde", type="date", nullable=true)
+     */    
+    private $salarioFechaDesde;    
 
     /**
      * Set contrato
@@ -179,5 +187,51 @@ class Contrato
     public function getSalarioIbc()
     {
         return $this->salarioIbc;
+    }
+
+    /**
+     * Set salarioAnterior
+     *
+     * @param integer $salarioAnterior
+     * @return Contrato
+     */
+    public function setSalarioAnterior($salarioAnterior)
+    {
+        $this->salarioAnterior = $salarioAnterior;
+
+        return $this;
+    }
+
+    /**
+     * Get salarioAnterior
+     *
+     * @return integer 
+     */
+    public function getSalarioAnterior()
+    {
+        return $this->salarioAnterior;
+    }
+
+    /**
+     * Set salarioFechaDesde
+     *
+     * @param \DateTime $salarioFechaDesde
+     * @return Contrato
+     */
+    public function setSalarioFechaDesde($salarioFechaDesde)
+    {
+        $this->salarioFechaDesde = $salarioFechaDesde;
+
+        return $this;
+    }
+
+    /**
+     * Get salarioFechaDesde
+     *
+     * @return \DateTime 
+     */
+    public function getSalarioFechaDesde()
+    {
+        return $this->salarioFechaDesde;
     }
 }

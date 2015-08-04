@@ -221,15 +221,17 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('K1', 'IBC CAJA')
                             ->setCellValue('L1', 'C. PENSION')
                             ->setCellValue('M1', 'C. SALUD')
-                            ->setCellValue('N1', 'C. RIESGOS')
+                            ->setCellValue('N1', 'C. RIESGOS')                        
                             ->setCellValue('O1', 'C. CAJA')
-                            ->setCellValue('P1', 'TOTAL');
+                            ->setCellValue('P1', 'FSP')
+                            ->setCellValue('Q1', 'FSS')                        
+                            ->setCellValue('R1', 'TOTAL');
 
                 $i = 2;
                 $arPilaRegistros = new \Soga\NominaBundle\Entity\SsoPila();
                 $arPilaRegistros = $em->getRepository('SogaNominaBundle:SsoPila')->findBy(array('codigoPeriodoDetalleFk' => $codigoPeriodoDetalle));
                 foreach ($arPilaRegistros as $arPila) { 
-                    $floTotal = $arPila->getCotizacionObligatoria() + $arPila->getCotizacionObligatoriaSalud() + $arPila->getCotizacionObligatoriaRiesgos() + $arPila->getValorAporteCCF();
+                    $floTotal = $arPila->getCotizacionObligatoria() + $arPila->getCotizacionObligatoriaSalud() + $arPila->getCotizacionObligatoriaRiesgos() + $arPila->getValorAporteCCF() + $arPila->getAportesFondoSolidaridadPensionalSolidaridad() + $arPila->getAportesFondoSolidaridadPensionalSubsistencia();
                     $objPHPExcel->setActiveSheetIndex(0)
                             ->setCellValue('A' . $i, $arPila->getCodigoPilaPk())
                             ->setCellValue('B' . $i, $arPila->getNumeroIdentificacion())
@@ -246,10 +248,11 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('M' . $i, $arPila->getCotizacionObligatoriaSalud())
                             ->setCellValue('N' . $i, $arPila->getCotizacionObligatoriaRiesgos())
                             ->setCellValue('O' . $i, $arPila->getValorAporteCCF())
-                            ->setCellValue('P' . $i, $floTotal);
+                            ->setCellValue('P' . $i, $arPila->getAportesFondoSolidaridadPensionalSolidaridad())
+                            ->setCellValue('Q' . $i, $arPila->getAportesFondoSolidaridadPensionalSubsistencia())                            
+                            ->setCellValue('R' . $i, $floTotal);
                     $i++;
-                }
-
+                }                
                 $objPHPExcel->getActiveSheet()->setTitle('pagopila');
                 $objPHPExcel->setActiveSheetIndex(0);
 

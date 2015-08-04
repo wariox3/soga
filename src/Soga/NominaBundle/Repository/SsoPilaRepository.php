@@ -30,9 +30,9 @@ class SsoPilaRepository extends EntityRepository
         foreach ($arPeriodoEmpleados AS $arPeriodoEmpleado) {
             $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
             $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arPeriodoEmpleado->getCodigoEmpleadoFk());
-            //if(1 == 1 && $i <= 5000) {
+            if(1 == 1 && $i <= 5000) {
             //if($arEmpleado->getCedemple() == '1214719340' || $arEmpleado->getCedemple() == '1045683705') {
-            if($arEmpleado->getCedemple() == '1128452813') {
+            //if($arEmpleado->getCedemple() == '1128452813') {
                 $arContratos = new \Soga\NominaBundle\Entity\Contrato();
                 $arContratos = $em->getRepository('SogaNominaBundle:Contrato')->devDqlContratosPeriodoEmpleado($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $arPeriodoEmpleado->getCodigoEmpleadoFk());
                 if(count($arContratos) <= 1) {
@@ -630,7 +630,9 @@ class SsoPilaRepository extends EntityRepository
                 $intDiasIncapacidad += $intDias + 1;
             }  
         }
-        
+        if($intDiasIncapacidad > 30 ) {
+            $intDiasIncapacidad = 30;
+        }
         return $intDiasIncapacidad;
     }            
     

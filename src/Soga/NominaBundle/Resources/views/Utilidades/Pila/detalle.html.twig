@@ -18,6 +18,7 @@
                 <th>IGE</th>
                 <th>LMA</th>
                 <th>VAC</th>
+                <th>IRP</th>
                 <th style="text-align: right">D. P</th>
                 <th style="text-align: right">D. S</th>
                 <th style="text-align: right">D. R</th>
@@ -48,6 +49,7 @@
                 <td>{% if arPila.incapacidadGeneral == 'X' %}{{ arPila.incapacidadGeneral }}{{ arPila.diasIncapacidad }}{% endif %}</td>                
                 <td>{% if arPila.licenciaMaternidad == 'X' %}{{ arPila.licenciaMaternidad }}{{ arPila.diasLicenciaMaternidad }}{% endif %}</td>                
                 <td>{% if arPila.vacaciones == 'X' %}{{ arPila.vacaciones }}{% endif %}</td>                                
+                <td>{{ arPila.incapacidadAccidenteTrabajoEnfermedadProfesional }}</td>
                 <td style="text-align: right">{{ arPila.diasCotizadosPension }}</td>
                 <td style="text-align: right">{{ arPila.diasCotizadosSalud }}</td>
                 <td style="text-align: right">{{ arPila.diasCotizadosRiesgosProfesionales }}</td>

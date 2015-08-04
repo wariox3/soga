@@ -263,7 +263,7 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('U' . $i, $arPila->getSuspensionTemporalContratoLicenciaServicios())
                             ->setCellValue('V' . $i, $arPila->getLicenciaMaternidad())
                             ->setCellValue('W' . $i, $arPila->getVacaciones())
-                            ->setCellValue('X' . $i, $arPila->getIncapacidadGeneral())
+                            ->setCellValue('X' . $i, $arPila->getIncapacidadGeneral() . $arPila->getDiasIncapacidad())
                             ->setCellValue('Y' . $i, $arPila->getIncapacidadAccidenteTrabajoEnfermedadProfesional());
                     $i++;
                 }                

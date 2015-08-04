@@ -240,7 +240,7 @@ class UtiPilaDetalleController extends Controller {
                 foreach ($arPilaRegistros as $arPila) { 
                     $floTotal = $arPila->getCotizacionObligatoria() + $arPila->getCotizacionObligatoriaSalud() + $arPila->getCotizacionObligatoriaRiesgos() + $arPila->getValorAporteCCF() + $arPila->getAportesFondoSolidaridadPensionalSolidaridad() + $arPila->getAportesFondoSolidaridadPensionalSubsistencia();
                     $strIncapacidadGeneral = '';
-                    if($arPila->getIncapacidadGeneral() != '') {
+                    if($arPila->getIncapacidadGeneral() != ' ') {
                         $strIncapacidadGeneral = $arPila->getIncapacidadGeneral() . $arPila->getDiasIncapacidad();
                     }
                     $objPHPExcel->setActiveSheetIndex(0)

@@ -239,6 +239,10 @@ class UtiPilaDetalleController extends Controller {
                 $arPilaRegistros = $em->getRepository('SogaNominaBundle:SsoPila')->findBy(array('codigoPeriodoDetalleFk' => $codigoPeriodoDetalle));
                 foreach ($arPilaRegistros as $arPila) { 
                     $floTotal = $arPila->getCotizacionObligatoria() + $arPila->getCotizacionObligatoriaSalud() + $arPila->getCotizacionObligatoriaRiesgos() + $arPila->getValorAporteCCF() + $arPila->getAportesFondoSolidaridadPensionalSolidaridad() + $arPila->getAportesFondoSolidaridadPensionalSubsistencia();
+                    $strIncapacidadGeneral = '';
+                    if($arPila->getIncapacidadGeneral() != '') {
+                        $strIncapacidadGeneral = $arPila->getIncapacidadGeneral() . $arPila->getDiasIncapacidad();
+                    }
                     $objPHPExcel->setActiveSheetIndex(0)
                             ->setCellValue('A' . $i, $arPila->getCodigoPilaPk())
                             ->setCellValue('B' . $i, $arPila->getNumeroIdentificacion())
@@ -263,7 +267,7 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('U' . $i, $arPila->getSuspensionTemporalContratoLicenciaServicios())
                             ->setCellValue('V' . $i, $arPila->getLicenciaMaternidad())
                             ->setCellValue('W' . $i, $arPila->getVacaciones())
-                            ->setCellValue('X' . $i, $arPila->getIncapacidadGeneral() . $arPila->getDiasIncapacidad())
+                            ->setCellValue('X' . $i, $strIncapacidadGeneral)
                             ->setCellValue('Y' . $i, $arPila->getIncapacidadAccidenteTrabajoEnfermedadProfesional());
                     $i++;
                 }                

@@ -452,6 +452,13 @@ class SsoPila {
      */
     private $claseRiesgoAfiliado;     
       
+    /**
+     * @ORM\Column(name="valor_total_cotizacion", type="float")
+     */
+    private $valorTotalCotizacion;    
+    
+
+    
 
     /**
      * Get codigoPilaPk
@@ -484,6 +491,29 @@ class SsoPila {
     public function getCodigoContratoFk()
     {
         return $this->codigoContratoFk;
+    }
+
+    /**
+     * Set codigoPeriodoFk
+     *
+     * @param integer $codigoPeriodoFk
+     * @return SsoPila
+     */
+    public function setCodigoPeriodoFk($codigoPeriodoFk)
+    {
+        $this->codigoPeriodoFk = $codigoPeriodoFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoPeriodoFk
+     *
+     * @return integer 
+     */
+    public function getCodigoPeriodoFk()
+    {
+        return $this->codigoPeriodoFk;
     }
 
     /**
@@ -1108,6 +1138,29 @@ class SsoPila {
     }
 
     /**
+     * Set diasLicenciaNoRemunerada
+     *
+     * @param integer $diasLicenciaNoRemunerada
+     * @return SsoPila
+     */
+    public function setDiasLicenciaNoRemunerada($diasLicenciaNoRemunerada)
+    {
+        $this->diasLicenciaNoRemunerada = $diasLicenciaNoRemunerada;
+
+        return $this;
+    }
+
+    /**
+     * Get diasLicenciaNoRemunerada
+     *
+     * @return integer 
+     */
+    public function getDiasLicenciaNoRemunerada()
+    {
+        return $this->diasLicenciaNoRemunerada;
+    }
+
+    /**
      * Set incapacidadGeneral
      *
      * @param string $incapacidadGeneral
@@ -1131,6 +1184,29 @@ class SsoPila {
     }
 
     /**
+     * Set diasIncapacidad
+     *
+     * @param integer $diasIncapacidad
+     * @return SsoPila
+     */
+    public function setDiasIncapacidad($diasIncapacidad)
+    {
+        $this->diasIncapacidad = $diasIncapacidad;
+
+        return $this;
+    }
+
+    /**
+     * Get diasIncapacidad
+     *
+     * @return integer 
+     */
+    public function getDiasIncapacidad()
+    {
+        return $this->diasIncapacidad;
+    }
+
+    /**
      * Set licenciaMaternidad
      *
      * @param string $licenciaMaternidad
@@ -1151,6 +1227,29 @@ class SsoPila {
     public function getLicenciaMaternidad()
     {
         return $this->licenciaMaternidad;
+    }
+
+    /**
+     * Set diasLicenciaMaternidad
+     *
+     * @param integer $diasLicenciaMaternidad
+     * @return SsoPila
+     */
+    public function setDiasLicenciaMaternidad($diasLicenciaMaternidad)
+    {
+        $this->diasLicenciaMaternidad = $diasLicenciaMaternidad;
+
+        return $this;
+    }
+
+    /**
+     * Get diasLicenciaMaternidad
+     *
+     * @return integer 
+     */
+    public function getDiasLicenciaMaternidad()
+    {
+        return $this->diasLicenciaMaternidad;
     }
 
     /**
@@ -2373,94 +2472,25 @@ class SsoPila {
     }
 
     /**
-     * Set diasIncapacidad
+     * Set valorTotalCotizacion
      *
-     * @param integer $diasIncapacidad
+     * @param float $valorTotalCotizacion
      * @return SsoPila
      */
-    public function setDiasIncapacidad($diasIncapacidad)
+    public function setValorTotalCotizacion($valorTotalCotizacion)
     {
-        $this->diasIncapacidad = $diasIncapacidad;
+        $this->valorTotalCotizacion = $valorTotalCotizacion;
 
         return $this;
     }
 
     /**
-     * Get diasIncapacidad
+     * Get valorTotalCotizacion
      *
-     * @return integer 
+     * @return float 
      */
-    public function getDiasIncapacidad()
+    public function getValorTotalCotizacion()
     {
-        return $this->diasIncapacidad;
-    }
-
-    /**
-     * Set diasLicenciaMaternidad
-     *
-     * @param integer $diasLicenciaMaternidad
-     * @return SsoPila
-     */
-    public function setDiasLicenciaMaternidad($diasLicenciaMaternidad)
-    {
-        $this->diasLicenciaMaternidad = $diasLicenciaMaternidad;
-
-        return $this;
-    }
-
-    /**
-     * Get diasLicenciaMaternidad
-     *
-     * @return integer 
-     */
-    public function getDiasLicenciaMaternidad()
-    {
-        return $this->diasLicenciaMaternidad;
-    }
-
-    /**
-     * Set codigoPeriodoFk
-     *
-     * @param integer $codigoPeriodoFk
-     * @return SsoPila
-     */
-    public function setCodigoPeriodoFk($codigoPeriodoFk)
-    {
-        $this->codigoPeriodoFk = $codigoPeriodoFk;
-
-        return $this;
-    }
-
-    /**
-     * Get codigoPeriodoFk
-     *
-     * @return integer 
-     */
-    public function getCodigoPeriodoFk()
-    {
-        return $this->codigoPeriodoFk;
-    }
-
-    /**
-     * Set diasLicenciaNoRemunerada
-     *
-     * @param integer $diasLicenciaNoRemunerada
-     * @return SsoPila
-     */
-    public function setDiasLicenciaNoRemunerada($diasLicenciaNoRemunerada)
-    {
-        $this->diasLicenciaNoRemunerada = $diasLicenciaNoRemunerada;
-
-        return $this;
-    }
-
-    /**
-     * Get diasLicenciaNoRemunerada
-     *
-     * @return integer 
-     */
-    public function getDiasLicenciaNoRemunerada()
-    {
-        return $this->diasLicenciaNoRemunerada;
+        return $this->valorTotalCotizacion;
     }
 }

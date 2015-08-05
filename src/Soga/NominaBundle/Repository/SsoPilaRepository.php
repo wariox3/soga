@@ -179,6 +179,10 @@ class SsoPilaRepository extends EntityRepository
                     $floIbcRiesgos = $this->redondearIbc($intDiasCotizarRiesgos, $floIbcBrutoRiesgos, $floIbcTotal);
                     $floIbcCaja = $this->redondearIbc($intDiasCotizarCaja, $floIbcBrutoCaja, $floIbcTotal);
 
+                    if($intDiasCotizarRiesgos <= 0) {
+                        $floIbcRiesgos = 0;
+                    }
+                    
                     $arEps = new \Soga\NominaBundle\Entity\Eps();
                     $arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arEmpleado->getCodeps());
                     $arPension = new \Soga\NominaBundle\Entity\Pension();
@@ -285,7 +289,7 @@ class SsoPilaRepository extends EntityRepository
                         }
                         $arPila->setAportesFondoSolidaridadPensionalSolidaridad($douCotizacionFSPSolidaridad);
                         $arPila->setAportesFondoSolidaridadPensionalSubsistencia($douCotizacionFSPSubsistencia);                        
-                    }
+                    }                    
                     $floAporteVoluntarioFondoPensionesObligatorias = 0;
                     $floCotizacionVoluntariaFondoPensionesObligatorias = 0;
                     $floTotalCotizacion = $floAporteVoluntarioFondoPensionesObligatorias + $floCotizacionVoluntariaFondoPensionesObligatorias + $douCotizacionPension;
@@ -299,8 +303,7 @@ class SsoPilaRepository extends EntityRepository
                     if($arTipoCotizante->getCodigoPila() == '19') {
                         $douTarifaSalud = 12.5 /100;
                     }
-                    $arPila->setTarifaAportesSalud($this->RellenarNr($douTarifaSalud, "0", 7, "D"));
-                    //$douCotizacionSalud = round($floIbc * $douTarifaSalud, -2, PHP_ROUND_HALF_DOWN);
+                    $arPila->setTarifaAportesSalud($this->RellenarNr($douTarifaSalud, "0", 7, "D"));                    
                     $douCotizacionSalud = $this->redondearAporte($floIbcTotal, $floIbcSalud, $douTarifaSalud, $intDiasCotizarSalud);
                     $arPila->setCotizacionObligatoriaSalud($douCotizacionSalud);
                     $arPila->setValorUpcAdicional('000000000');
@@ -331,9 +334,12 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setCotizanteExoneradoPagoAporteParafiscalesSalud(' ');
                     $arPila->setCodigoAdministradoraRiesgosLaborales('      ');
                     $arPila->setClaseRiesgoAfiliado(' ');
+                    $floValorTotalCotizacion = $douCotizacionPension + $douCotizacionFSPSolidaridad + $douCotizacionFSPSubsistencia + $floAporteVoluntarioFondoPensionesObligatorias + $floCotizacionVoluntariaFondoPensionesObligatorias + $douCotizacionSalud + $douCotizacionRiesgos + $douCotizacionCaja;
+                    $arPila->setValorTotalCotizacion($floValorTotalCotizacion);
                     $em->persist($arPila);
+                                        
                     
-                    if($intHorasLicenciaNoRemunerada > 0) {                                                
+                    if($intDiasLicenciaNoRemunerada > 0) {                                                
                         $i++;        
                         $floIbcBrutoSeguridadSocial = (($intDiasLicenciaNoRemunerada) * ($floSalario / 30));                        
                         $floIbcBrutoRiesgos = ($intDiasLicenciaNoRemunerada * ($floSalario / 30));
@@ -472,6 +478,8 @@ class SsoPilaRepository extends EntityRepository
                         $arPila->setCotizanteExoneradoPagoAporteParafiscalesSalud(' ');
                         $arPila->setCodigoAdministradoraRiesgosLaborales('      ');
                         $arPila->setClaseRiesgoAfiliado(' ');
+                        $floValorTotalCotizacion = $douCotizacionPension + $douCotizacionFSPSolidaridad + $douCotizacionFSPSubsistencia + $floAporteVoluntarioFondoPensionesObligatorias + $floCotizacionVoluntariaFondoPensionesObligatorias + $douCotizacionSalud + $douCotizacionRiesgos + $douCotizacionCaja;
+                        $arPila->setValorTotalCotizacion($floValorTotalCotizacion);                        
                         $em->persist($arPila);                        
                     }              
       

@@ -240,8 +240,7 @@ class UtiPilaDetalleController extends Controller {
                 $i = 2;
                 $arPilaRegistros = new \Soga\NominaBundle\Entity\SsoPila();
                 $arPilaRegistros = $em->getRepository('SogaNominaBundle:SsoPila')->findBy(array('codigoPeriodoDetalleFk' => $codigoPeriodoDetalle));
-                foreach ($arPilaRegistros as $arPila) { 
-                    $floTotal = $arPila->getCotizacionObligatoria() + $arPila->getCotizacionObligatoriaSalud() + $arPila->getCotizacionObligatoriaRiesgos() + $arPila->getValorAporteCCF() + $arPila->getAportesFondoSolidaridadPensionalSolidaridad() + $arPila->getAportesFondoSolidaridadPensionalSubsistencia();
+                foreach ($arPilaRegistros as $arPila) {                     
                     $strIncapacidadGeneral = '';
                     $arEmpleado = new \Soga\NominaBundle\Entity\Empleado();
                     $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arPila->getCodigoEmpleadoFk());
@@ -268,7 +267,7 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('Q' . $i, $arPila->getValorAporteCCF())
                             ->setCellValue('R' . $i, $arPila->getAportesFondoSolidaridadPensionalSolidaridad())
                             ->setCellValue('S' . $i, $arPila->getAportesFondoSolidaridadPensionalSubsistencia())                            
-                            ->setCellValue('T' . $i, $floTotal)
+                            ->setCellValue('T' . $i, $arPila->getValorTotalCotizacion())
                             ->setCellValue('U' . $i, $arPila->getIngreso())
                             ->setCellValue('V' . $i, $arPila->getRetiro())
                             ->setCellValue('W' . $i, $arPila->getSuspensionTemporalContratoLicenciaServicios())

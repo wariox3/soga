@@ -119,7 +119,7 @@ class SsoPilaRepository extends EntityRepository
                         $arNominaDetalles = new \Soga\NominaBundle\Entity\Denomina();
                         $arNominaDetalles = $em->getRepository('SogaNominaBundle:Denomina')->findBy(array('consecutivo' => $arNomina->getConsecutivo()));                        
                         foreach ($arNominaDetalles as $arNominaDetalle) {                            
-                            if($arNominaDetalle->getCodsala() == '94' || $arNominaDetalle->getCodsala() == '95') {                                
+                            if($arNominaDetalle->getCodsala() == '94' || $arNominaDetalle->getCodsala() == '95' || $arNominaDetalle->getCodsala() == '92') {                                
                                 $intHorasLicenciaNoRemunerada += $arNominaDetalle->getNrohora();
                             }
                         }
@@ -270,6 +270,8 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setIbcRiesgosProfesionales($floIbcRiesgos);
                     $arPila->setIbcCaja($floIbcCaja);                    
                     $douCotizacionPension = 0;
+                    $douCotizacionFSPSolidaridad = 0;
+                    $douCotizacionFSPSubsistencia = 0;
                     if($arEmpleado->getCodpension() == 7) {
                         $arPila->setIbcPension(0);
                         $arPila->setTarifaAportesPensiones('0.00000');
@@ -336,7 +338,10 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setClaseRiesgoAfiliado(' ');
                     $floValorTotalCotizacion = $douCotizacionPension + $douCotizacionFSPSolidaridad + $douCotizacionFSPSubsistencia + $floAporteVoluntarioFondoPensionesObligatorias + $floCotizacionVoluntariaFondoPensionesObligatorias + $douCotizacionSalud + $douCotizacionRiesgos + $douCotizacionCaja;
                     $arPila->setValorTotalCotizacion($floValorTotalCotizacion);
-                    $em->persist($arPila);
+                    if($intDiasCotizarPension > 0 || $arTipoCotizante->getCodigoPila() == '19') {
+                        $em->persist($arPila);
+                    }
+                    
                                         
                     
                     if($intDiasLicenciaNoRemunerada > 0) {                                                
@@ -382,7 +387,12 @@ class SsoPilaRepository extends EntityRepository
                         $arPila->setPrimerApellido($this->RellenarNr($arEmpleado->getApemple(), " ", 20, "D"));
                         $arPila->setSegundoApellido($this->RellenarNr($arEmpleado->getApemple1(), " ", 30, "D"));
                         $arPila->setIngreso(' ');
-                        $arPila->setRetiro(' ');
+                        if($intDiasCotizarPension > 0) {
+                            $arPila->setRetiro(' ');
+                        } else {
+                            $arPila->setRetiro($strNovedadRetiro);
+                        }
+                        
                         $arPila->setTrasladoDesdeOtraEps(' ');
                         $arPila->setTrasladoAOtraEps(' ');
                         $arPila->setTrasladoDesdeOtraPension(' ');
@@ -629,7 +639,9 @@ class SsoPilaRepository extends EntityRepository
                 $intDiasIncapacidad += $intDias + 1;
             }  
         }
-        
+        if($intDiasIncapacidad > 30) {
+            $intDiasIncapacidad = 30;
+        }
         return $intDiasIncapacidad;
     }        
     
@@ -706,7 +718,9 @@ class SsoPilaRepository extends EntityRepository
                 $intDiasIncapacidad += $intDias + 1;
             }  
         }
-        
+        if($intDiasIncapacidad > 30) {
+            $intDiasIncapacidad = 30;
+        }
         return $intDiasIncapacidad;
     }            
     

@@ -161,6 +161,10 @@ class SsoPilaRepository extends EntityRepository
                     if(($intDiasCotizar - $intDiasIncapacidadGeneral - $intDiasIncapacidadLaboral - $intDiasLicenciaMaternidad - $intDiasVacaciones) <= 0 ) {
                         $intDiasLicenciaNoRemunerada = 0;
                     }
+                    //A los practicantes no se les marca sln
+                    if($arTipoCotizante->getCodigoPila() == '19') {
+                        $intDiasLicenciaNoRemunerada = 0;
+                    }
                     
                     $floIbcTotal = $floSalario + $floSuplementario;
                     

@@ -109,22 +109,7 @@ class SsoPilaRepository extends EntityRepository
                     }
                     
                     $arTipoCotizante = $em->getRepository('SogaNominaBundle:SsoTipoCotizante')->find($arEmpleado->getCodigoTipoCotizanteFk());
-                    $arSubtipoCotizante = $em->getRepository('SogaNominaBundle:SsoSubtipoCotizante')->find($arEmpleado->getCodigoSubtipoCotizanteFk());                                                                                
-                    
-                    $intDiasLicenciaNoRemunerada = 0;
-                    $intHorasLicenciaNoRemunerada = 0;
-                    $arNominas = new \Soga\NominaBundle\Entity\Nomina();
-                    $arNominas = $em->getRepository('SogaNominaBundle:Nomina')->nominasPeriodo($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $arEmpleado->getCedemple());
-                    foreach ($arNominas as $arNomina) {                        
-                        $arNominaDetalles = new \Soga\NominaBundle\Entity\Denomina();
-                        $arNominaDetalles = $em->getRepository('SogaNominaBundle:Denomina')->findBy(array('consecutivo' => $arNomina->getConsecutivo()));                        
-                        foreach ($arNominaDetalles as $arNominaDetalle) {                            
-                            if($arNominaDetalle->getCodsala() == '94' || $arNominaDetalle->getCodsala() == '95' || $arNominaDetalle->getCodsala() == '92') {                                
-                                $intHorasLicenciaNoRemunerada += $arNominaDetalle->getNrohora();
-                            }
-                        }
-                    }
-                    $intDiasLicenciaNoRemunerada = round($intHorasLicenciaNoRemunerada / 8);                                                                        
+                    $arSubtipoCotizante = $em->getRepository('SogaNominaBundle:SsoSubtipoCotizante')->find($arEmpleado->getCodigoSubtipoCotizanteFk());                                                                                                    
                     
                     $floSuplementario = $em->getRepository('SogaNominaBundle:Nomina')->devTiempoSuplementario($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $arEmpleado->getCedemple());
                     $douSalario = $floSalario;
@@ -159,6 +144,24 @@ class SsoPilaRepository extends EntityRepository
                         //$floIbcVacaciones = $this->liquidarIncapacidadGeneral($douSalario+$floSuplementario, $intDiasIncapacidadGeneral);                        
                     }                    
 
+                    $intDiasLicenciaNoRemunerada = 0;
+                    $intHorasLicenciaNoRemunerada = 0;
+                    $arNominas = new \Soga\NominaBundle\Entity\Nomina();
+                    $arNominas = $em->getRepository('SogaNominaBundle:Nomina')->nominasPeriodo($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $arEmpleado->getCedemple());
+                    foreach ($arNominas as $arNomina) {                        
+                        $arNominaDetalles = new \Soga\NominaBundle\Entity\Denomina();
+                        $arNominaDetalles = $em->getRepository('SogaNominaBundle:Denomina')->findBy(array('consecutivo' => $arNomina->getConsecutivo()));                        
+                        foreach ($arNominaDetalles as $arNominaDetalle) {                            
+                            if($arNominaDetalle->getCodsala() == '94' || $arNominaDetalle->getCodsala() == '95' || $arNominaDetalle->getCodsala() == '92') {                                
+                                $intHorasLicenciaNoRemunerada += $arNominaDetalle->getNrohora();
+                            }
+                        }
+                    }
+                    $intDiasLicenciaNoRemunerada = round($intHorasLicenciaNoRemunerada / 8);                                                                                                                
+                    if(($intDiasCotizar - $intDiasIncapacidadGeneral - $intDiasIncapacidadLaboral - $intDiasLicenciaMaternidad - $intDiasVacaciones) <= 0 ) {
+                        $intDiasLicenciaNoRemunerada = 0;
+                    }
+                    
                     $floIbcTotal = $floSalario + $floSuplementario;
                     
                     $intDiasCotizarPension = $intDiasCotizar - $intDiasLicenciaNoRemunerada;

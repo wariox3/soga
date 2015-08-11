@@ -35,6 +35,10 @@
                 <th style="text-align: right">C.R</th>
                 <th style="text-align: right">C.C</th>
                 <th style="text-align: right">TOTAL</th>
+                <th style="text-align: right">P.P</th>
+                <th style="text-align: right">P.S</th>
+                <th style="text-align: right">P.R</th>
+                <th style="text-align: right">P.C</th>
             </tr>
             {% set floTotal = 0 %}
             {% for arPila in arPila %}
@@ -67,6 +71,10 @@
                     <td style="text-align: right">{{ arPila.cotizacionObligatoriaRiesgos | number_format(0, '.', ',') }}</td>
                     <td style="text-align: right">{{ arPila.valorAporteCcf | number_format(0, '.', ',') }}</td>
                     <td style="text-align: right">{{ arPila.valorTotalCotizacion | number_format(0, '.', ',') }}</td>
+                    <td>{{ arPila.tarifaAportesPensiones }}</td>
+                    <td>{{ arPila.tarifaAportesSalud }}</td>
+                    <td>{{ arPila.tarifaAportesRiesgosProfesionales }}</td>
+                    <td>{{ arPila.tarifaAportesCCF }}</td>                                        
                 </tr>
             {% endfor %}
             <tr>

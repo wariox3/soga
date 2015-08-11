@@ -47,6 +47,10 @@ class SsoPeriodo {
      */    
     private $estadoGenerado = 0;     
   
+    /**     
+     * @ORM\Column(name="estado_cerrado", type="boolean")
+     */    
+    private $estadoCerrado = 0;     
 
     /**
      * Get codigoPeriodoPk
@@ -194,5 +198,28 @@ class SsoPeriodo {
     public function getEstadoGenerado()
     {
         return $this->estadoGenerado;
+    }
+
+    /**
+     * Set estadoCerrado
+     *
+     * @param boolean $estadoCerrado
+     * @return SsoPeriodo
+     */
+    public function setEstadoCerrado($estadoCerrado)
+    {
+        $this->estadoCerrado = $estadoCerrado;
+
+        return $this;
+    }
+
+    /**
+     * Get estadoCerrado
+     *
+     * @return boolean 
+     */
+    public function getEstadoCerrado()
+    {
+        return $this->estadoCerrado;
     }
 }

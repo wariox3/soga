@@ -235,7 +235,13 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('Y1', 'VAC')
                             ->setCellValue('Z1', 'IGE')
                             ->setCellValue('AA1', 'IRP')
-                            ->setCellValue('AB1', 'D. SLN');
+                            ->setCellValue('AB1', 'D. SLN')
+                            ->setCellValue('AC1', 'P.P')
+                            ->setCellValue('AD1', 'P.S')
+                            ->setCellValue('AE1', 'P.R')
+                            ->setCellValue('AF1', 'P.C')
+                            ->setCellValue('AG1', 'TIPO')
+                            ->setCellValue('AH1', 'SUBTIPO');
 
                 $i = 2;
                 $arPilaRegistros = new \Soga\NominaBundle\Entity\SsoPila();
@@ -275,7 +281,13 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('Y' . $i, $arPila->getVacaciones())
                             ->setCellValue('Z' . $i, $strIncapacidadGeneral)
                             ->setCellValue('AA' . $i, $arPila->getIncapacidadAccidenteTrabajoEnfermedadProfesional())
-                            ->setCellValue('AB' . $i, $arPila->getDiasLicenciaNoRemunerada());
+                            ->setCellValue('AB' . $i, $arPila->getDiasLicenciaNoRemunerada())
+                            ->setCellValue('AC' . $i, $arPila->getTarifaAportesPensiones())
+                            ->setCellValue('AD' . $i, $arPila->getTarifaAportesSalud())
+                            ->setCellValue('AE' . $i, $arPila->getTarifaAportesRiesgosProfesionales())
+                            ->setCellValue('AF' . $i, $arPila->getTarifaAportesCCF())
+                            ->setCellValue('AG' . $i, $arPila->getTipo())
+                            ->setCellValue('AH' . $i, $arPila->getSubtipo());
                     $i++;
                 }                
                 $objPHPExcel->getActiveSheet()->setTitle('pagopila');

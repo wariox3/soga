@@ -91,7 +91,7 @@ class HerIntCtiRecibosController extends Controller {
 
                                 $arNomRegistroExportacion->setDetalle('PAGO INCAPACIDAD');
                                 $arNomRegistroExportacion->setTipo(1);
-                                $arNomRegistroExportacion->setBase(0);
+                                $arNomRegistroExportacion->setBase($arDetalleRecibo->getAbono());
                                 $arNomRegistroExportacion->setPlazo(0);
                                 $arNomRegistroExportacion->setCuenta("135595");
                                 $arNomRegistroExportacion->setValor($arDetalleRecibo->getCree());
@@ -107,7 +107,7 @@ class HerIntCtiRecibosController extends Controller {
 
                                 $arNomRegistroExportacion->setDetalle('PAGO INCAPACIDAD');
                                 $arNomRegistroExportacion->setTipo(2);
-                                $arNomRegistroExportacion->setBase(0);
+                                $arNomRegistroExportacion->setBase($arDetalleRecibo->getAbono());
                                 $arNomRegistroExportacion->setPlazo(0);
                                 $arNomRegistroExportacion->setCuenta("236575");
                                 $arNomRegistroExportacion->setValor($arDetalleRecibo->getCree());

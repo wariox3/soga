@@ -32,7 +32,7 @@ class SsoPilaRepository extends EntityRepository
             $arEmpleado = $em->getRepository('SogaNominaBundle:Empleado')->find($arPeriodoEmpleado->getCodigoEmpleadoFk());
             if(1 == 1 && $i <= 5000) {
             //if($arEmpleado->getCedemple() == '1214719340' || $arEmpleado->getCedemple() == '1045683705') {
-            //if($arEmpleado->getCedemple() == '1128') {
+            //if($arEmpleado->getCedemple() == '72234588') {
                 $arContratos = new \Soga\NominaBundle\Entity\Contrato();
                 $arContratos = $em->getRepository('SogaNominaBundle:Contrato')->devDqlContratosPeriodoEmpleado($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $arPeriodoEmpleado->getCodigoEmpleadoFk());
                 if(count($arContratos) <= 1) {
@@ -86,7 +86,6 @@ class SsoPilaRepository extends EntityRepository
                             }                            
                         }
                     }
-
                     
                     if($arContrato->getFechainic() >= $arPeriodoDetalle->getFechaDesde()) {
                         $strNovedadIngreso = "X";
@@ -117,9 +116,12 @@ class SsoPilaRepository extends EntityRepository
                     $intDiasIncapacidadGeneral = $this->diasIncapacidadGeneral($arPeriodoDetalle, $arEmpleado->getCedemple());
                     $strIncapacidadGeneral = " ";
                     $floIbcIncapacidadGeneral = 0;
+                    $floSalarioMesAnterior = 0;
                     if($intDiasIncapacidadGeneral > 0) {
                         $strIncapacidadGeneral = "X"; 
-                        $floIbcIncapacidadGeneral = $this->liquidarIncapacidadGeneral($douSalario+$floSuplementario, $intDiasIncapacidadGeneral);                        
+                        $floSalarioMesActual = $douSalario+$floSuplementario;   
+                        $floSalarioMesAnterior = $this->ibcMesAnterior($arEmpleado->getCedemple(), $arPeriodoDetalle->getMes(), $arPeriodoDetalle->getAnio());
+                        $floIbcIncapacidadGeneral = $this->liquidarIncapacidadGeneral($floSalarioMesActual, $floSalarioMesAnterior, $intDiasIncapacidadGeneral);                        
                     }
 
                     $intDiasLicenciaMaternidad = $this->diasLicenciaMaternidad($arPeriodoDetalle, $arEmpleado->getCedemple());
@@ -215,6 +217,9 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setTipoDocumento($arEmpleado->getTipod());
                     $arPila->setTipo($this->RellenarNr($arTipoCotizante->getCodigoPila(), "0", 2, "I"));
                     $arPila->setSubtipo($this->RellenarNr($arSubtipoCotizante->getCodigoPila(), "0", 2, "I"));
+                    $arPila->setAnio($arPeriodoDetalle->getAnio());
+                    $arPila->setMes($arPeriodoDetalle->getMes());
+                    $arPila->setSalarioMesAnterior($floSalarioMesAnterior);
                     if($arEmpleado->getExtranjeroNoObligadoCotizarPensiones() == 1) {
                         $arPila->setExtranjeroNoObligadoCotizarPensiones('X');
                     } else {
@@ -374,6 +379,8 @@ class SsoPilaRepository extends EntityRepository
                         $arPila->setTipoDocumento($arEmpleado->getTipod());
                         $arPila->setTipo($this->RellenarNr($arTipoCotizante->getCodigoPila(), "0", 2, "I"));
                         $arPila->setSubtipo($this->RellenarNr($arSubtipoCotizante->getCodigoPila(), "0", 2, "I"));
+                        $arPila->setAnio($arPeriodoDetalle->getAnio());
+                        $arPila->setMes($arPeriodoDetalle->getMes());                        
                         if($arEmpleado->getExtranjeroNoObligadoCotizarPensiones() == 1) {
                             $arPila->setExtranjeroNoObligadoCotizarPensiones('X');
                         } else {
@@ -684,12 +691,12 @@ class SsoPilaRepository extends EntityRepository
         return $intDiasIncapacidad;
     }            
     
-    public function liquidarIncapacidadGeneral($floSalario, $intDias) {
+    public function liquidarIncapacidadGeneral($floSalario, $floSalarioAnterior, $intDias) {
+        if($floSalarioAnterior > 0) {
+            $floSalario = $floSalarioAnterior;
+        }                
         $floValorDia = $floSalario / 30;
         $floIbcIncapacidad = 0;
-        //Traer el ibc del mes anterior del registro 
-        //maestro no el de la SLN
-        $floIbcMesAnterior = 0;
         if($floSalario > (644350 * 1.5)) {
             $floIbcIncapacidad = $intDias * $floValorDia;
             $floIbcIncapacidad = ($floIbcIncapacidad * 66.67) / 100;
@@ -760,4 +767,15 @@ class SsoPilaRepository extends EntityRepository
         
         return $intDiasVacaciones;
     }            
+    
+    public function ibcMesAnterior($strIdentificacion, $intMes, $intAnio) {
+        $em = $this->getEntityManager();
+        $floIbcMesAnterior = 0;
+        $arSsoPila = new \Soga\NominaBundle\Entity\SsoPila();
+        $arSsoPila = $em->getRepository('SogaNominaBundle:SsoPila')->findOneBy(array('numeroIdentificacion' => $strIdentificacion, 'anio' => $intAnio, 'mes' => $intMes - 1));
+        if(count($arSsoPila) > 0) {
+            $floIbcMesAnterior = $arSsoPila->getSalarioBasico() + $arSsoPila->getTiempoSuplementario();
+        }
+        return $floIbcMesAnterior;        
+    }
 }

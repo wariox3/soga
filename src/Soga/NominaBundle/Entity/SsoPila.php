@@ -258,6 +258,11 @@ class SsoPila {
     private $salarioBasico;
     
     /**
+     * @ORM\Column(name="salario_mes_anterior", type="float")
+     */
+    private $salarioMesAnterior = 0;    
+    
+    /**
      * @ORM\Column(name="salario_integral", type="string", length=1)
      */
     private $salarioIntegral;    
@@ -265,7 +270,7 @@ class SsoPila {
     /**
      * @ORM\Column(name="tiempo_suplementario", type="float")
      */
-    private $tiempoSuplementario;    
+    private $tiempoSuplementario = 0;    
     
     /**
      * @ORM\Column(name="ibc_pension", type="float")
@@ -457,7 +462,15 @@ class SsoPila {
      */
     private $valorTotalCotizacion;    
     
+    /**
+     * @ORM\Column(name="anio", type="integer")
+     */
+    private $anio;
 
+    /**
+     * @ORM\Column(name="mes", type="integer")
+     */
+    private $mes;
     
 
     /**
@@ -2492,5 +2505,97 @@ class SsoPila {
     public function getValorTotalCotizacion()
     {
         return $this->valorTotalCotizacion;
+    }
+
+    /**
+     * Set anio
+     *
+     * @param integer $anio
+     * @return SsoPila
+     */
+    public function setAnio($anio)
+    {
+        $this->anio = $anio;
+
+        return $this;
+    }
+
+    /**
+     * Get anio
+     *
+     * @return integer 
+     */
+    public function getAnio()
+    {
+        return $this->anio;
+    }
+
+    /**
+     * Set mes
+     *
+     * @param integer $mes
+     * @return SsoPila
+     */
+    public function setMes($mes)
+    {
+        $this->mes = $mes;
+
+        return $this;
+    }
+
+    /**
+     * Get mes
+     *
+     * @return integer 
+     */
+    public function getMes()
+    {
+        return $this->mes;
+    }
+
+    /**
+     * Set ibcMesAnterior
+     *
+     * @param float $ibcMesAnterior
+     * @return SsoPila
+     */
+    public function setIbcMesAnterior($ibcMesAnterior)
+    {
+        $this->ibcMesAnterior = $ibcMesAnterior;
+
+        return $this;
+    }
+
+    /**
+     * Get ibcMesAnterior
+     *
+     * @return float 
+     */
+    public function getIbcMesAnterior()
+    {
+        return $this->ibcMesAnterior;
+    }
+
+    /**
+     * Set salarioMesAnterior
+     *
+     * @param float $salarioMesAnterior
+     * @return SsoPila
+     */
+    public function setSalarioMesAnterior($salarioMesAnterior)
+    {
+        $this->salarioMesAnterior = $salarioMesAnterior;
+
+        return $this;
+    }
+
+    /**
+     * Get salarioMesAnterior
+     *
+     * @return float 
+     */
+    public function getSalarioMesAnterior()
+    {
+        return $this->salarioMesAnterior;
     }
 }

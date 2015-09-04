@@ -12,6 +12,22 @@ use Doctrine\ORM\EntityRepository;
  */
 class SsoPilaRepository extends EntityRepository
 {
+    public function listaDql($strIdentificacion = "", $intAnio = "", $intMes = "") {        
+        $em = $this->getEntityManager();
+        $dql   = "SELECT p FROM SogaNominaBundle:SsoPila p WHERE p.codigoPilaPk <> 0";
+        if($strIdentificacion != "" ) {
+            $dql .= " AND p.numeroIdentificacion = '" . $strIdentificacion . "'";
+        }        
+        if($intAnio != "" ) {
+            $dql .= " AND p.anio = " . $intAnio;
+        }
+        if($intMes != "" ) {
+            $dql .= " AND p.mes = '" . $intMes . "'";
+        }
+        $dql .= " ORDER BY p.codigoPilaPk DESC";
+        return $dql;
+    }                            
+    
     public function dqlDetalle($codigoPeriodoDetalle) {
         $em = $this->getEntityManager();         
         $dql = "SELECT pila FROM SogaNominaBundle:SsoPila pila WHERE pila.codigoPeriodoDetalleFk = " . $codigoPeriodoDetalle;

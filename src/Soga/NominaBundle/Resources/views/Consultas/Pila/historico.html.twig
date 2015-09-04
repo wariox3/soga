@@ -1,0 +1,137 @@
+{% extends '::base.html.twig' %}
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h3>Registros pila</h3>
+    </div>
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'} }) }}
+            {{ form_errors(form) }}
+        <div class="panel panel-default">
+            <div class="panel-heading">Filtros de busqueda</div>
+            <div class="panel-body">                                                 
+                <div class="form-group form-group-sm">  
+                    <label for="form_TxtIdentificacion" class="col-sm-2 control-label">Identificacion:</label>
+                    <div class="col-sm-10">                  
+                        {{ form_widget(form.TxtIdentificacion, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                </div>  
+                <div class="form-group form-group-sm">  
+                    <label for="form_anio" class="col-sm-2 control-label">Anio:</label>
+                    <div class="col-sm-10">                  
+                        {{ form_widget(form.anio, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                </div>                     
+                <div class="form-group form-group-sm">  
+                    <label for="form_mes" class="col-sm-2 control-label">Mes:</label>
+                    <div class="col-sm-10">                  
+                        {{ form_widget(form.mes, { 'attr': {'class': 'form-control'} }) }}
+                    </div>
+                </div>                    
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        {{ form_widget(form.BtnFiltrar, { 'attr': {'class': 'btn btn-default btn-sm', 'style':'float:right'} }) }}
+                    </div>
+                </div>                                                    
+            </div>
+        </div> 
+        <table class="table table-striped table-bordered table-condensed table-hover" style="font-size:12px">
+            <tr>
+                <th>ID</th>
+                <th>AÑO</th>
+                <th>MES</th>
+                <th>IDENTIFICACION</th>
+                <th>ING</th>
+                <th>RET</th>
+                <th>VST</th>
+                <th>SLN</th>
+                <th>IGE</th>
+                <th>LMA</th>
+                <th>VAC</th>
+                <th>IRP</th>
+                <th style="text-align: right">D.P</th>
+                <th style="text-align: right">D.S</th>
+                <th style="text-align: right">D.R</th>
+                <th style="text-align: right">D.C</th>                
+                <th style="text-align: right">SALARIO</th>
+                <th style="text-align: right">SUPLE</th>
+                <th style="text-align: right">SAL.M.A</th>
+                <th style="text-align: right">IBC.P</th>
+                <th style="text-align: right">IBC.S</th>
+                <th style="text-align: right">IBC.R</th>
+                <th style="text-align: right">IBC.C</th>
+                <th style="text-align: right">C.P</th>
+                <th style="text-align: right">FSP</th>
+                <th style="text-align: right">FSS</th>
+                <th style="text-align: right">C.S</th>
+                <th style="text-align: right">C.R</th>
+                <th style="text-align: right">C.C</th>
+                <th style="text-align: right">TOTAL</th>
+                <th style="text-align: right">P.P</th>
+                <th style="text-align: right">P.S</th>
+                <th style="text-align: right">P.R</th>
+                <th style="text-align: right">P.C</th>
+            </tr>
+            {% set floTotal = 0 %}
+            {% for arPila in arPila %}
+                {% set floTotal = floTotal + arPila.valorTotalCotizacion %}
+                <tr>
+                    <td><input type="hidden" name="LblCodigo[]" value="{{ arPila.codigoPilaPk }}">{{ arPila.codigoPilaPk }}</td>                    
+                    <td>{{ arPila.anio }}</td>
+                    <td>{{ arPila.mes }}</td>
+                    <td>{{ arPila.numeroIdentificacion }}</td>
+                    <td>{{ arPila.ingreso }}</td>
+                    <td>{{ arPila.retiro }}</td>
+                    <td>{{ arPila.variacionTransitoriaSalario }}</td>
+                    <td>{{ arPila.suspensionTemporalContratoLicenciaServicios }}</td>                
+                    <td>{% if arPila.incapacidadGeneral == 'X' %}{{ arPila.incapacidadGeneral }}{{ arPila.diasIncapacidad }}{% endif %}</td>                
+                    <td>{% if arPila.licenciaMaternidad == 'X' %}{{ arPila.licenciaMaternidad }}{{ arPila.diasLicenciaMaternidad }}{% endif %}</td>                
+                    <td>{% if arPila.vacaciones == 'X' %}{{ arPila.vacaciones }}{% endif %}</td>                                
+                    <td>{{ arPila.incapacidadAccidenteTrabajoEnfermedadProfesional }}</td>
+                    <td style="text-align: right">{{ arPila.diasCotizadosPension }}</td>
+                    <td style="text-align: right">{{ arPila.diasCotizadosSalud }}</td>
+                    <td style="text-align: right">{{ arPila.diasCotizadosRiesgosProfesionales }}</td>
+                    <td style="text-align: right">{{ arPila.diasCotizadosCajaCompensacion }}</td>                
+                    <td style="text-align: right">{{ arPila.salarioBasico | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right">{{ arPila.tiempoSuplementario | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right">{{ arPila.salarioMesAnterior | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right">{{ arPila.ibcPension | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right">{{ arPila.ibcSalud | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right">{{ arPila.ibcRiesgosProfesionales | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right">{{ arPila.ibcCaja | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right">{{ arPila.cotizacionObligatoria | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right">{{ arPila.aportesFondoSolidaridadPensionalSolidaridad | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right">{{ arPila.aportesFondoSolidaridadPensionalSubsistencia | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right">{{ arPila.cotizacionObligatoriaSalud | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right">{{ arPila.cotizacionObligatoriaRiesgos | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right">{{ arPila.valorAporteCcf | number_format(0, '.', ',') }}</td>
+                    <td style="text-align: right">{{ arPila.valorTotalCotizacion | number_format(0, '.', ',') }}</td>
+                    <td>{{ arPila.tarifaAportesPensiones }}</td>
+                    <td>{{ arPila.tarifaAportesSalud }}</td>
+                    <td>{{ arPila.tarifaAportesRiesgosProfesionales }}</td>
+                    <td>{{ arPila.tarifaAportesCCF }}</td>                                        
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="26"></td>                
+                <td style="text-align: right">{{ floTotal | number_format(0, '.', ',') }}</td>
+            </tr>            
+        </table>                    
+        <div class="btn-toolbar" style="float: left">
+            <div class="btn-group">
+                {{ knp_pagination_render(arPila) }} 
+            </div>
+            <div class="btn-group">
+                <div class="btn btn-default btn-sm">Registros <span class="badge">{{ arPila.getTotalItemCount }}</span></div>        
+            </div>
+        </div>                
+        <div class="btn-toolbar" style="float: right">                 
+            <div class="btn-group">                
+                {{ form_widget(form.BtnExcel, { 'attr': {'class': 'btn btn-default btn-sm'} }) }}                
+            </div>
+        </div>
+                
+        {{ form_rest(form) }}
+    {{ form_end(form) }}
+
+</div>
+{% endblock %}

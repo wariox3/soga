@@ -61,6 +61,10 @@ soga_nomina_utilidades_pila_detalle_nuevo:
 soga_nomina_utilidades_pila_empleados:
     pattern:  /nomina/utilidades/pila/empleados/{codigoPeriodoDetalle}
     defaults: { _controller: SogaNominaBundle:UtiPilaDetalle:empleados }     
+
+soga_nomina_consultas_pila_historico:
+    pattern:  /nomina/consultas/pila/historico/
+    defaults: { _controller: SogaNominaBundle:ConPila:lista }     
     
 soga_nomina_procesos_procesar_nomina:
     pattern:  /nomina/procesos/procesar/nomina

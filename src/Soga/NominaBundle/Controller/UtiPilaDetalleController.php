@@ -39,7 +39,7 @@ class UtiPilaDetalleController extends Controller {
                 fputs($ar, '          ');
                 fputs($ar, '          ');
                 fputs($ar, 'S');
-                fputs($ar, $arPeriodoDetalle->getSucursalRel()->getCodigoPila());
+                fputs($ar, $this->RellenarNr($arPeriodoDetalle->getSucursalRel()->getCodigoPila(), " ", 10, "D"));
                 fputs($ar, $this->RellenarNr($arPeriodoDetalle->getSucursalRel()->getNombre(), " ", 40, "D"));
                 //Arp del aportante
                 fputs($ar, '14-18 ');

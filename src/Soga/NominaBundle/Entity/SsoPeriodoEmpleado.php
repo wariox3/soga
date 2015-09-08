@@ -72,7 +72,16 @@ class SsoPeriodoEmpleado {
      */    
     private $numeroContratos;
 
+    /**
+     * @ORM\Column(name="vr_tiempo_suplementario", type="float")
+     */
+    private $vrTiempoSuplementario;     
 
+    /**
+     * @ORM\Column(name="dias_totales", type="integer")
+     */    
+    private $diasTotales = 0;    
+    
     /**
      * Get codigoPeriodoEmpleadoPk
      *
@@ -334,5 +343,51 @@ class SsoPeriodoEmpleado {
     public function getNumeroContratos()
     {
         return $this->numeroContratos;
+    }
+
+    /**
+     * Set vrTiempoSuplementario
+     *
+     * @param float $vrTiempoSuplementario
+     * @return SsoPeriodoEmpleado
+     */
+    public function setVrTiempoSuplementario($vrTiempoSuplementario)
+    {
+        $this->vrTiempoSuplementario = $vrTiempoSuplementario;
+
+        return $this;
+    }
+
+    /**
+     * Get vrTiempoSuplementario
+     *
+     * @return float 
+     */
+    public function getVrTiempoSuplementario()
+    {
+        return $this->vrTiempoSuplementario;
+    }
+
+    /**
+     * Set diasTotales
+     *
+     * @param integer $diasTotales
+     * @return SsoPeriodoEmpleado
+     */
+    public function setDiasTotales($diasTotales)
+    {
+        $this->diasTotales = $diasTotales;
+
+        return $this;
+    }
+
+    /**
+     * Get diasTotales
+     *
+     * @return integer 
+     */
+    public function getDiasTotales()
+    {
+        return $this->diasTotales;
     }
 }

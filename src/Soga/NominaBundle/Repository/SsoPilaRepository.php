@@ -61,6 +61,16 @@ class SsoPilaRepository extends EntityRepository
                     $dateFechaHasta =  "";
                     $strNovedadIngreso = " ";
                     $strNovedadRetiro = " ";
+                    $strVariacionPermanenteSalario = " ";
+                    if($arPeriodoEmpleadoContrato->getVariacionPermanenteSalario() == "X") {
+                        $strVariacionPermanenteSalario = "X";
+                    }
+                    if($arPeriodoEmpleadoContrato->getIngreso() == "X") {
+                        $strNovedadIngreso = "X";
+                    }
+                    if($arPeriodoEmpleadoContrato->getRetiro() == "X") {
+                        $strNovedadRetiro = "X";
+                    }                    
 
                     $floSalario = $arPeriodoEmpleadoContrato->getVrSalario();
                     $intDiasCotizar = $arPeriodoEmpleadoContrato->getDias();
@@ -209,7 +219,7 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setTrasladoAOtraEps(' ');
                     $arPila->setTrasladoDesdeOtraPension(' ');
                     $arPila->setTrasladoAOtraPension(' ');
-                    $arPila->setVariacionPermanenteSalario($arPeriodoEmpleadoContrato->getVariacionPermanenteSalario());
+                    $arPila->setVariacionPermanenteSalario($strVariacionPermanenteSalario);
                     $arPila->setCorrecciones(' ');
                     $arPila->setVariacionTransitoriaSalario($strVariacionTransitoriaSalario);
                     $arPila->setSuspensionTemporalContratoLicenciaServicios(' ');
@@ -363,7 +373,14 @@ class SsoPilaRepository extends EntityRepository
                         $arPila->setSegundoNombre($this->RellenarNr($arEmpleado->getNomemple1(), " ", 30, "D"));
                         $arPila->setPrimerApellido($this->RellenarNr($arEmpleado->getApemple(), " ", 20, "D"));
                         $arPila->setSegundoApellido($this->RellenarNr($arEmpleado->getApemple1(), " ", 30, "D"));
-                        $arPila->setIngreso(' ');
+                        
+                        
+                        if($intDiasCotizarPension > 0) {
+                            $arPila->setIngreso(' ');    
+                        } else {
+                            $arPila->setIngreso($strNovedadIngreso);    
+                        }
+                        
                         if($intDiasCotizarPension > 0) {
                             $arPila->setRetiro(' ');
                         } else {
@@ -497,8 +514,8 @@ class SsoPilaRepository extends EntityRepository
     }
 
     public function redondearAporte($floIbcTotal, $floIbc, $floTarifa, $intDias) {
-        $floIbcBruto = ($floIbcTotal / 30) * $intDias;
-        $floCotizacionRedondeada = round($floIbc * $floTarifa, -2, PHP_ROUND_HALF_DOWN);
+        $floIbcBruto = ($floIbcTotal / 30) * $intDias;        
+        $floCotizacionRedondeada = round($floIbc * $floTarifa, -2, PHP_ROUND_HALF_DOWN);        
         $floCotizacionCalculada = $floIbcBruto * $floTarifa;
         $floCotizacionIBC = $floIbc * $floTarifa;
         $floResiduo = fmod($floCotizacionIBC, 100);
@@ -517,7 +534,7 @@ class SsoPilaRepository extends EntityRepository
             if(round($floCotizacionRedondeada) >= $floCotizacionCalculada) {
                 $floCotizacion = round($floCotizacionRedondeada);
             } else {
-                $floCotizacion = ceil($floCotizacionRedondeada);
+                $floCotizacion = ceil($floCotizacionRedondeada);                                
             }
         } else {
             $floCotizacion = $floCotizacionRedondeada;

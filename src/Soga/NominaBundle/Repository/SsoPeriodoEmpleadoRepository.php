@@ -223,8 +223,8 @@ class SsoPeriodoEmpleadoRepository extends EntityRepository
                         $arPeriodoEmpleadoContrato->setVrTiempoSuplementario($floTiempoSuplementario);
                     }                       
                 }
-                 
-
+                $arPeriodoEmpleadoContrato->setIngreso($strNovedadIngreso);
+                $arPeriodoEmpleadoContrato->setRetiro($strNovedadRetiro);
                 $em->persist($arPeriodoEmpleadoContrato);                    
             }                            
         }        

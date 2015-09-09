@@ -76,6 +76,16 @@ class SsoPeriodoEmpleadoContrato {
      * @ORM\Column(name="variacion_permanente_salario", type="string", length=1)
      */    
     private $variacionPermanenteSalario;    
+
+    /**
+     * @ORM\Column(name="ingreso", type="string", length=1)
+     */    
+    private $ingreso;    
+
+    /**
+     * @ORM\Column(name="retiro", type="string", length=1)
+     */    
+    private $retiro;        
     
     /**
      * Get codigoPeriodoEmpleadoContratoPk
@@ -361,5 +371,51 @@ class SsoPeriodoEmpleadoContrato {
     public function getVariacionPermanenteSalario()
     {
         return $this->variacionPermanenteSalario;
+    }
+
+    /**
+     * Set ingreso
+     *
+     * @param string $ingreso
+     * @return SsoPeriodoEmpleadoContrato
+     */
+    public function setIngreso($ingreso)
+    {
+        $this->ingreso = $ingreso;
+
+        return $this;
+    }
+
+    /**
+     * Get ingreso
+     *
+     * @return string 
+     */
+    public function getIngreso()
+    {
+        return $this->ingreso;
+    }
+
+    /**
+     * Set retiro
+     *
+     * @param string $retiro
+     * @return SsoPeriodoEmpleadoContrato
+     */
+    public function setRetiro($retiro)
+    {
+        $this->retiro = $retiro;
+
+        return $this;
+    }
+
+    /**
+     * Get retiro
+     *
+     * @return string 
+     */
+    public function getRetiro()
+    {
+        return $this->retiro;
     }
 }

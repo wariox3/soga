@@ -110,7 +110,9 @@ class SsoPilaRepository extends EntityRepository
                     $floIbcLicenciaMaternidad = 0;
                     if($intDiasLicenciaMaternidad > 0) {
                         $strLicenciaMaternidad = "X"; 
-                        $floIbcLicenciaMaternidad = $this->liquidarIncapacidadGeneral($floSalario+$floSuplementario, $intDiasLicenciaMaternidad);                        
+                        $floSalarioMesActual = $floSalario + $floSuplementario;
+                        $floSalarioMesAnterior = $this->ibcMesAnterior($arEmpleado->getCedemple(), $arPeriodoDetalle->getMes(), $arPeriodoDetalle->getAnio());
+                        $floIbcLicenciaMaternidad = $this->liquidarIncapacidadGeneral($floSalarioMesActual, $floSalarioMesAnterior, $intDiasLicenciaMaternidad);                        
                     }                                                            
 
                     $intDiasVacaciones = $this->diasVacaciones($arPeriodoDetalle, $arEmpleado->getCedemple());

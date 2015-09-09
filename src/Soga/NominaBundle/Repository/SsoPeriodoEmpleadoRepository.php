@@ -237,7 +237,7 @@ class SsoPeriodoEmpleadoRepository extends EntityRepository
         $em = $this->getEntityManager();
         $intDiasIncapacidad = 0;
         $arIncapacidades = new \Soga\NominaBundle\Entity\Incapacidad();
-        $arIncapacidades = $em->getRepository('SogaNominaBundle:Incapacidad')->devDqlIncapacidadesGeneralesPeriodoEmpleado($fechaDesde->format('Y-m-d'), $fechaDesde->format('Y-m-d'), $strNumeroIdentificacion);        
+        $arIncapacidades = $em->getRepository('SogaNominaBundle:Incapacidad')->devDqlIncapacidadesGeneralesPeriodoEmpleado($fechaDesde->format('Y-m-d'), $fechaHasta->format('Y-m-d'), $strNumeroIdentificacion);        
         foreach ($arIncapacidades as $arIncapacidad) {
             $dateFechaDesde =  "";
             $dateFechaHasta =  "";               

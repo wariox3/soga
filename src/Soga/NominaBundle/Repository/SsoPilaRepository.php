@@ -662,6 +662,9 @@ class SsoPilaRepository extends EntityRepository
                 $intDias = $dateFechaDesde->diff($dateFechaHasta);
                 $intDias = $intDias->format('%a');
                 $intDiasIncapacidad += $intDias + 1;
+                if($dateFechaHasta->format('d') == 31) {
+                    $intDiasIncapacidad = $intDiasIncapacidad - 1;
+                }
             }  
         }
         if($intDiasIncapacidad > 30) {

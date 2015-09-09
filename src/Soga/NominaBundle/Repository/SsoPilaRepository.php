@@ -152,10 +152,10 @@ class SsoPilaRepository extends EntityRepository
                         $intDiasCotizarPension = 0;
                         $intDiasCotizarCaja = 0;
                     }
-                    $floIbcBrutoSeguridadSocialPension = (($intDiasCotizarPension-$intDiasIncapacidades) * (($floSalario + $floSuplementario) / 30) + $floIbcIncapacidades);
-                    $floIbcBrutoSeguridadSocialSalud = (($intDiasCotizarSalud-$intDiasIncapacidades) * (($floSalario + $floSuplementario) / 30) + $floIbcIncapacidades);                    
-                    $floIbcBrutoRiesgos = ($intDiasCotizarRiesgos * (($floSalario + $floSuplementario) / 30));
-                    $floIbcBrutoCaja = ($intDiasCotizarCaja * (($floSalario + $floSuplementario) / 30));
+                    $floIbcBrutoSeguridadSocialPension = (($intDiasCotizarPension-$intDiasIncapacidades) * ($floSalario / 30)) + $floIbcIncapacidades + $floSuplementario;
+                    $floIbcBrutoSeguridadSocialSalud = (($intDiasCotizarSalud-$intDiasIncapacidades) * ($floSalario / 30)) + $floIbcIncapacidades + $floSuplementario;                    
+                    $floIbcBrutoRiesgos = ($intDiasCotizarRiesgos * ($floSalario / 30)) + $floSuplementario;
+                    $floIbcBrutoCaja = ($intDiasCotizarCaja * ($floSalario / 30)) + $floSuplementario;
                     
                     $floIbcPension = $this->redondearIbc($intDiasCotizarPension, $floIbcBrutoSeguridadSocialPension, $floIbcTotal);
                     $floIbcSalud = $this->redondearIbc($intDiasCotizarSalud, $floIbcBrutoSeguridadSocialSalud, $floIbcTotal);

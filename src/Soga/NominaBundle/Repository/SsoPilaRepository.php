@@ -433,7 +433,7 @@ class SsoPilaRepository extends EntityRepository
                             $arPila->setAportesFondoSolidaridadPensionalSolidaridad('000000000');
                             $arPila->setAportesFondoSolidaridadPensionalSubsistencia('000000000');
                         } else {
-                            $douTarifaPension = ($arEmpleado->getPension() + 4)/100;
+                            $douTarifaPension = $arEmpleado->getPension()/100;
                             $arPila->setTarifaAportesPensiones($this->RellenarNr($douTarifaPension, 0, 7, "D"));
                             $douCotizacionPension = $this->redondearAporte($floSalario, $floIbcPension, $douTarifaPension, $intDiasLicenciaNoRemunerada);
                             $arPila->setCotizacionObligatoria($douCotizacionPension);

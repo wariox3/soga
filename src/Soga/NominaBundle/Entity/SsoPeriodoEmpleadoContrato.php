@@ -88,6 +88,11 @@ class SsoPeriodoEmpleadoContrato {
     private $retiro;        
     
     /**
+     * @ORM\Column(name="codigo_caja_fk", type="integer")
+     */    
+    private $codigoCajaFk;    
+    
+    /**
      * Get codigoPeriodoEmpleadoContratoPk
      *
      * @return integer 
@@ -417,5 +422,28 @@ class SsoPeriodoEmpleadoContrato {
     public function getRetiro()
     {
         return $this->retiro;
+    }
+
+    /**
+     * Set codigoCajaFk
+     *
+     * @param integer $codigoCajaFk
+     * @return SsoPeriodoEmpleadoContrato
+     */
+    public function setCodigoCajaFk($codigoCajaFk)
+    {
+        $this->codigoCajaFk = $codigoCajaFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoCajaFk
+     *
+     * @return integer 
+     */
+    public function getCodigoCajaFk()
+    {
+        return $this->codigoCajaFk;
     }
 }

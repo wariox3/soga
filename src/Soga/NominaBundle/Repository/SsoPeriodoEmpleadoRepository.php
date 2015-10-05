@@ -39,7 +39,7 @@ class SsoPeriodoEmpleadoRepository extends EntityRepository
             $arPeriodoEmpleado->setMes($arPeriodo->getMes());
             $arPeriodoEmpleado->setCodigoZonaFk($arZona->getCodzona());
             $arPeriodoEmpleado->setNombreZona($arZona->getZona());
-            $arPeriodoEmpleado->setNumeroContratos($arContrato['1']);
+            $arPeriodoEmpleado->setNumeroContratos($arContrato['1']);            
             $em->persist($arPeriodoEmpleado);
         }
         $em->flush();
@@ -225,6 +225,7 @@ class SsoPeriodoEmpleadoRepository extends EntityRepository
                 }
                 $arPeriodoEmpleadoContrato->setIngreso($strNovedadIngreso);
                 $arPeriodoEmpleadoContrato->setRetiro($strNovedadRetiro);
+                $arPeriodoEmpleadoContrato->setCodigoCajaFk($arContrato->getCodigoCajaPk());
                 $em->persist($arPeriodoEmpleadoContrato);                    
             }                            
         }        

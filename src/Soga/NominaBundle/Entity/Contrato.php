@@ -52,6 +52,11 @@ class Contrato
     private $salarioFechaDesde;    
 
     /**
+     * @ORM\Column(name="codigo_caja_pk", type="integer")
+     */
+    private $codigoCajaPk;     
+    
+    /**
      * Set contrato
      *
      * @param string $contrato
@@ -233,5 +238,28 @@ class Contrato
     public function getSalarioFechaDesde()
     {
         return $this->salarioFechaDesde;
+    }
+
+    /**
+     * Set codigoCajaPk
+     *
+     * @param integer $codigoCajaPk
+     * @return Contrato
+     */
+    public function setCodigoCajaPk($codigoCajaPk)
+    {
+        $this->codigoCajaPk = $codigoCajaPk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoCajaPk
+     *
+     * @return integer 
+     */
+    public function getCodigoCajaPk()
+    {
+        return $this->codigoCajaPk;
     }
 }

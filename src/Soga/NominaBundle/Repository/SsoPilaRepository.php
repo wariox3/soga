@@ -53,8 +53,6 @@ class SsoPilaRepository extends EntityRepository
             //if($arEmpleado->getCedemple() == '1032434232') {
                 $arPeriodosEmpleadoContratos = new \Soga\NominaBundle\Entity\SsoPeriodoEmpleadoContrato();
                 $arPeriodosEmpleadoContratos = $em->getRepository('SogaNominaBundle:SsoPeriodoEmpleadoContrato')->findBy(array('codigoPeriodoDetalleFk' => $codigoPeriodoDetalle, 'numeroIdentificacion' => $arPeriodoEmpleado->getNumeroIdentificacion()));
-                //$arContratos = new \Soga\NominaBundle\Entity\Contrato();
-                //$arContratos = $em->getRepository('SogaNominaBundle:Contrato')->devDqlContratosPeriodoEmpleado($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $arPeriodoEmpleado->getCodigoEmpleadoFk());                
                 foreach ($arPeriodosEmpleadoContratos as $arPeriodoEmpleadoContrato) {
                     $i++;
                     $dateFechaDesde =  "";
@@ -143,7 +141,7 @@ class SsoPilaRepository extends EntityRepository
                     if($arTipoCotizante->getCodigoPila() == '19') {
                         $intDiasLicenciaNoRemunerada = 0;
                     }
-                    
+                                       
                     $floIbcTotal = $floSalario + $floSuplementario;
                     
                     $intDiasCotizarPension = $intDiasCotizar - $intDiasLicenciaNoRemunerada;
@@ -154,6 +152,7 @@ class SsoPilaRepository extends EntityRepository
                         $intDiasCotizarPension = 0;
                         $intDiasCotizarCaja = 0;
                     }
+                    
                     $floIbcBrutoSeguridadSocialPension = (($intDiasCotizarPension-$intDiasIncapacidades) * ($floSalario / 30)) + $floIbcIncapacidades + $floSuplementario;
                     $floIbcBrutoSeguridadSocialSalud = (($intDiasCotizarSalud-$intDiasIncapacidades) * ($floSalario / 30)) + $floIbcIncapacidades + $floSuplementario;                    
                     $floIbcBrutoRiesgos = ($intDiasCotizarRiesgos * ($floSalario / 30)) + $floSuplementario;
@@ -173,7 +172,7 @@ class SsoPilaRepository extends EntityRepository
                     $arPension = new \Soga\NominaBundle\Entity\Pension();
                     $arPension = $em->getRepository('SogaNominaBundle:Pension')->find($arEmpleado->getCodpension());
                     $arCaja = new \Soga\NominaBundle\Entity\Caja();
-                    $arCaja = $em->getRepository('SogaNominaBundle:Caja')->find($arEmpleado->getCodigoCajaPk());
+                    $arCaja = $em->getRepository('SogaNominaBundle:Caja')->find($arPeriodoEmpleadoContrato->getCodigoCajaFk());
                     
                     $strVariacionTransitoriaSalario = ' ';
                     if($floSuplementario > 0) {
@@ -290,7 +289,7 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setValorNoRetenidoAportesVoluntarios('000000000');
                     $douTarifaSalud = $em->getRepository('SogaNominaBundle:Centro')->devTarifaSalud($arEmpleado->getCedemple());
                     $douTarifaSalud = $douTarifaSalud /100;
-                    if($arTipoCotizante->getCodigoPila() == '19') {
+                    if($arTipoCotizante->getCodigoPila() == '19' || $arTipoCotizante->getCodigoPila() == '12') {
                         $douTarifaSalud = 12.5 /100;
                     }
                     $arPila->setTarifaAportesSalud($this->RellenarNr($douTarifaSalud, "0", 7, "D"));                    
@@ -301,6 +300,8 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setValorIncapacidadEnfermedadGeneral('000000000');
                     $arPila->setNumeroAutorizacionLicenciaMaternidadPaternidad('               ');
                     $arPila->setValorLicenciaMaternidadPaternidad('000000000');
+                    //Verificar normatividad y aplicar si se le paga riesgos
+                    //a los parendiz en etapa LECTIVA
                     $douTarifaRiesgos = $arEmpleado->getNivel()/100;
                     $arPila->setTarifaAportesRiesgosProfesionales($this->RellenarNr($douTarifaRiesgos, 0, 9, "D"));
                     $arPila->setCentroTrabajoCodigoCt($this->RellenarNr($arEmpleado->getCodzona(), "0", 9, "I"));

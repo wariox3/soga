@@ -167,8 +167,6 @@ class SsoPilaRepository extends EntityRepository
                         $floIbcRiesgos = 0;
                     }
                     
-                    $arEps = new \Soga\NominaBundle\Entity\Eps();
-                    $arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arEmpleado->getCodeps());
                     $arPension = new \Soga\NominaBundle\Entity\Pension();
                     $arPension = $em->getRepository('SogaNominaBundle:Pension')->find($arEmpleado->getCodpension());
                     $arCaja = new \Soga\NominaBundle\Entity\Caja();
@@ -206,6 +204,40 @@ class SsoPilaRepository extends EntityRepository
                         $arPila->setColombianoResidenteExterior(' ');
                     }
 
+                    
+                    $arEps = new \Soga\NominaBundle\Entity\Eps();
+                    $arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arEmpleado->getCodeps());                        
+                    $arPila->setCodigoEntidadSaludPertenece($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));
+                    $arPila->setCodigoEntidadSaludTraslada('      ');                        
+                    $arPila->setTrasladoDesdeOtraEps(' ');
+                    $arPila->setTrasladoAOtraEps(' ');                    
+                    $arTrasladosEps = new \Soga\NominaBundle\Entity\TrasladoEps();
+                    $arTrasladosEps = $em->getRepository('SogaNominaBundle:TrasladoEps')->trasladoPeriodoEmpleado($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoEmpleadoContrato->getNumeroIdentificacion());
+                    if(count($arTrasladosEps) > 0) {                        
+                        $arPila->setTrasladoAOtraEps('X');                        
+                        $arEps = new \Soga\NominaBundle\Entity\Eps();
+                        $arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arTrasladosEps[0]->getCodigoEpsActualFk());                        
+                        $arPila->setCodigoEntidadSaludPertenece($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));
+                        //$arEps = new \Soga\NominaBundle\Entity\Eps();                        
+                        //$arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arTrasladosEps[0]->getCodigoEpsNuevaFk());                        
+                        $arPila->setCodigoEntidadSaludTraslada($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));
+                    } 
+                                           
+                    $arTrasladosEps = new \Soga\NominaBundle\Entity\TrasladoEps();
+                    $arTrasladosEps = $em->getRepository('SogaNominaBundle:TrasladoEps')->aplicacionTrasladoPeriodoEmpleado($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoEmpleadoContrato->getNumeroIdentificacion());
+                    if(count($arTrasladosEps) > 0) {
+                        $arPila->setTrasladoDesdeOtraEps('X');
+                        $arPila->setTrasladoAOtraEps(' ');                        
+                        $arEps = new \Soga\NominaBundle\Entity\Eps();
+                        $arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arTrasladosEps[0]->getCodigoEpsNuevaFk());                        
+                        $arPila->setCodigoEntidadSaludPertenece($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));
+                        $arEps = new \Soga\NominaBundle\Entity\Eps();                        
+                        $arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arTrasladosEps[0]->getCodigoEpsActualFk());                        
+                        $arPila->setCodigoEntidadSaludTraslada($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));
+                    }
+                    
+                    
+                    
                     $strCodigoDepartamento = substr($arEmpleado->getCodmuni(), 0, 2);
                     $strCodigoCiudad = substr($arEmpleado->getCodmuni(), 2, 3);
                     $arPila->setCodigoMunicipio($strCodigoCiudad);
@@ -216,8 +248,7 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setSegundoApellido($this->RellenarNr($arEmpleado->getApemple1(), " ", 30, "D"));
                     $arPila->setIngreso($strNovedadIngreso);
                     $arPila->setRetiro($strNovedadRetiro);
-                    $arPila->setTrasladoDesdeOtraEps(' ');
-                    $arPila->setTrasladoAOtraEps(' ');
+
                     $arPila->setTrasladoDesdeOtraPension(' ');
                     $arPila->setTrasladoAOtraPension(' ');
                     $arPila->setVariacionPermanenteSalario($strVariacionPermanenteSalario);
@@ -238,8 +269,6 @@ class SsoPilaRepository extends EntityRepository
                         $arPila->setCodigoEntidadPensionPertenece('      ');
                     }
                     $arPila->setCodigoEntidadPensionTraslada('      ');
-                    $arPila->setCodigoEntidadSaludPertenece($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));
-                    $arPila->setCodigoEntidadSaludTraslada('      ');
                     $arPila->setCodigoEntidadCajaPertenece($this->RellenarNr($arCaja->getCodigoInterfacePila(), " ", 6, "D"));
                     $arPila->setDiasCotizadosPension($intDiasCotizarPension);
                     if($arEmpleado->getCodpension() == 7) {

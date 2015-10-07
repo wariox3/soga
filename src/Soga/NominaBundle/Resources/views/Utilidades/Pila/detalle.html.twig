@@ -18,6 +18,8 @@
                 <th>LMA</th>
                 <th>VAC</th>
                 <th>IRP</th>
+                <th>TDE</th>
+                <th>TAE</th>
                 <th style="text-align: right">D.P</th>
                 <th style="text-align: right">D.S</th>
                 <th style="text-align: right">D.R</th>
@@ -39,6 +41,8 @@
                 <th style="text-align: right">P.S</th>
                 <th style="text-align: right">P.R</th>
                 <th style="text-align: right">P.C</th>
+                <th>EPS.P</th>
+                <th>EPS.T</th>
             </tr>
             {% set floTotal = 0 %}
             {% for arPila in arPila %}
@@ -54,6 +58,8 @@
                     <td>{% if arPila.licenciaMaternidad == 'X' %}{{ arPila.licenciaMaternidad }}{{ arPila.diasLicenciaMaternidad }}{% endif %}</td>                
                     <td>{% if arPila.vacaciones == 'X' %}{{ arPila.vacaciones }}{% endif %}</td>                                
                     <td>{{ arPila.incapacidadAccidenteTrabajoEnfermedadProfesional }}</td>
+                    <td>{% if arPila.trasladoDesdeOtraEps == 'X' %}{{ arPila.trasladoDesdeOtraEps }}{% endif %}</td>                
+                    <td>{% if arPila.trasladoAOtraEps == 'X' %}{{ arPila.trasladoAOtraEps }}{% endif %}</td>                
                     <td style="text-align: right">{{ arPila.diasCotizadosPension }}</td>
                     <td style="text-align: right">{{ arPila.diasCotizadosSalud }}</td>
                     <td style="text-align: right">{{ arPila.diasCotizadosRiesgosProfesionales }}</td>
@@ -75,6 +81,8 @@
                     <td>{{ arPila.tarifaAportesSalud }}</td>
                     <td>{{ arPila.tarifaAportesRiesgosProfesionales }}</td>
                     <td>{{ arPila.tarifaAportesCCF }}</td>                                        
+                    <td>{{ arPila.codigoEntidadSaludPertenece }}</td>
+                    <td>{{ arPila.codigoEntidadSaludTraslada }}</td>
                 </tr>
             {% endfor %}
             <tr>

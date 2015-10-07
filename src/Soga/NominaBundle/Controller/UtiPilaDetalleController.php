@@ -242,7 +242,11 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('AF1', 'P.C')
                             ->setCellValue('AG1', 'TIPO')
                             ->setCellValue('AH1', 'SUBTIPO')
-                            ->setCellValue('AI1', 'SAL.M.ANT');
+                            ->setCellValue('AI1', 'SAL.M.ANT')
+                            ->setCellValue('AJ1', 'TDE')
+                            ->setCellValue('AK1', 'TAE')
+                            ->setCellValue('AL1', 'EPS.P')
+                            ->setCellValue('AM1', 'EPS.T');
 
                 $i = 2;
                 $arPilaRegistros = new \Soga\NominaBundle\Entity\SsoPila();
@@ -289,7 +293,11 @@ class UtiPilaDetalleController extends Controller {
                             ->setCellValue('AF' . $i, $arPila->getTarifaAportesCCF())
                             ->setCellValue('AG' . $i, $arPila->getTipo())
                             ->setCellValue('AH' . $i, $arPila->getSubtipo())
-                            ->setCellValue('AI' . $i, $arPila->getSalarioMesAnterior());
+                            ->setCellValue('AI' . $i, $arPila->getSalarioMesAnterior())
+                            ->setCellValue('AJ' . $i, $arPila->getTrasladoDesdeOtraEps())
+                            ->setCellValue('AK' . $i, $arPila->getTrasladoAOtraEps())
+                            ->setCellValue('AL' . $i, $arPila->getCodigoEntidadSaludPertenece())
+                            ->setCellValue('AM' . $i, $arPila->getCodigoEntidadSaludTraslada());
                     $i++;
                 }                
                 $objPHPExcel->getActiveSheet()->setTitle('pagopila');

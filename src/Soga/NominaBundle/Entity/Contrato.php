@@ -57,6 +57,16 @@ class Contrato
     private $codigoCajaPk;     
     
     /**
+     * @ORM\Column(name="codigo_tipo_cotizante_fk", type="integer")
+     */    
+    private $codigoTipoCotizanteFk;         
+
+    /**
+     * @ORM\Column(name="codigo_subtipo_cotizante_fk", type="integer")
+     */    
+    private $codigoSubtipoCotizanteFk;    
+    
+    /**
      * Set contrato
      *
      * @param string $contrato
@@ -261,5 +271,51 @@ class Contrato
     public function getCodigoCajaPk()
     {
         return $this->codigoCajaPk;
+    }
+
+    /**
+     * Set codigoTipoCotizanteFk
+     *
+     * @param integer $codigoTipoCotizanteFk
+     * @return Contrato
+     */
+    public function setCodigoTipoCotizanteFk($codigoTipoCotizanteFk)
+    {
+        $this->codigoTipoCotizanteFk = $codigoTipoCotizanteFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoTipoCotizanteFk
+     *
+     * @return integer 
+     */
+    public function getCodigoTipoCotizanteFk()
+    {
+        return $this->codigoTipoCotizanteFk;
+    }
+
+    /**
+     * Set codigoSubtipoCotizanteFk
+     *
+     * @param integer $codigoSubtipoCotizanteFk
+     * @return Contrato
+     */
+    public function setCodigoSubtipoCotizanteFk($codigoSubtipoCotizanteFk)
+    {
+        $this->codigoSubtipoCotizanteFk = $codigoSubtipoCotizanteFk;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoSubtipoCotizanteFk
+     *
+     * @return integer 
+     */
+    public function getCodigoSubtipoCotizanteFk()
+    {
+        return $this->codigoSubtipoCotizanteFk;
     }
 }

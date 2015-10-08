@@ -114,17 +114,7 @@ class Empleado
     /**
      * @ORM\Column(name="pension", type="float")
      */    
-    private $pension;     
-    
-    /**
-     * @ORM\Column(name="codigo_tipo_cotizante_fk", type="integer")
-     */    
-    private $codigoTipoCotizanteFk;         
-
-    /**
-     * @ORM\Column(name="codigo_subtipo_cotizante_fk", type="integer")
-     */    
-    private $codigoSubtipoCotizanteFk;    
+    private $pension;             
     
     /**
      * @ORM\Column(name="extranjero_no_obligado_cotizar_pensiones", type="boolean")
@@ -146,6 +136,7 @@ class Empleado
      */    
     private $exportadoContabilidad;     
        
+
 
     /**
      * Set codemple
@@ -628,52 +619,6 @@ class Empleado
     public function getPension()
     {
         return $this->pension;
-    }
-
-    /**
-     * Set codigoTipoCotizanteFk
-     *
-     * @param integer $codigoTipoCotizanteFk
-     * @return Empleado
-     */
-    public function setCodigoTipoCotizanteFk($codigoTipoCotizanteFk)
-    {
-        $this->codigoTipoCotizanteFk = $codigoTipoCotizanteFk;
-
-        return $this;
-    }
-
-    /**
-     * Get codigoTipoCotizanteFk
-     *
-     * @return integer 
-     */
-    public function getCodigoTipoCotizanteFk()
-    {
-        return $this->codigoTipoCotizanteFk;
-    }
-
-    /**
-     * Set codigoSubtipoCotizanteFk
-     *
-     * @param integer $codigoSubtipoCotizanteFk
-     * @return Empleado
-     */
-    public function setCodigoSubtipoCotizanteFk($codigoSubtipoCotizanteFk)
-    {
-        $this->codigoSubtipoCotizanteFk = $codigoSubtipoCotizanteFk;
-
-        return $this;
-    }
-
-    /**
-     * Get codigoSubtipoCotizanteFk
-     *
-     * @return integer 
-     */
-    public function getCodigoSubtipoCotizanteFk()
-    {
-        return $this->codigoSubtipoCotizanteFk;
     }
 
     /**

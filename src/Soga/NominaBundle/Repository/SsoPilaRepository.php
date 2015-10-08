@@ -72,10 +72,7 @@ class SsoPilaRepository extends EntityRepository
 
                     $floSalario = $arPeriodoEmpleadoContrato->getVrSalario();
                     $intDiasCotizar = $arPeriodoEmpleadoContrato->getDias();
-                    $floSuplementario = $arPeriodoEmpleadoContrato->getVrTiempoSuplementario();
-                 
-                    $arTipoCotizante = $em->getRepository('SogaNominaBundle:SsoTipoCotizante')->find($arEmpleado->getCodigoTipoCotizanteFk());
-                    $arSubtipoCotizante = $em->getRepository('SogaNominaBundle:SsoSubtipoCotizante')->find($arEmpleado->getCodigoSubtipoCotizanteFk());                                                                                                                                            
+                    $floSuplementario = $arPeriodoEmpleadoContrato->getVrTiempoSuplementario();                 
                     
                     $intDiasIncapacidadGeneral = $arPeriodoEmpleadoContrato->getDiasIncapacidadGeneral();
                     $intDiasIncapacidadLaboral = $arPeriodoEmpleadoContrato->getDiasIncapacidadLaboral();
@@ -138,7 +135,7 @@ class SsoPilaRepository extends EntityRepository
                         $intDiasLicenciaNoRemunerada = 0;
                     }
                     //A los practicantes no se les marca sln
-                    if($arTipoCotizante->getCodigoPila() == '19') {
+                    if($arPeriodoEmpleadoContrato->getTipo() == '19') {
                         $intDiasLicenciaNoRemunerada = 0;
                     }
                                        
@@ -148,7 +145,7 @@ class SsoPilaRepository extends EntityRepository
                     $intDiasCotizarSalud = $intDiasCotizar - $intDiasLicenciaNoRemunerada;
                     $intDiasCotizarRiesgos = $intDiasCotizar - $intDiasIncapacidades - $intDiasLicenciaNoRemunerada - $intDiasLicenciaMaternidad - $intDiasVacaciones;
                     $intDiasCotizarCaja = $intDiasCotizar - $intDiasIncapacidades - $intDiasLicenciaNoRemunerada - $intDiasLicenciaMaternidad;
-                    if($arTipoCotizante->getCodigoPila() == '19') {
+                    if($arPeriodoEmpleadoContrato->getTipo() == '19') {
                         $intDiasCotizarPension = 0;
                         $intDiasCotizarCaja = 0;
                     }
@@ -171,7 +168,9 @@ class SsoPilaRepository extends EntityRepository
                     $arPension = $em->getRepository('SogaNominaBundle:Pension')->find($arEmpleado->getCodpension());
                     $arCaja = new \Soga\NominaBundle\Entity\Caja();
                     $arCaja = $em->getRepository('SogaNominaBundle:Caja')->find($arPeriodoEmpleadoContrato->getCodigoCajaFk());
-                    
+                    if(count($arCaja) <= 0) {
+                        echo "El empleado " . $arPeriodoEmpleadoContrato->getNumeroIdentificacion() . " no tiene entidad caja";
+                    }
                     $strVariacionTransitoriaSalario = ' ';
                     if($floSuplementario > 0) {
                         $strVariacionTransitoriaSalario = 'X';
@@ -188,8 +187,8 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setTipoRegistro('02');
                     $arPila->setSecuencia($this->RellenarNr($i, "0", 5, "I"));
                     $arPila->setTipoDocumento($arEmpleado->getTipod());
-                    $arPila->setTipo($this->RellenarNr($arTipoCotizante->getCodigoPila(), "0", 2, "I"));
-                    $arPila->setSubtipo($this->RellenarNr($arSubtipoCotizante->getCodigoPila(), "0", 2, "I"));
+                    $arPila->setTipo($arPeriodoEmpleadoContrato->getTipo());
+                    $arPila->setSubtipo($arPeriodoEmpleadoContrato->getSubtipo());
                     $arPila->setAnio($arPeriodoDetalle->getAnio());
                     $arPila->setMes($arPeriodoDetalle->getMes());
                     $arPila->setSalarioMesAnterior($floSalarioMesAnterior);
@@ -318,7 +317,7 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setValorNoRetenidoAportesVoluntarios('000000000');
                     $douTarifaSalud = $em->getRepository('SogaNominaBundle:Centro')->devTarifaSalud($arEmpleado->getCedemple());
                     $douTarifaSalud = $douTarifaSalud /100;
-                    if($arTipoCotizante->getCodigoPila() == '19' || $arTipoCotizante->getCodigoPila() == '12') {
+                    if($arPeriodoEmpleadoContrato->getTipo() == '19' || $arPeriodoEmpleadoContrato->getTipo() == '12') {
                         $douTarifaSalud = 12.5 /100;
                     }
                     $arPila->setTarifaAportesSalud($this->RellenarNr($douTarifaSalud, "0", 7, "D"));                    
@@ -356,7 +355,7 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setClaseRiesgoAfiliado(' ');
                     $floValorTotalCotizacion = $douCotizacionPension + $douCotizacionFSPSolidaridad + $douCotizacionFSPSubsistencia + $floAporteVoluntarioFondoPensionesObligatorias + $floCotizacionVoluntariaFondoPensionesObligatorias + $douCotizacionSalud + $douCotizacionRiesgos + $douCotizacionCaja;
                     $arPila->setValorTotalCotizacion($floValorTotalCotizacion);
-                    if($intDiasCotizarPension > 0 || $arTipoCotizante->getCodigoPila() == '19') {
+                    if($intDiasCotizarPension > 0 || $arPeriodoEmpleadoContrato->getTipo() == '19') {
                         $em->persist($arPila);
                     }
                                                             
@@ -382,8 +381,8 @@ class SsoPilaRepository extends EntityRepository
                         $arPila->setTipoRegistro('02');
                         $arPila->setSecuencia($this->RellenarNr($i, "0", 5, "I"));
                         $arPila->setTipoDocumento($arEmpleado->getTipod());
-                        $arPila->setTipo($this->RellenarNr($arTipoCotizante->getCodigoPila(), "0", 2, "I"));
-                        $arPila->setSubtipo($this->RellenarNr($arSubtipoCotizante->getCodigoPila(), "0", 2, "I"));
+                        $arPila->setTipo($arPeriodoEmpleadoContrato->getTipo());
+                        $arPila->setSubtipo($arPeriodoEmpleadoContrato->getSubtipo());
                         $arPila->setAnio($arPeriodoDetalle->getAnio());
                         $arPila->setMes($arPeriodoDetalle->getMes());                        
                         if($arEmpleado->getExtranjeroNoObligadoCotizarPensiones() == 1) {

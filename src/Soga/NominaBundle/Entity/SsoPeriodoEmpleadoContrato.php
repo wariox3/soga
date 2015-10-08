@@ -93,6 +93,16 @@ class SsoPeriodoEmpleadoContrato {
     private $codigoCajaFk;    
     
     /**
+     * @ORM\Column(name="tipo", type="string", length=2)
+     */
+    private $tipo;
+
+    /**
+     * @ORM\Column(name="subtipo", type="string", length=2)
+     */
+    private $subtipo;    
+    
+    /**
      * Get codigoPeriodoEmpleadoContratoPk
      *
      * @return integer 
@@ -445,5 +455,51 @@ class SsoPeriodoEmpleadoContrato {
     public function getCodigoCajaFk()
     {
         return $this->codigoCajaFk;
+    }
+
+    /**
+     * Set tipo
+     *
+     * @param string $tipo
+     * @return SsoPeriodoEmpleadoContrato
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+
+        return $this;
+    }
+
+    /**
+     * Get tipo
+     *
+     * @return string 
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * Set subtipo
+     *
+     * @param string $subtipo
+     * @return SsoPeriodoEmpleadoContrato
+     */
+    public function setSubtipo($subtipo)
+    {
+        $this->subtipo = $subtipo;
+
+        return $this;
+    }
+
+    /**
+     * Get subtipo
+     *
+     * @return string 
+     */
+    public function getSubtipo()
+    {
+        return $this->subtipo;
     }
 }

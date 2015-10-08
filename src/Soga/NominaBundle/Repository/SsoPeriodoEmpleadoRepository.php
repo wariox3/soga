@@ -226,6 +226,10 @@ class SsoPeriodoEmpleadoRepository extends EntityRepository
                 $arPeriodoEmpleadoContrato->setIngreso($strNovedadIngreso);
                 $arPeriodoEmpleadoContrato->setRetiro($strNovedadRetiro);
                 $arPeriodoEmpleadoContrato->setCodigoCajaFk($arContrato->getCodigoCajaPk());
+                $arTipoCotizante = $em->getRepository('SogaNominaBundle:SsoTipoCotizante')->find($arContrato->getCodigoTipoCotizanteFk());
+                $arSubtipoCotizante = $em->getRepository('SogaNominaBundle:SsoSubtipoCotizante')->find($arContrato->getCodigoSubtipoCotizanteFk());                                                                                                                                                            
+                $arPeriodoEmpleadoContrato->setTipo($arTipoCotizante->getCodigoPila());
+                $arPeriodoEmpleadoContrato->setSubtipo($arSubtipoCotizante->getCodigoPila());
                 $em->persist($arPeriodoEmpleadoContrato);                    
             }                            
         }        

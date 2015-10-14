@@ -84,7 +84,7 @@ class SsoPilaRepository extends EntityRepository
                     $strIncapacidadGeneral = " ";
                     if($intDiasIncapacidadGeneral > 0) {
                         $strIncapacidadGeneral = "X"; 
-                        $floSalarioMesActual = $floSalario + $floSuplementario;   
+                        $floSalarioMesActual = $floSalario;   
                         $floSalarioMesAnterior = $this->ibcMesAnterior($arEmpleado->getCedemple(), $arPeriodoDetalle->getMes(), $arPeriodoDetalle->getAnio());
                         $floIbcIncapacidadGeneral = $this->liquidarIncapacidadGeneral($floSalarioMesActual, $floSalarioMesAnterior, $intDiasIncapacidadGeneral);                        
                         $floIbcIncapacidades += $floIbcIncapacidadGeneral;
@@ -94,7 +94,7 @@ class SsoPilaRepository extends EntityRepository
                     $strIncapacidadLaboral = " ";
                     if($intDiasIncapacidadLaboral > 0) {
                         $strIncapacidadLaboral = "X";  
-                        $floSalarioMesActual = $floSalario + $floSuplementario;   
+                        $floSalarioMesActual = $floSalario;   
                         $floSalarioMesAnterior = $this->ibcMesAnterior($arEmpleado->getCedemple(), $arPeriodoDetalle->getMes(), $arPeriodoDetalle->getAnio());
                         $floIbcIncapacidadLaboral = $this->liquidarIncapacidadLaboral($floSalarioMesActual, $floSalarioMesAnterior, $intDiasIncapacidadLaboral);                        
                         $floIbcIncapacidades += $floIbcIncapacidadLaboral;                        
@@ -105,7 +105,7 @@ class SsoPilaRepository extends EntityRepository
                     $floIbcLicenciaMaternidad = 0;
                     if($intDiasLicenciaMaternidad > 0) {
                         $strLicenciaMaternidad = "X"; 
-                        $floSalarioMesActual = $floSalario + $floSuplementario;
+                        $floSalarioMesActual = $floSalario;
                         $floSalarioMesAnterior = $this->ibcMesAnterior($arEmpleado->getCedemple(), $arPeriodoDetalle->getMes(), $arPeriodoDetalle->getAnio());
                         $floIbcLicenciaMaternidad = $this->liquidarIncapacidadGeneral($floSalarioMesActual, $floSalarioMesAnterior, $intDiasLicenciaMaternidad);                        
                     }                                                            
@@ -264,6 +264,9 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setVariacionCentrosTrabajo(' ');
                     $arPila->setIncapacidadAccidenteTrabajoEnfermedadProfesional($intDiasIncapacidadLaboral);
                     $arPila->setCodigoEntidadPensionPertenece($this->RellenarNr($arPension->getCodigoInterfacePila(), " ", 6, "D"));
+                    if($arPeriodoEmpleadoContrato->getTipo() == '19' || $arPeriodoEmpleadoContrato->getTipo() == '12') {
+                        $arPila->setCodigoEntidadPensionPertenece('      ');
+                    }
                     if($arEmpleado->getCodpension() == 7) {
                         $arPila->setCodigoEntidadPensionPertenece('      ');
                     }
@@ -300,7 +303,7 @@ class SsoPilaRepository extends EntityRepository
                         $arPila->setCotizacionObligatoria($douCotizacionPension);
                         $douCotizacionFSPSolidaridad = 0;
                         $douCotizacionFSPSubsistencia = 0;
-                        if($floSalario >= (644350 * 4)) {
+                        if(($floSalario + $floSuplementario) >= (644350 * 4)) {
                             $douCotizacionFSPSolidaridad = round($floIbcPension * 0.005, -2, PHP_ROUND_HALF_DOWN);
                             $douCotizacionFSPSubsistencia = round($floIbcPension * 0.005, -2, PHP_ROUND_HALF_DOWN);
                         }
@@ -433,6 +436,9 @@ class SsoPilaRepository extends EntityRepository
                         $arPila->setVariacionCentrosTrabajo(' ');
                         $arPila->setIncapacidadAccidenteTrabajoEnfermedadProfesional(0);
                         $arPila->setCodigoEntidadPensionPertenece($this->RellenarNr($arPension->getCodigoInterfacePila(), " ", 6, "D"));
+                        if($arPeriodoEmpleadoContrato->getTipo() == '19' || $arPeriodoEmpleadoContrato->getTipo() == '12') {
+                            $arPila->setCodigoEntidadPensionPertenece('      ');
+                        }                        
                         if($arEmpleado->getCodpension() == 7) {
                             $arPila->setCodigoEntidadPensionPertenece('      ');
                         }
@@ -738,7 +744,7 @@ class SsoPilaRepository extends EntityRepository
         $arSsoPila = new \Soga\NominaBundle\Entity\SsoPila();
         $arSsoPila = $em->getRepository('SogaNominaBundle:SsoPila')->findOneBy(array('numeroIdentificacion' => $strIdentificacion, 'anio' => $intAnio, 'mes' => $intMes - 1));
         if(count($arSsoPila) > 0) {
-            $floIbcMesAnterior = $arSsoPila->getSalarioBasico() + $arSsoPila->getTiempoSuplementario();
+            $floIbcMesAnterior = $arSsoPila->getSalarioBasico();
         }
         return $floIbcMesAnterior;        
     }

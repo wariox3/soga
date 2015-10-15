@@ -50,7 +50,7 @@ class UtiGenerarPagoController extends Controller {
                 . "LEFT JOIN periodo ON zona.codzona = periodo.codzona "
                 . "WHERE periodo.desde='" . $frmExportacion->get('TxtFechaDesde')->getData() . "' "
                 . "AND periodo.hasta='" . $frmExportacion->get('TxtFechaHasta')->getData() . "' "
-                . "AND periodo.pagado = ''";
+                . "AND periodo.pagado = '' ORDER BY zona.zona";
         $query = $em->createNativeQuery($strSql, $ar);
         $arZona = $query->getResult();
         $arZona = $paginator->paginate($arZona, $this->getRequest()->query->get('page', 1), 50);

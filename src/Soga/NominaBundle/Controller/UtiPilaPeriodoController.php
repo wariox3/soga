@@ -31,6 +31,7 @@ class UtiPilaPeriodoController extends Controller {
                     $arPeriodoDetalle->setFechaDesde($arPeriodo->getFechaDesde());
                     $arPeriodoDetalle->setFechaHasta($arPeriodo->getFechaHasta());
                     $arPeriodoDetalle->setSucursalRel($arSucursal);
+                    $arPeriodoDetalle->setFechaPago($arPeriodo->getFechaDesde());
                     $em->persist($arPeriodoDetalle);
                 }
                 $em->flush();

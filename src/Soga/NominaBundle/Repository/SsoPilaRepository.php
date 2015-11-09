@@ -217,8 +217,10 @@ class SsoPilaRepository extends EntityRepository
                         $arEps = new \Soga\NominaBundle\Entity\Eps();
                         $arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arTrasladosEps[0]->getCodigoEpsActualFk());                        
                         $arPila->setCodigoEntidadSaludPertenece($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));
-                        //$arEps = new \Soga\NominaBundle\Entity\Eps();                        
-                        //$arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arTrasladosEps[0]->getCodigoEpsNuevaFk());                        
+                        //Se activaron estas dos lineas por error en fechas verificar
+                        $arEps = new \Soga\NominaBundle\Entity\Eps();                        
+                        $arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arTrasladosEps[0]->getCodigoEpsNuevaFk());                        
+                        
                         $arPila->setCodigoEntidadSaludTraslada($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));
                     } 
                                            
@@ -227,12 +229,13 @@ class SsoPilaRepository extends EntityRepository
                     if(count($arTrasladosEps) > 0) {
                         $arPila->setTrasladoDesdeOtraEps('X');
                         $arPila->setTrasladoAOtraEps(' ');                        
+                        //$arEps = new \Soga\NominaBundle\Entity\Eps();                        
+                        //$arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arTrasladosEps[0]->getCodigoEpsActualFk());                        
+                        //$arPila->setCodigoEntidadSaludTraslada($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));
+                        
                         $arEps = new \Soga\NominaBundle\Entity\Eps();
                         $arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arTrasladosEps[0]->getCodigoEpsNuevaFk());                        
-                        $arPila->setCodigoEntidadSaludPertenece($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));
-                        $arEps = new \Soga\NominaBundle\Entity\Eps();                        
-                        $arEps = $em->getRepository('SogaNominaBundle:Eps')->find($arTrasladosEps[0]->getCodigoEpsActualFk());                        
-                        $arPila->setCodigoEntidadSaludTraslada($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));
+                        $arPila->setCodigoEntidadSaludPertenece($this->RellenarNr($arEps->getCodigoInterfacePila(), " ", 6, "D"));                        
                     }
                     
                     

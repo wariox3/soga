@@ -347,6 +347,7 @@ class UtiPilaDetalleController extends Controller {
             $arPeriodoDetalle->setCodigoPeriodoFk($codigoPeriodo);
             $arPeriodoDetalle->setFechaDesde($arPeriodo->getFechaDesde());
             $arPeriodoDetalle->setFechaHasta($arPeriodo->getFechaHasta());
+            $arPeriodoDetalle->setFechaPago($arPeriodo->getFechaDesde());
             $arPeriodoDetalle->setAnio($arPeriodo->getAnio());
             $arPeriodoDetalle->setMes($arPeriodo->getMes());
             $arPeriodoDetalle->setMesSalud($arPeriodo->getMesSalud());

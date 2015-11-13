@@ -100,8 +100,7 @@ class UtiGenerarPagoController extends Controller {
                                           empleado.cuenta, nomina.neto as nivel
                                     FROM empleado,banco,periodo,zona,nomina
                                     WHERE
-                                    zona.codzona=periodo.codzona AND
-                                    zona.codzona=empleado.codzona AND
+                                    zona.codzona=periodo.codzona AND                                    
                                     empleado.codbanco=banco.codbanco AND
                                     banco.codbanco='07' AND
                                     nomina.neto > 0 AND
@@ -140,8 +139,7 @@ class UtiGenerarPagoController extends Controller {
                                           empleado.cuenta, nomina.neto as nivel
                                     FROM empleado,banco,periodo,zona,nomina
                                     WHERE
-                                    zona.codzona=periodo.codzona AND
-                                    zona.codzona=empleado.codzona AND
+                                    zona.codzona=periodo.codzona AND                                    
                                     empleado.codbanco=banco.codbanco AND
                                     banco.codbanco='07' AND
                                     nomina.neto > 0 AND
@@ -207,8 +205,7 @@ class UtiGenerarPagoController extends Controller {
                         $strSql = "SELECT COUNT(codemple) as codemple, SUM(nomina.neto) as nivel
                                     FROM empleado,banco,periodo,zona,nomina
                                     WHERE
-                                    zona.codzona=periodo.codzona AND
-                                    zona.codzona=empleado.codzona AND
+                                    zona.codzona=periodo.codzona AND                                    
                                     empleado.codbanco=banco.codbanco AND
                                     banco.codbanco='07' AND
                                     nomina.neto > 0 AND

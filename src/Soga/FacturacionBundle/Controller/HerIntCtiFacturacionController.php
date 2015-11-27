@@ -36,11 +36,11 @@ class HerIntCtiFacturacionController extends Controller {
                         $objQuery = $em->getRepository('SogaFacturacionBundle:DeFacturas')->DevDqlFacturaDetalle($strNumero);
                         $arDeFactura = $objQuery->getResult();  
                         $douBase = 0;
+                        $strNumeroDocumento = $this->RellenarNr((int)$strNumero, "0", 9);
                         foreach ($arDeFactura as $arDeFactura) {      
                             $arItem = new \Soga\FacturacionBundle\Entity\Item();
                             $arItem = $em->getRepository('SogaFacturacionBundle:Item')->find($arDeFactura->getCodcom());
-                            if($arItem->getSumar()=='SI') {
-                                $strNumeroDocumento = $this->RellenarNr((int)$strNumero, "0", 9);
+                            if($arItem->getSumar()=='SI') {                                
                                 //Registros detalles
                                 $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
                                 $arNomRegistroExportacion->setConsecutivo($strNumero);                                                        
@@ -59,8 +59,7 @@ class HerIntCtiFacturacionController extends Controller {
                                 $em->flush();                                     
                             }                            
                         }
-                        if($arFactura->getNroservicio()==1) {
-                            
+                        if($arFactura->getNroservicio()==1) {                            
                             $douBaseIva = ($arFactura->getSubtotal() * 10) /100;                        
                         } else {
                             $douBaseIva = $arFactura->getSubtotal();                        
@@ -219,10 +218,16 @@ class HerIntCtiFacturacionController extends Controller {
                     $strSql = "TRUNCATE TABLE nom_registro_exportacion";           
                     $objCon = $em->getConnection()->executeQuery($strSql);                    
         
-                    header ("Content-Type: application/octet-stream");            
-                    header ("Content-Disposition: attachment; filename=" . $strNombreArchivo); 
-                    header ("Content-Length: ".filesize($strRutaArchivo.$strNombreArchivo));
-                    readfile($strRutaArchivo.$strNombreArchivo);
+                    $strArchivo = $strRutaArchivo.$strNombreArchivo;
+                    header('Content-Description: File Transfer');
+                    header('Content-Type: text/csv; charset=ISO-8859-15');
+                    header('Content-Disposition: attachment; filename='.basename($strArchivo));
+                    header('Expires: 0');
+                    header('Cache-Control: must-revalidate');
+                    header('Pragma: public');
+                    header('Content-Length: ' . filesize($strArchivo));
+                    readfile($strArchivo); 
+                    exit;
                     break;                    
                     
                 case "OpCargarFactura";

@@ -108,11 +108,23 @@ class HerIntCtiPrestacionesController extends Controller {
                     $strSql = "TRUNCATE TABLE nom_registro_exportacion";
                     $objCon = $em->getConnection()->executeQuery($strSql);
 
-                    header ("Content-Type: application/octet-stream");
+                    $strArchivo = $strRutaArchivo.$strNombreArchivo;
+                    header('Content-Description: File Transfer');
+                    header('Content-Type: text/csv; charset=ISO-8859-15');
+                    header('Content-Disposition: attachment; filename='.basename($strArchivo));
+                    header('Expires: 0');
+                    header('Cache-Control: must-revalidate');
+                    header('Pragma: public');
+                    header('Content-Length: ' . filesize($strArchivo));
+                    readfile($strArchivo);                 
+                    exit;
+                    break;                    
+                    
+                    /*header ("Content-Type: application/octet-stream");
                     header ("Content-Disposition: attachment; filename=" . $strNombreArchivo);
                     header ("Content-Length: ".filesize($strRutaArchivo.$strNombreArchivo));
                     readfile($strRutaArchivo.$strNombreArchivo);
-                    break;                    
+                    break;*/
                     
                 case "OpCargarPrestacion";       
                     if($arrControles['TxtNumeroConsecutivoDesde'] && $arrControles['TxtNumeroConsecutivoHasta']){

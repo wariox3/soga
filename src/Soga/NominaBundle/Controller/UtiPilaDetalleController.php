@@ -43,9 +43,10 @@ class UtiPilaDetalleController extends Controller {
                 fputs($ar, $this->RellenarNr($arPeriodoDetalle->getSucursalRel()->getNombre(), " ", 40, "D"));
                 //Arp del aportante
                 fputs($ar, '14-18 ');
-                //Periodo pago para los diferentes sistemas
+                //Periodo para los sistemas diferentes de salud
                 fputs($ar, $arPeriodoDetalle->getAnio().'-'. $this->RellenarNr($arPeriodoDetalle->getMes(), "0", 2, "I"));
-                fputs($ar, $arPeriodoDetalle->getAnio().'-'. $this->RellenarNr($arPeriodoDetalle->getMesSalud(), "0", 2, "I"));
+                //Periodo para los sistemas de salud
+                fputs($ar, $arPeriodoDetalle->getAnioSalud().'-'. $this->RellenarNr($arPeriodoDetalle->getMesSalud(), "0", 2, "I"));
                 //Numero radicacion de la planilla
                 fputs($ar, '0000000000');  
                 //Fecha de pago

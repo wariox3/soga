@@ -33,6 +33,11 @@ class SsoPeriodoDetalle {
     private $anio;
 
     /**
+     * @ORM\Column(name="anio_salud", type="integer")
+     */
+    private $anioSalud;    
+    
+    /**
      * @ORM\Column(name="mes", type="integer")
      */
     private $mes;
@@ -449,5 +454,28 @@ class SsoPeriodoDetalle {
     public function getNombre()
     {
         return $this->nombre;
+    }
+
+    /**
+     * Set anioSalud
+     *
+     * @param integer $anioSalud
+     * @return SsoPeriodoDetalle
+     */
+    public function setAnioSalud($anioSalud)
+    {
+        $this->anioSalud = $anioSalud;
+
+        return $this;
+    }
+
+    /**
+     * Get anioSalud
+     *
+     * @return integer 
+     */
+    public function getAnioSalud()
+    {
+        return $this->anioSalud;
     }
 }

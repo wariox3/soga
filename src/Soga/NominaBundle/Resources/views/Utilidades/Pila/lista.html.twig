@@ -9,6 +9,7 @@
             <tr>
                 <th>CODIGO</th>
                 <th>AÑO</th>
+                <th>AÑO SALUD</th>
                 <th>MES</th>
                 <th>MES SALUD</th>
                 <th>DESDE</th>
@@ -22,6 +23,7 @@
             <tr>
                 <td><input type="hidden" name="LblCodigo[]" value="{{ arPeriodos.codigoPeriodoPk }}">{{ arPeriodos.codigoPeriodoPk }}</td>
                 <td>{{ arPeriodos.anio }}</td>
+                <td>{{ arPeriodos.anioSalud }}</td>
                 <td>{{ arPeriodos.mes }}</td>
                 <td>{{ arPeriodos.mesSalud }}</td>
                 <td>{{ arPeriodos.fechaDesde |date("Y/m/d")  }}</td>

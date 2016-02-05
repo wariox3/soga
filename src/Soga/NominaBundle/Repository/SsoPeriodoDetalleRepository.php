@@ -14,8 +14,7 @@ class SsoPeriodoDetalleRepository extends EntityRepository
 {   
     public function DevDqlPeriodos() {
         $em = $this->getEntityManager();         
-        $dql = "SELECT periododetalle FROM SogaNominaBundle:SsoPeriodoDetalle periododetalle WHERE periododetalle.anio = 2015 "
-                . "AND periododetalle.estadoCerrado = 0";
+        $dql = "SELECT periododetalle FROM SogaNominaBundle:SsoPeriodoDetalle periododetalle WHERE periododetalle.estadoCerrado = 0";
         $objQuery = $em->createQuery($dql);       
         return $objQuery;                
     }    

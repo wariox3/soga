@@ -26,6 +26,7 @@ class UtiPilaPeriodoController extends Controller {
                     $arPeriodoDetalle->setCodigoPeriodoFk($codigoPeriodo);
                     $arPeriodoDetalle->setNombre($arSucursal->getNombre());
                     $arPeriodoDetalle->setAnio($arPeriodo->getAnio());
+                    $arPeriodoDetalle->setAnioSalud($arPeriodo->getAnioSalud());
                     $arPeriodoDetalle->setMes($arPeriodo->getMes());
                     $arPeriodoDetalle->setMesSalud($arPeriodo->getMesSalud());
                     $arPeriodoDetalle->setFechaDesde($arPeriodo->getFechaDesde());

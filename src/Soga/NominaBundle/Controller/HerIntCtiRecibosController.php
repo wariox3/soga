@@ -50,7 +50,7 @@ class HerIntCtiRecibosController extends Controller {
                             $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
                             $arNomRegistroExportacion->setConsecutivo($consecutivo);
                             $arNomRegistroExportacion->setComprobante($strComprobante);
-                            $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaRa());
+                            $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaPago());
                             $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
                             $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumentoReferencia);
                             $arNomRegistroExportacion->setNit($arDetalleRecibo->getNit());
@@ -66,7 +66,7 @@ class HerIntCtiRecibosController extends Controller {
                                 $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
                                 $arNomRegistroExportacion->setConsecutivo($consecutivo);
                                 $arNomRegistroExportacion->setComprobante($strComprobante);
-                                $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaRa());
+                                $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaPago());
                                 $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
                                 $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumentoReferencia);
                                 $arNomRegistroExportacion->setNit($arDetalleRecibo->getNit());
@@ -84,7 +84,7 @@ class HerIntCtiRecibosController extends Controller {
                                 $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
                                 $arNomRegistroExportacion->setConsecutivo($consecutivo);
                                 $arNomRegistroExportacion->setComprobante($strComprobante);
-                                $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaRa());
+                                $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaPago());
                                 $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
                                 $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumentoReferencia);
                                 $arNomRegistroExportacion->setNit($arDetalleRecibo->getNit());
@@ -100,7 +100,7 @@ class HerIntCtiRecibosController extends Controller {
                                 $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
                                 $arNomRegistroExportacion->setConsecutivo($consecutivo);
                                 $arNomRegistroExportacion->setComprobante($strComprobante);
-                                $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaRa());
+                                $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaPago());
                                 $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
                                 $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumentoReferencia);
                                 $arNomRegistroExportacion->setNit($arDetalleRecibo->getNit());
@@ -117,7 +117,7 @@ class HerIntCtiRecibosController extends Controller {
                             $arNomRegistroExportacion = new \Soga\NominaBundle\Entity\NomRegistroExportacion();
                             $arNomRegistroExportacion->setConsecutivo($consecutivo);
                             $arNomRegistroExportacion->setComprobante($strComprobante);
-                            $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaRa());
+                            $arNomRegistroExportacion->setFecha($arMaestroRecibo->getFechaPago());
                             $arNomRegistroExportacion->setDocumento($strNumeroDocumento);
                             $arNomRegistroExportacion->setDocumentoReferencia($strNumeroDocumentoReferencia);
                             $arNomRegistroExportacion->setTipo(1);

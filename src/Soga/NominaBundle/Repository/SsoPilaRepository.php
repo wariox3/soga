@@ -306,7 +306,8 @@ class SsoPilaRepository extends EntityRepository
                         $arPila->setCotizacionObligatoria($douCotizacionPension);
                         $douCotizacionFSPSolidaridad = 0;
                         $douCotizacionFSPSubsistencia = 0;
-                        if(($floIbcPension + $floSuplementario) >= (689455 * 4)) {
+                        //Se modifica con don jose, para que tome el ibc.pension
+                        if(($floIbcPension) >= (689455 * 4)) {
                             $douCotizacionFSPSolidaridad = round($floIbcPension * 0.005, -2, PHP_ROUND_HALF_DOWN);
                             $douCotizacionFSPSubsistencia = round($floIbcPension * 0.005, -2, PHP_ROUND_HALF_DOWN);
                         }

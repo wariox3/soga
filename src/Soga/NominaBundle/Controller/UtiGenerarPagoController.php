@@ -155,7 +155,7 @@ class UtiGenerarPagoController extends Controller {
                         foreach ($arEmpleados AS $arEmpleado) {
                             if($arEmpleado->getCuenta() != "") {
                                 fputs($ar, "6" . $this->RellenarNr($arEmpleado->getCedemple(), "0", 15));
-                                fputs($ar, $this->RellenarNr($arEmpleado->getNomemple(),"0", 18));
+                                fputs($ar, $this->RellenarNr(utf8_decode($arEmpleado->getNomemple()),"0", 18));
                                 fputs($ar, "005600078");
                                 fputs($ar, $this->RellenarNr($arEmpleado->getCuenta(), "0", 17));
                                 fputs($ar, "S37");

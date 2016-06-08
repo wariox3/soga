@@ -43,6 +43,11 @@ class SsoPeriodoEmpleadoContrato {
     private $vrSalario = 0;    
     
     /**
+     * @ORM\Column(name="vr_salario_integral", type="float")
+     */    
+    private $vrSalarioIntegral = 0;    
+    
+    /**
      * @ORM\Column(name="fecha_desde", type="date")
      */
     private $fechaDesde;
@@ -101,6 +106,11 @@ class SsoPeriodoEmpleadoContrato {
      * @ORM\Column(name="subtipo", type="string", length=2)
      */
     private $subtipo;    
+    
+    /**
+     * @ORM\Column(name="salario_integral", type="string", length=1)
+     */    
+    private $salarioIntegral;    
     
     /**
      * Get codigoPeriodoEmpleadoContratoPk
@@ -501,5 +511,51 @@ class SsoPeriodoEmpleadoContrato {
     public function getSubtipo()
     {
         return $this->subtipo;
+    }
+
+    /**
+     * Set salarioIntegral
+     *
+     * @param string $salarioIntegral
+     * @return SsoPeriodoEmpleadoContrato
+     */
+    public function setSalarioIntegral($salarioIntegral)
+    {
+        $this->salarioIntegral = $salarioIntegral;
+
+        return $this;
+    }
+
+    /**
+     * Get salarioIntegral
+     *
+     * @return string 
+     */
+    public function getSalarioIntegral()
+    {
+        return $this->salarioIntegral;
+    }
+
+    /**
+     * Set vrSalarioIntegral
+     *
+     * @param float $vrSalarioIntegral
+     * @return SsoPeriodoEmpleadoContrato
+     */
+    public function setVrSalarioIntegral($vrSalarioIntegral)
+    {
+        $this->vrSalarioIntegral = $vrSalarioIntegral;
+
+        return $this;
+    }
+
+    /**
+     * Get vrSalarioIntegral
+     *
+     * @return float 
+     */
+    public function getVrSalarioIntegral()
+    {
+        return $this->vrSalarioIntegral;
     }
 }

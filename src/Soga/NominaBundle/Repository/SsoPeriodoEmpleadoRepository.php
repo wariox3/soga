@@ -230,6 +230,12 @@ class SsoPeriodoEmpleadoRepository extends EntityRepository
                 $arSubtipoCotizante = $em->getRepository('SogaNominaBundle:SsoSubtipoCotizante')->find($arContrato->getCodigoSubtipoCotizanteFk());                                                                                                                                                            
                 $arPeriodoEmpleadoContrato->setTipo($arTipoCotizante->getCodigoPila());
                 $arPeriodoEmpleadoContrato->setSubtipo($arSubtipoCotizante->getCodigoPila());
+                if($arContrato->getTipoSalario() == 'INTEGRAL') {
+                    $arPeriodoEmpleadoContrato->setSalarioIntegral('X');
+                    $arPeriodoEmpleadoContrato->setVrSalarioIntegral($arContrato->getSalario());
+                } else {
+                    $arPeriodoEmpleadoContrato->setSalarioIntegral(' ');
+                }
                 $em->persist($arPeriodoEmpleadoContrato);                    
             }                            
         }        

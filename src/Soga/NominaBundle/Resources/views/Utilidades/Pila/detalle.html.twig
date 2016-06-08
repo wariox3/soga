@@ -20,6 +20,7 @@
                 <th>IRP</th>
                 <th>TDE</th>
                 <th>TAE</th>
+                <th>INT</th>
                 <th style="text-align: right">D.P</th>
                 <th style="text-align: right">D.S</th>
                 <th style="text-align: right">D.R</th>
@@ -60,6 +61,7 @@
                     <td>{{ arPila.incapacidadAccidenteTrabajoEnfermedadProfesional }}</td>
                     <td>{% if arPila.trasladoDesdeOtraEps == 'X' %}{{ arPila.trasladoDesdeOtraEps }}{% endif %}</td>                
                     <td>{% if arPila.trasladoAOtraEps == 'X' %}{{ arPila.trasladoAOtraEps }}{% endif %}</td>                
+                    <td>{{ arPila.salarioIntegral }}</td>
                     <td style="text-align: right">{{ arPila.diasCotizadosPension }}</td>
                     <td style="text-align: right">{{ arPila.diasCotizadosSalud }}</td>
                     <td style="text-align: right">{{ arPila.diasCotizadosRiesgosProfesionales }}</td>

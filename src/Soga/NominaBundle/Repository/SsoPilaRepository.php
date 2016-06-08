@@ -283,8 +283,12 @@ class SsoPilaRepository extends EntityRepository
                     $arPila->setDiasCotizadosRiesgosProfesionales($intDiasCotizarRiesgos);
                     $arPila->setDiasCotizadosCajaCompensacion($intDiasCotizarCaja);
                     
-                    $arPila->setSalarioBasico($this->RellenarNr($floSalario, "0", 9, "I"));
-                    $arPila->setSalarioIntegral(' ');
+                    if($arPeriodoEmpleadoContrato->getSalarioIntegral() == 'X') {
+                        $arPila->setSalarioBasico($arPeriodoEmpleadoContrato->getVrSalarioIntegral());    
+                    } else {
+                        $arPila->setSalarioBasico($this->RellenarNr($floSalario, "0", 9, "I"));
+                    }                    
+                    $arPila->setSalarioIntegral($arPeriodoEmpleadoContrato->getSalarioIntegral());
                     $arPila->setTiempoSuplementario($floSuplementario);
                     $arPila->setIbcPension($floIbcPension);
                     $arPila->setIbcSalud($floIbcSalud);
@@ -457,9 +461,13 @@ class SsoPilaRepository extends EntityRepository
                         $arPila->setDiasCotizadosSalud($intDiasLicenciaNoRemunerada);
                         $arPila->setDiasCotizadosRiesgosProfesionales($intDiasLicenciaNoRemunerada);
                         $arPila->setDiasCotizadosCajaCompensacion($intDiasLicenciaNoRemunerada);
-
-                        $arPila->setSalarioBasico($floSalario);
-                        $arPila->setSalarioIntegral(' ');
+                        
+                        if($arPeriodoEmpleadoContrato->getSalarioIntegral() == 'X') {
+                            $arPila->setSalarioBasico($arPeriodoEmpleadoContrato->getVrSalarioIntegral());    
+                        } else {
+                            $arPila->setSalarioBasico($this->RellenarNr($floSalario, "0", 9, "I"));
+                        }                        
+                        $arPila->setSalarioIntegral($arPeriodoEmpleadoContrato->getSalarioIntegral());
                         $arPila->setIbcPension($floIbcPension);
                         $arPila->setIbcSalud($floIbcSalud);
                         $arPila->setIbcRiesgosProfesionales($floIbcRiesgos);

@@ -67,6 +67,11 @@ class Contrato
     private $codigoSubtipoCotizanteFk;    
     
     /**
+     * @ORM\Column(name="tiposalario", type="string", length=20)
+     */
+    private $tipoSalario;    
+    
+    /**
      * Set contrato
      *
      * @param string $contrato
@@ -317,5 +322,28 @@ class Contrato
     public function getCodigoSubtipoCotizanteFk()
     {
         return $this->codigoSubtipoCotizanteFk;
+    }
+
+    /**
+     * Set tipoSalario
+     *
+     * @param string $tipoSalario
+     * @return Contrato
+     */
+    public function setTipoSalario($tipoSalario)
+    {
+        $this->tipoSalario = $tipoSalario;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoSalario
+     *
+     * @return string 
+     */
+    public function getTipoSalario()
+    {
+        return $this->tipoSalario;
     }
 }

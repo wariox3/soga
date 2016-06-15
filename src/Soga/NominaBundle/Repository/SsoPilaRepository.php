@@ -125,7 +125,7 @@ class SsoPilaRepository extends EntityRepository
                         $arNominaDetalles = new \Soga\NominaBundle\Entity\Denomina();
                         $arNominaDetalles = $em->getRepository('SogaNominaBundle:Denomina')->findBy(array('consecutivo' => $arNomina->getConsecutivo()));                        
                         foreach ($arNominaDetalles as $arNominaDetalle) {                            
-                            if($arNominaDetalle->getCodsala() == '94' || $arNominaDetalle->getCodsala() == '95' || $arNominaDetalle->getCodsala() == '92') {                                
+                            if($arNominaDetalle->getCodsala() == '94' || $arNominaDetalle->getCodsala() == '95') {                                
                                 $intHorasLicenciaNoRemunerada += $arNominaDetalle->getNrohora();
                             }
                         }

@@ -583,10 +583,11 @@ class SsoPilaRepository extends EntityRepository
             if(round($floCotizacionRedondeada) >= $floCotizacionCalculada) {
                 $floCotizacion = round($floCotizacionRedondeada);
             } else {
-                $floCotizacion = ceil($floCotizacionRedondeada);                                
+                $floCotizacion = round($floCotizacionRedondeada);
+                //$floCotizacion = ceil($floCotizacionRedondeada);                 
             }
         } else {
-            $floCotizacion = $floCotizacionRedondeada;
+            $floCotizacion = $floCotizacionRedondeada;            
         }
         return $floCotizacion;
     }

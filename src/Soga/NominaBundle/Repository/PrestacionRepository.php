@@ -28,4 +28,16 @@ class PrestacionRepository extends EntityRepository
         $objQuery = $em->createQuery($dql);       
         return $objQuery;                
     }    
+    
+    public function ibc($fechaDesde, $fechaHasta, $strIdentificacion) {
+        $em = $this->getEntityManager();         
+        $dql   = "SELECT SUM(prestacion.vacacion) FROM SogaNominaBundle:Prestacion prestacion "
+                . "WHERE prestacion.fechaPro >= '" . $fechaDesde . "' "
+                . "AND prestacion.fechaPro <= '" . $fechaHasta .  "' "
+                . "AND prestacion.cedulaEmpleado = '" . $strIdentificacion . "'";
+        $query = $em->createQuery($dql);
+        $douIBC = $query->getSingleScalarResult();
+        return $douIBC;               
+    }     
+    
 }

@@ -27,5 +27,17 @@ class VacacionRepository extends EntityRepository
         }
         $objQuery = $em->createQuery($dql);       
         return $objQuery;                
+    }
+
+    public function ibc($fechaDesde, $fechaHasta, $strIdentificacion) {
+        $em = $this->getEntityManager();         
+        $dql   = "SELECT SUM(vacacion.valor) FROM SogaNominaBundle:Vacacion vacacion "
+                . "WHERE vacacion.fechap >= '" . $fechaDesde . "' "
+                . "AND vacacion.fechap <= '" . $fechaHasta .  "' "
+                . "AND vacacion.cedemple = '" . $strIdentificacion . "'";
+        $query = $em->createQuery($dql);
+        $douIBC = $query->getSingleScalarResult();
+        return $douIBC;               
     }    
+    
 }

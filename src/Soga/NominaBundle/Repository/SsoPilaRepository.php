@@ -150,10 +150,14 @@ class SsoPilaRepository extends EntityRepository
                         $intDiasCotizarCaja = 0;
                     }
                     
+                    //ibc vacacaciones
+                    $vacacionDisfrutada = $em->getRepository('SogaNominaBundle:Vacacion')->ibc($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $arEmpleado->getCedemple());
+                    $vacacionLiquidacion = $em->getRepository('SogaNominaBundle:Prestacion')->ibc($arPeriodoDetalle->getFechaDesde()->format('Y-m-d'), $arPeriodoDetalle->getFechaHasta()->format('Y-m-d'), $arEmpleado->getCedemple());
+                    $vacacionTotal = $vacacionDisfrutada + $vacacionLiquidacion;
                     $floIbcBrutoSeguridadSocialPension = (($intDiasCotizarPension-$intDiasIncapacidades) * ($floSalario / 30)) + $floIbcIncapacidades + $floSuplementario;
                     $floIbcBrutoSeguridadSocialSalud = (($intDiasCotizarSalud-$intDiasIncapacidades) * ($floSalario / 30)) + $floIbcIncapacidades + $floSuplementario;                    
                     $floIbcBrutoRiesgos = ($intDiasCotizarRiesgos * ($floSalario / 30)) + $floSuplementario;
-                    $floIbcBrutoCaja = ($intDiasCotizarCaja * ($floSalario / 30)) + $floSuplementario;
+                    $floIbcBrutoCaja = ($intDiasCotizarCaja * ($floSalario / 30)) + $floSuplementario + $vacacionTotal;
                     
                     $floIbcPension = $this->redondearIbc($intDiasCotizarPension, $floIbcBrutoSeguridadSocialPension, $floIbcTotal);
                     $floIbcSalud = $this->redondearIbc($intDiasCotizarSalud, $floIbcBrutoSeguridadSocialSalud, $floIbcTotal);

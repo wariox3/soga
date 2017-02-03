@@ -315,7 +315,7 @@ class SsoPilaRepository extends EntityRepository
                         $douCotizacionFSPSolidaridad = 0;
                         $douCotizacionFSPSubsistencia = 0;
                         //Se modifica con don jose, para que tome el ibc.pension
-                        if(($floIbcPension) >= (689455 * 4)) {
+                        if(($floIbcPension) >= (737717 * 4)) {
                             $douCotizacionFSPSolidaridad = round($floIbcPension * 0.005, -2, PHP_ROUND_HALF_DOWN);
                             $douCotizacionFSPSubsistencia = round($floIbcPension * 0.005, -2, PHP_ROUND_HALF_DOWN);
                         }
@@ -490,7 +490,7 @@ class SsoPilaRepository extends EntityRepository
                             $arPila->setCotizacionObligatoria($douCotizacionPension);
                             $douCotizacionFSPSolidaridad = 0;
                             $douCotizacionFSPSubsistencia = 0;
-                            /*if($floSalario >= (689455 * 4)) {
+                            /*if($floSalario >= (737717 * 4)) {
                                 $douCotizacionFSPSolidaridad = round($floIbcPension * 0.005, -2, PHP_ROUND_HALF_DOWN);
                                 $douCotizacionFSPSubsistencia = round($floIbcPension * 0.005, -2, PHP_ROUND_HALF_DOWN);
                             }*/                            
@@ -597,7 +597,7 @@ class SsoPilaRepository extends EntityRepository
     }
 
     public function redondearAporteMinimo($floTarifa, $intDias) {
-        $floSalario = 689455;
+        $floSalario = 737717;
         $douValorDia = $floSalario / 30;
         $floIbcReal = $douValorDia * $intDias;
         if($intDias != 30) {
@@ -654,7 +654,7 @@ class SsoPilaRepository extends EntityRepository
 
     public function redondearIbcMinimo ($intDias) {
         $floIbcMinimo = 0;
-        $floValorDia = 689455 / 30;
+        $floValorDia = 737717 / 30;
         $floIbcBruto = intval($intDias * $floValorDia);
         return $floIbcBruto;
     }    
@@ -664,16 +664,16 @@ class SsoPilaRepository extends EntityRepository
             $floSalario = $floSalarioAnterior;
         }                
         $floValorDia = $floSalario / 30;
-        $floValorDiaSalarioMinimo = 689455 / 30;
+        $floValorDiaSalarioMinimo = 737717 / 30;
         $floIbcIncapacidad = 0;       
                 
-        if($floSalario <= 689455) {
+        if($floSalario <= 737717) {
             $floIbcIncapacidad = $intDias * $floValorDia;            
         }
-        if($floSalario > 689455 && $floSalario <= 689455 * 1.5) {
+        if($floSalario > 737717 && $floSalario <= 737717 * 1.5) {
             $floIbcIncapacidad = $intDias * $floValorDiaSalarioMinimo;            
         }
-        if($floSalario > (689455 * 1.5)) {
+        if($floSalario > (737717 * 1.5)) {
             $floIbcIncapacidad = $intDias * $floValorDia; 
             $floIbcIncapacidad = ($floIbcIncapacidad * 66.67)/100;            
         }        

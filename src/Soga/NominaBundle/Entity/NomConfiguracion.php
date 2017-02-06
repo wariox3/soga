@@ -89,6 +89,26 @@ class NomConfiguracion {
     private $secuencia;    
     
     /**
+     * @ORM\Column(name="nit_empresa_aporta", type="string", length=20, nullable=false)
+     */
+    private $nitEmpresaAporta;    
+
+    /**
+     * @ORM\Column(name="digito_empresa_aporta", type="string", length=2, nullable=false)
+     */
+    private $digitoEmpresaAporta; 
+    
+    /**
+     * @ORM\Column(name="nombre_empresa_aporta", type="string", length=100, nullable=false)
+     */
+    private $nombreEmpresaAporta;     
+
+    /**
+     * @ORM\Column(name="arl_empresa_aporta", type="string", length=100, nullable=false)
+     */
+    private $arlEmpresaAporta;
+    
+    /**
      * Get codigoConfiguracionPk
      *
      * @return integer 
@@ -418,5 +438,97 @@ class NomConfiguracion {
     public function getComprobanteVacaciones()
     {
         return $this->comprobanteVacaciones;
+    }
+
+    /**
+     * Set nitEmpresaAporta
+     *
+     * @param string $nitEmpresaAporta
+     * @return NomConfiguracion
+     */
+    public function setNitEmpresaAporta($nitEmpresaAporta)
+    {
+        $this->nitEmpresaAporta = $nitEmpresaAporta;
+
+        return $this;
+    }
+
+    /**
+     * Get nitEmpresaAporta
+     *
+     * @return string 
+     */
+    public function getNitEmpresaAporta()
+    {
+        return $this->nitEmpresaAporta;
+    }
+
+    /**
+     * Set nombreEmpresaAporta
+     *
+     * @param string $nombreEmpresaAporta
+     * @return NomConfiguracion
+     */
+    public function setNombreEmpresaAporta($nombreEmpresaAporta)
+    {
+        $this->nombreEmpresaAporta = $nombreEmpresaAporta;
+
+        return $this;
+    }
+
+    /**
+     * Get nombreEmpresaAporta
+     *
+     * @return string 
+     */
+    public function getNombreEmpresaAporta()
+    {
+        return $this->nombreEmpresaAporta;
+    }
+
+    /**
+     * Set digitoEmpresaAporta
+     *
+     * @param string $digitoEmpresaAporta
+     * @return NomConfiguracion
+     */
+    public function setDigitoEmpresaAporta($digitoEmpresaAporta)
+    {
+        $this->digitoEmpresaAporta = $digitoEmpresaAporta;
+
+        return $this;
+    }
+
+    /**
+     * Get digitoEmpresaAporta
+     *
+     * @return string 
+     */
+    public function getDigitoEmpresaAporta()
+    {
+        return $this->digitoEmpresaAporta;
+    }
+
+    /**
+     * Set arlEmpresaAporta
+     *
+     * @param string $arlEmpresaAporta
+     * @return NomConfiguracion
+     */
+    public function setArlEmpresaAporta($arlEmpresaAporta)
+    {
+        $this->arlEmpresaAporta = $arlEmpresaAporta;
+
+        return $this;
+    }
+
+    /**
+     * Get arlEmpresaAporta
+     *
+     * @return string 
+     */
+    public function getArlEmpresaAporta()
+    {
+        return $this->arlEmpresaAporta;
     }
 }

@@ -33,8 +33,8 @@ class UtiPilaDetalleController extends Controller {
                 fputs($ar, '0001');
                 fputs($ar, $this->RellenarNr("JG EFECTIVOS SAS", " ", 200, "D"));
                 fputs($ar, 'NI');
-                fputs($ar, '900456778       ');
-                fputs($ar, '3');
+                fputs($ar, $this->RellenarNr($arNomConfiguracion->getNitEmpresaAporta(), " ", 16, "D"));                
+                fputs($ar, $arNomConfiguracion->getDigitoEmpresaAporta());
                 fputs($ar, 'E');
                 fputs($ar, '          ');
                 fputs($ar, '          ');
@@ -42,7 +42,7 @@ class UtiPilaDetalleController extends Controller {
                 fputs($ar, $this->RellenarNr($arPeriodoDetalle->getSucursalRel()->getCodigoPila(), " ", 10, "D"));
                 fputs($ar, $this->RellenarNr($arPeriodoDetalle->getSucursalRel()->getNombre(), " ", 40, "D"));
                 //Arp del aportante
-                fputs($ar, '14-18 ');
+                fputs($ar, $this->RellenarNr($arNomConfiguracion->getArlEmpresaAporta(), " ", 6, "D"));                
                 //Periodo para los sistemas diferentes de salud
                 fputs($ar, $arPeriodoDetalle->getAnio().'-'. $this->RellenarNr($arPeriodoDetalle->getMes(), "0", 2, "I"));
                 //Periodo para los sistemas de salud

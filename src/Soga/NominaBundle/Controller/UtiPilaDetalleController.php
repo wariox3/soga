@@ -31,7 +31,7 @@ class UtiPilaDetalleController extends Controller {
                 fputs($ar, '01');
                 fputs($ar, '1');
                 fputs($ar, '0001');
-                fputs($ar, $this->RellenarNr("JG EFECTIVOS SAS", " ", 200, "D"));
+                fputs($ar, $this->RellenarNr($arNomConfiguracion->getNombreEmpresaAporta(), " ", 200, "D"));
                 fputs($ar, 'NI');
                 fputs($ar, $this->RellenarNr($arNomConfiguracion->getNitEmpresaAporta(), " ", 16, "D"));                
                 fputs($ar, $arNomConfiguracion->getDigitoEmpresaAporta());

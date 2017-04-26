@@ -402,6 +402,7 @@ class HerIntCtiComprobantesController extends Controller {
                 '35' => '35 ABONO A PRESTAMO TERCERO',
                 '36' => '36 PAGO PRESTAMO TERCERO',
                 '37' => '37 PAGO LINEA CELULAR',
+                '48' => '48* PAGO CESANTIAS',
                     ), 'data' => $session->get('filtroTipoComprobante')))
             ->add('TxtFechaDesde', 'text', array('label'  => 'Desde','data' => $session->get('filtroFechaDesde')))
             ->add('TxtFechaHasta', 'text', array('label'  => 'Hasta','data' => $session->get('filtroFechaHasta')))
